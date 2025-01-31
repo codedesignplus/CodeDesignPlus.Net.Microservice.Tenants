@@ -1,0 +1,42 @@
+namespace CodeDesignPlus.Net.Microservice.Tenants.Domain;
+
+public class Errors : IErrorCodes
+{
+    public const string UnknownError = "100 : UnknownError";
+
+    public const string LicenseIdIsEmpty = "101 : The license id is invalid.";
+    public const string LicenseNameIsEmpty = "102 : The license name is invalid.";
+    public const string LicenseStartDateIsGreaterThanEndDate = "103 : The license start date is greater than the end date.";
+    public const string LicenseEndDateIsLessThanStartDate = "104 : The license end date is less than the start date.";
+    public const string LicenseMetadataIsNull = "105 : The license metadata is null.";
+
+    public const string LocalityNameIsEmpty = "106 : The locality name is invalid.";
+    public const string LocalityIdIsEmpty = "107 : The locality id is invalid.";
+
+    public const string NeighborhoodNameIsEmpty = "108 : The neighborhood name is invalid.";
+    public const string NeighborhoodIdIsEmpty = "109 : The neighborhood id is invalid.";
+
+    public const string CityNameIsEmpty = "110 : The city name is invalid.";
+    public const string CityIdIsEmpty = "111 : The city id is invalid.";
+    public const string CityTimezoneIsEmpty = "112 : The city timezone is invalid.";
+
+    public const string StateNameIsEmpty = "113 : The state name is invalid.";
+    public const string StateIdIsEmpty = "114 : The state id is invalid.";
+    public const string StateCodeIsEmpty = "115 : The state code is invalid.";
+
+    public const string CountryNameIsEmpty = "116 : The country name is invalid.";
+    public const string CountryIdIsEmpty = "117 : The country id is invalid.";
+    public const string CountryCodeIsEmpty = "118 : The country code is invalid.";
+    public const string CountryTimezoneIsEmpty = "119 : The country timezone is invalid.";
+
+    public const string CurrencyIdIsEmpty = "120 : The currency id is invalid.";
+    public const string CurrencyNameIsEmpty = "121 : The currency name is invalid.";
+    public const string CurrencyTimezoneIsEmpty = "122 : The currency code is invalid.";
+    public const string CurrencySymbolIsEmpty = "123 : The currency symbol is invalid.";
+
+    public const string IdTenantIsInvalid = "124 : The tenant id is invalid."; 
+    public const string NameTenantIsInvalid = "125 : The tenant name is invalid."; 
+    public const string DomainTenantIsInvalid = "126 : The tenant domain is invalid."; 
+    public const string TenantIsInvalid = "127 : The tenant is invalid."; 
+    public const string CreatedByIsInvalid = "128 : The created by is invalid."; 
+}
