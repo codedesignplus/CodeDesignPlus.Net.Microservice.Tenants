@@ -1,17 +1,16 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain;
 
-public class TenantAggregate(Guid id) : AggregateRoot(id)
+public class TenantAggregate(Guid id) : AggregateRootBase(id)
 {
     public string Name { get; private set; } = string.Empty;
     public Uri? Domain { get; private set; }
     public License License { get; private set; } = License.Create();
     public Location Location { get; private set; } = Location.Create();
 
-    private TenantAggregate(Guid id, string name, Uri? domain, License license, Location location, Guid tenant, Guid createdBy): this(id)
+    private TenantAggregate(Guid id, string name, Uri? domain, License license, Location location,  Guid createdBy): this(id)
     {
         this.Name = name;
         this.Domain = domain;
-        this.Tenant = tenant;
         this.IsActive = true;
         this.CreatedBy = createdBy;
         this.CreatedAt = SystemClock.Instance.GetCurrentInstant();
@@ -19,26 +18,23 @@ public class TenantAggregate(Guid id) : AggregateRoot(id)
         AddEvent(TenantCreatedDomainEvent.Create(id, name, domain, License, Location, IsActive));
     }
 
-    public static TenantAggregate Create(Guid id, string name, Uri? domain, License license, Location location, Guid tenant, Guid createdBy)
+    public static TenantAggregate Create(Guid id, string name, Uri? domain, License license, Location location,  Guid createdBy)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
-        DomainGuard.GuidIsEmpty(tenant, Errors.TenantIsInvalid);
         DomainGuard.GuidIsEmpty(createdBy, Errors.CreatedByIsInvalid);
 
-        return new TenantAggregate(id, name, domain, license, location, tenant, createdBy);
+        return new TenantAggregate(id, name, domain, license, location, createdBy);
     }
 
-    public void Update(string name, Uri? domain, bool isActive, Guid tenant, Guid updatedBy)
+    public void Update(string name, Uri? domain, bool isActive, Guid updatedBy)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
-        DomainGuard.GuidIsEmpty(tenant, Errors.TenantIsInvalid);
         DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
 
         Name = name;
         Domain = domain;
         IsActive = isActive;
-        Tenant = tenant;
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
