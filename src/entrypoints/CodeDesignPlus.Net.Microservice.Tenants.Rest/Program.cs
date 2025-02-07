@@ -19,7 +19,6 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(opt => opt.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb));
 
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddVault(builder.Configuration);

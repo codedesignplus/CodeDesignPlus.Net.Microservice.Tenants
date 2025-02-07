@@ -6,7 +6,7 @@ public class UpdateTenantCommandHandler(ITenantRepository repository, IUserConte
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
 
-        var tenant = await repository.FindAsync<TenantAggregate>(request.Id, user.Tenant, cancellationToken);
+        var tenant = await repository.FindAsync<TenantAggregate>(request.Id, cancellationToken);
 
         ApplicationGuard.IsNull(tenant, Errors.TenantNotFound);
 

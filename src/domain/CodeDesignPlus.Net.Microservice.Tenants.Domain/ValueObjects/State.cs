@@ -1,12 +1,9 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 
 public sealed partial class State
 {
-    [GeneratedRegex(@"^0x[0-9]{32}$")]
-    private static partial Regex Regex();
-
     public Guid Id { get; private set; }
     public string Name { get; private set; }
     public string Code { get; private set; }
@@ -14,8 +11,8 @@ public sealed partial class State
     private State()
     {
         this.Id = Guid.Empty;
-        this.Name = string.Empty;
-        this.Code = string.Empty;
+        this.Name = null!;
+        this.Code = null!;
     }
 
     [JsonConstructor]
@@ -33,10 +30,5 @@ public sealed partial class State
     public static State Create(Guid id, string name, string code)
     {
         return new State(id, name, code);
-    }
-
-    public static State Create()
-    {
-        return new State();
     }
 }

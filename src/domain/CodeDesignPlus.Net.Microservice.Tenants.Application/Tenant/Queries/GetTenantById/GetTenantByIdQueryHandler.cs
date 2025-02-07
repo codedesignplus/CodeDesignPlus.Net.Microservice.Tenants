@@ -15,8 +15,10 @@ public class GetTenantByIdQueryHandler(ITenantRepository repository, IMapper map
 
         ApplicationGuard.IsNull(tenant, Errors.TenantNotFound);
 
-        await cacheManager.SetAsync(request.Id.ToString(), mapper.Map<TenantDto>(tenant));
+        var dto = mapper.Map<TenantDto>(tenant);
 
-        return mapper.Map<TenantDto>(tenant);
+        await cacheManager.SetAsync(request.Id.ToString(), dto);
+
+        return dto;
     }
 }

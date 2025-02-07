@@ -6,8 +6,7 @@ public class Errors : IErrorCodes
 
     public const string LicenseIdIsEmpty = "101 : The license id is invalid.";
     public const string LicenseNameIsEmpty = "102 : The license name is invalid.";
-    public const string LicenseStartDateIsGreaterThanEndDate = "103 : The license start date is greater than the end date.";
-    public const string LicenseEndDateIsLessThanStartDate = "104 : The license end date is less than the start date.";
+    public const string LicenseStartDateGreaterThanEndDate = "103 : The license start date is greater than the end date.";
     public const string LicenseMetadataIsNull = "105 : The license metadata is null.";
 
     public const string LocalityNameIsEmpty = "106 : The locality name is invalid.";
@@ -38,5 +37,15 @@ public class Errors : IErrorCodes
     public const string NameTenantIsInvalid = "125 : The tenant name is invalid."; 
     public const string DomainTenantIsInvalid = "126 : The tenant domain is invalid."; 
     public const string TenantIsInvalid = "127 : The tenant is invalid."; 
-    public const string CreatedByIsInvalid = "128 : The created by is invalid."; 
+    public const string CreatedByIsInvalid = "128 : The created by is invalid.";
+    public const string LicenseNameIsInvalid = "129 : The license name is invalid.";
+
+    public const string CurrencyCodeIsEmpty = "130 : The currency code is invalid.";
+
+    public const string CountryIsNull = "131 : The country is null.";
+    public const string StateIsNull = "132 : The state is null."; 
+    public const string CityIsNull = "133 : The city is null."; 
+    public const string LocalityIsNull = "134 : The locality is null."; 
+    public const string NeighborhoodIsNull = "135 : The neighborhood is null."; 
+
 }

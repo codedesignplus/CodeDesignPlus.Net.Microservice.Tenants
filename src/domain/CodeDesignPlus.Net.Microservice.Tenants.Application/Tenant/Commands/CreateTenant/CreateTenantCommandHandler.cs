@@ -6,7 +6,7 @@ public class CreateTenantCommandHandler(ITenantRepository repository, IUserConte
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
         
-        var exist = await repository.ExistsAsync<TenantAggregate>(request.Id, user.Tenant, cancellationToken);
+        var exist = await repository.ExistsAsync<TenantAggregate>(request.Id, cancellationToken);
 
         ApplicationGuard.IsTrue(exist, Errors.TenantAlreadyExists);
 

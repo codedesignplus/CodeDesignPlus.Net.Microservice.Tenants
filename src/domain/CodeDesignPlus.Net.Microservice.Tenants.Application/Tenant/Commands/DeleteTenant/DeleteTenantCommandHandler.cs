@@ -6,13 +6,13 @@ public class DeleteTenantCommandHandler(ITenantRepository repository, IUserConte
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
 
-        var aggregate = await repository.FindAsync<TenantAggregate>(request.Id, user.Tenant, cancellationToken);
+        var aggregate = await repository.FindAsync<TenantAggregate>(request.Id, cancellationToken);
 
         ApplicationGuard.IsNull(aggregate, Errors.TenantNotFound);
 
         aggregate.Delete(user.IdUser);
 
-        await repository.DeleteAsync<TenantAggregate>(aggregate.Id, user.Tenant, cancellationToken);
+        await repository.DeleteAsync<TenantAggregate>(aggregate.Id, cancellationToken);
 
         await pubsub.PublishAsync(aggregate.GetAndClearEvents(), cancellationToken);
     }
