@@ -1,0 +1,21 @@
+name: Sync Charts
+on:
+  push:
+    branches:
+      - main
+      - rc
+      - dev
+      - feature/*
+
+permissions:
+  contents: write
+  packages: write
+  repository-projects: write
+
+jobs:
+  ci:
+    uses: codedesignplus/workflows/.github/workflows/helm-chart.yaml@main
+    with:
+      project-name: CodeDesignPlus.Net.Microservice.Tenants
+      microservice-name: ms-tenants
+    secrets: inherit
