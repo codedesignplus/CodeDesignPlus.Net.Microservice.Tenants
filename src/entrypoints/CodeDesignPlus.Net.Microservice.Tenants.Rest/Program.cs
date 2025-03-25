@@ -22,7 +22,7 @@ builder.Services
     .AddJsonOptions(opt => opt.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb));
 
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddCors();
 builder.Services.AddVault(builder.Configuration);
 builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddMongo<CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Startup>(builder.Configuration);
