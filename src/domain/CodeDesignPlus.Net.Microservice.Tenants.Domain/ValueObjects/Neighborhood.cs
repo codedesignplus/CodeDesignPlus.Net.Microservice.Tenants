@@ -8,7 +8,7 @@ public sealed partial class Neighborhood
     public string Name { get; private set; }
 
     [JsonConstructor]
-    private Neighborhood(Guid id, string name)
+    public Neighborhood(Guid id, string name)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.NeighborhoodNameIsEmpty);
         DomainGuard.GuidIsEmpty(id, Errors.NeighborhoodIdIsEmpty);

@@ -11,7 +11,7 @@ public sealed partial class Country
     public Currency Currency { get; private set; }
 
     [JsonConstructor]
-    private Country(Guid id, string name, string code, string timezone, Currency currency)
+    public Country(Guid id, string name, string code, string timezone, Currency currency)
     {
         DomainGuard.GuidIsEmpty(id, Errors.CountryIdIsEmpty);
         DomainGuard.IsNullOrEmpty(name, Errors.CountryNameIsEmpty);

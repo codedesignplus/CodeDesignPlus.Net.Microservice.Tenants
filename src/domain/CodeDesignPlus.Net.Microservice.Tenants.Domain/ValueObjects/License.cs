@@ -14,7 +14,7 @@ public sealed partial class License
     public Dictionary<string, string> Metadata { get; private set; } 
 
     [JsonConstructor]
-    private License(Guid Id, string Name, Instant StartDate, Instant EndDate, Dictionary<string, string> Metadata)
+    public License(Guid Id, string Name, Instant StartDate, Instant EndDate, Dictionary<string, string> Metadata)
     {        
         DomainGuard.GuidIsEmpty(Id, Errors.LicenseIdIsEmpty);
         DomainGuard.IsNullOrEmpty(Name, Errors.LicenseNameIsEmpty);

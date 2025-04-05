@@ -8,7 +8,7 @@ public sealed partial class Locality
     public string Name { get; private set; }
 
     [JsonConstructor]
-    private Locality(Guid id, string name)
+    public Locality(Guid id, string name)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.LocalityNameIsEmpty);
         DomainGuard.GuidIsEmpty(id, Errors.LocalityIdIsEmpty);

@@ -9,7 +9,7 @@ public sealed partial class City
     public string Timezone { get; private set; }
 
     [JsonConstructor]
-    private City(Guid id, string name, string timezone)
+    public City(Guid id, string name, string timezone)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.CityNameIsEmpty);
         DomainGuard.GuidIsEmpty(id, Errors.CityIdIsEmpty);

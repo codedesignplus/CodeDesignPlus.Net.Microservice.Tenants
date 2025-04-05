@@ -8,15 +8,8 @@ public sealed partial class State
     public string Name { get; private set; }
     public string Code { get; private set; }
 
-    private State()
-    {
-        this.Id = Guid.Empty;
-        this.Name = null!;
-        this.Code = null!;
-    }
-
     [JsonConstructor]
-    private State(Guid id, string name, string code)
+    public State(Guid id, string name, string code)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.StateNameIsEmpty);
         DomainGuard.GuidIsEmpty(id, Errors.StateIdIsEmpty);

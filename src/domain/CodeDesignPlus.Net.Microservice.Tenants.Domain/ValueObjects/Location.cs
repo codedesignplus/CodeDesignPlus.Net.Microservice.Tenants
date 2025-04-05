@@ -11,7 +11,7 @@ public sealed partial class Location
     public Neighborhood Neighborhood { get; private set; }
 
     [JsonConstructor]
-    private Location(Country country, State state, City city, Locality locality, Neighborhood neighborhood)
+    public Location(Country country, State state, City city, Locality locality, Neighborhood neighborhood)
     {
         DomainGuard.IsNull(country, Errors.CountryIsNull);
         DomainGuard.IsNull(state, Errors.StateIsNull);
