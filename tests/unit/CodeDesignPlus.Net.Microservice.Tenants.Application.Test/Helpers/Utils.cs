@@ -5,7 +5,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Helpers;
 public static class Utils
 {
     public readonly static Currency Currency = Currency.Create(Guid.NewGuid(), "COP", "Colombian Peso", "COP");
-    public readonly static Country Country = Country.Create(Guid.NewGuid(), "Colombia", "CO", "America/Bogota", Currency);
+    public readonly static Country Country = Country.Create(Guid.NewGuid(), "Colombia", 102, "America/Bogota", Currency);
     public readonly static State State = State.Create(Guid.NewGuid(), "Bogota", "DC");
     public readonly static City City = City.Create(Guid.NewGuid(), "Bogota", "America/Bogota");
     public readonly static Locality Locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");

@@ -24,7 +24,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
     {
 
         this.currency = Currency.Create(Guid.NewGuid(), "COP", "Colombian Peso", "COP");
-        this.country = Country.Create(Guid.NewGuid(), "Colombia", "CO", "America/Bogota", this.currency);
+        this.country = Country.Create(Guid.NewGuid(), "Colombia", 102, "America/Bogota", this.currency);
         this.state = State.Create(Guid.NewGuid(), "Bogota", "DC");
         this.city = City.Create(Guid.NewGuid(), "Bogota", "America/Bogota");
         this.locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");

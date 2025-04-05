@@ -12,7 +12,7 @@ public class CountryTest
         // Arrange
         var id = Guid.NewGuid();
         var name = "United States";
-        var code = "US";
+        var code = (ushort)625;
         var timezone = "America/New_York";
         var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
 
@@ -33,7 +33,7 @@ public class CountryTest
         // Arrange
         var id = Guid.Empty;
         var name = "United States";
-        var code = "US";
+        var code = (ushort)625;
         var timezone = "America/New_York";
         var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
 
@@ -51,7 +51,7 @@ public class CountryTest
         // Arrange
         var id = Guid.NewGuid();
         var name = string.Empty;
-        var code = "US";
+        var code = (ushort)625;
         var timezone = "America/New_York";
         var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
 
@@ -69,7 +69,7 @@ public class CountryTest
         // Arrange
         var id = Guid.NewGuid();
         var name = "United States";
-        var code = string.Empty;
+        var code = (ushort)0;
         var timezone = "America/New_York";
         var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
 
@@ -87,7 +87,7 @@ public class CountryTest
         // Arrange
         var id = Guid.NewGuid();
         var name = "United States";
-        var code = "US";
+        var code = (ushort)625;
         var timezone = string.Empty;
         var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
 
