@@ -76,8 +76,8 @@ public class CountryTest
         // Act & Assert
         var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
 
-        Assert.Equal(Errors.CountryCodeIsEmpty.GetMessage(), exception.Message);
-        Assert.Equal(Errors.CountryCodeIsEmpty.GetCode(), exception.Code);
+        Assert.Equal(Errors.CountryCodeIsInvalid.GetMessage(), exception.Message);
+        Assert.Equal(Errors.CountryCodeIsInvalid.GetCode(), exception.Code);
         Assert.Equal(Layer.Domain, exception.Layer);
     }
 

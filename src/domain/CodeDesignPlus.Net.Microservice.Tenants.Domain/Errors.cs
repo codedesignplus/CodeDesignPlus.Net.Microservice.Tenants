@@ -25,7 +25,7 @@ public class Errors : IErrorCodes
 
     public const string CountryNameIsEmpty = "116 : The country name is invalid.";
     public const string CountryIdIsEmpty = "117 : The country id is invalid.";
-    public const string CountryCodeIsEmpty = "118 : The country code is invalid.";
+    public const string CountryCodeIsInvalid = "118 : The country code is invalid.";
     public const string CountryTimezoneIsEmpty = "119 : The country timezone is invalid.";
 
     public const string CurrencyIdIsEmpty = "120 : The currency id is invalid.";
