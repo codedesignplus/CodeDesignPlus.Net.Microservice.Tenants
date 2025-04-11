@@ -25,7 +25,8 @@ public static class MapsterConfigTenant
                 Name = tenant.Name,
                 Domain = tenant.Domain,
                 License = tenant.License,
-                Location = tenant.Location
+                Location = tenant.Location,
+                IsActive = tenant.IsActive
             });
     }
 }

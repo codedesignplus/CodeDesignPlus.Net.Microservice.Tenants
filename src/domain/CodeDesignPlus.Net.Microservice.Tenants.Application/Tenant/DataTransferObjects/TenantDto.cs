@@ -9,4 +9,5 @@ public class TenantDto: IDtoBase
     public Uri? Domain { get; set; }
     public License License { get; set; } = null!;
     public Location Location { get; set; } = null!;
+    public bool IsActive { get; set; }
 }
