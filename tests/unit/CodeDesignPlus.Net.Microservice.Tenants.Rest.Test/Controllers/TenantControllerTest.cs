@@ -14,6 +14,7 @@ using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.Create
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
+using CodeDesignPlus.Net.Core.Abstractions.Models.Pager;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
 {
@@ -51,14 +52,14 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
             var cancellationToken = new CancellationToken();
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllTenantQuery>(), cancellationToken))
-                .ReturnsAsync(new List<TenantDto>());
+                .ReturnsAsync(Pagination<TenantDto>.Create([], 0, 10, 0));
 
             // Act
             var result = await controller.GetTenants(criteria, cancellationToken);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.IsType<List<TenantDto>>(okResult.Value);
+            Assert.IsType<Pagination<TenantDto>>(okResult.Value);
 
             mediatorMock.Verify(m => m.Send(It.IsAny<GetAllTenantQuery>(), cancellationToken), Times.Once);
         }
