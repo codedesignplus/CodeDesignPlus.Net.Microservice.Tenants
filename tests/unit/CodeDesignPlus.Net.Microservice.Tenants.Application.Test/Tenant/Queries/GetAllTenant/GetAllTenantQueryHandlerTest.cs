@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CodeDesignPlus.Net.Core.Abstractions.Models.Pager;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetAllTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
@@ -56,18 +57,22 @@ public class GetAllTenantQueryHandlerTest
 
         var tenantsAggregate = new List<TenantAggregate> { tenantAggregate };
 
+        var pagination = Pagination<TenantAggregate>.Create(tenantsAggregate, tenantsAggregate.Count, 10, 0);
+
         repositoryMock
             .Setup(repo => repo.MatchingAsync<TenantAggregate>(request.Criteria, cancellationToken))
-            .ReturnsAsync(tenantsAggregate);
+            .ReturnsAsync(pagination);
+
+        var tenantsDto = new List<TenantDto> { tenantDto };
 
         mapperMock
-            .Setup(mapper => mapper.Map<List<TenantDto>>(tenantsAggregate))
-            .Returns([tenantDto]);
+            .Setup(mapper => mapper.Map<Pagination<TenantDto>>(pagination))
+            .Returns(Pagination<TenantDto>.Create(tenantsDto, tenantsDto.Count, 10, 0));
 
         // Act
         var result = await handler.Handle(request, cancellationToken);
 
         // Assert
-        Assert.Contains(result, x => x.Id == tenantDto.Id);
+        Assert.Contains(result.Data, x => x.Id == tenantDto.Id);
     }
 }

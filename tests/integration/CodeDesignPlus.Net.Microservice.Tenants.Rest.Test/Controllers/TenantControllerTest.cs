@@ -1,4 +1,5 @@
 
+using CodeDesignPlus.Net.Core.Abstractions.Models.Pager;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 using NodaTime.Serialization.SystemTextJson;
 
@@ -62,11 +63,11 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var tenants = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<TenantDto>>(json, this.options);
+        var tenants = System.Text.Json.JsonSerializer.Deserialize<Pagination<TenantDto>>(json, this.options);
 
         Assert.NotNull(tenants);
-        Assert.NotEmpty(tenants);
-        Assert.Contains(tenants, x => x.Id == tenant.Id);
+        Assert.NotEmpty(tenants.Data);
+        Assert.Contains(tenants.Data, x => x.Id == tenant.Id);
     }
 
     [Fact]
