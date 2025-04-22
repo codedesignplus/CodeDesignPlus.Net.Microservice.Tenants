@@ -1,4 +1,5 @@
 ms-base:
+  environment: Staging
   replicaCount: 1
 
   image:
@@ -19,13 +20,13 @@ ms-base:
   podAnnotations: {}
   podLabels: {}
   podSecurityContext: {}
-    # fsGroup: 2000
+    # fsGroup: 2000 
 
-  securityContext: {}
+  securityContext: {} 
     # capabilities:
     #   drop:
     #   - ALL
-    # readOnlyRootFilesystem: true
+    # readOnlyRootFilesystem: true 
     # runAsNonRoot: true
     # runAsUser: 1000
 
@@ -38,16 +39,16 @@ ms-base:
     className: ""
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      # kubernetes.io/tls-acme: "true" 
     hosts:
       - host: services.codedesignplus.com
         paths:
           - path: /
             pathType: ImplementationSpecific
-    tls: []
+    tls: [] 
     #  - secretName: chart-example-tls
     #    hosts:
-    #      - services.codedesignplus.com
+    #      - services.codedesignplus.com 
 
   resources: {}
     # limits:
