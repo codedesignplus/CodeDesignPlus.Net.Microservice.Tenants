@@ -1,12 +1,15 @@
-name: Release Workflow
+name: Continuous Deployment
 
 on: 
-  push:
-    branches:
-      - main
-      - rc
-      - dev
-      - feature/*  
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select the environment to deploy to
+        default: Staging
+        options: 
+        - Staging
+        - Production
  
 permissions:
   contents: write
@@ -15,39 +18,27 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    uses: codedesignplus/workflows/.github/workflows/build-microservice.yaml@main
+
+  version:
+    uses: codedesignplus/workflows/.github/workflows/release.yaml@main
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Dev
+      environment: Staging
     secrets: inherit
-  
+
   container:
-    needs: build
+    needs: version
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rc' || github.ref == 'refs/heads/dev' }}
     uses: codedesignplus/workflows/.github/workflows/container-image.yaml@main
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Dev
+      environment: Staging
     secrets: inherit
   
-  # chart:
-  #   needs: container
-  #   if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rc' || github.ref == 'refs/heads/dev' }}
-  #   uses: codedesignplus/workflows/.github/workflows/helm-chart.yaml@main
-  #   with:
-  #     project-name: CodeDesignPlus.Net.Microservice.Tenants
-  #     microservice-name: ms-tenants
-  #     enable-rest: true
-  #     enable-grpc: false
-  #     enable-worker: false 
-  #     environment: Dev
-  #   secrets: inherit 
-  
   deploy:
-    needs: container
+    needs: version
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rc' || github.ref == 'refs/heads/dev' }}
     uses: codedesignplus/workflows/.github/workflows/deploy.yaml@main
     with:
@@ -56,5 +47,5 @@ jobs:
       enable-rest: true
       enable-grpc: false
       enable-worker: false
-      environment: Dev
+      environment: Staging
     secrets: inherit
