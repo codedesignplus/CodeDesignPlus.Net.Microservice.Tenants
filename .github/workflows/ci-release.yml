@@ -6,7 +6,7 @@ on:
       - main
       - rc
       - dev
-      - feature/* 
+      - feature/*  
  
 permissions:
   contents: write
