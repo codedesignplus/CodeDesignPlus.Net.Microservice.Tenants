@@ -7,6 +7,17 @@ on:
       - rc
       - dev
       - feature/*
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'Dev'
+        type: choice
+        options:
+          - Dev
+          - Test
+          - Prod
 
 permissions:
   contents: write
