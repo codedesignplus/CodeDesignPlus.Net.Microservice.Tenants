@@ -38,7 +38,7 @@ jobs:
     secrets: inherit
   
   deploy:
-    needs: version
+    needs: container
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rc' || github.ref == 'refs/heads/dev' }}
     uses: codedesignplus/workflows/.github/workflows/deploy.yaml@main
     with:
