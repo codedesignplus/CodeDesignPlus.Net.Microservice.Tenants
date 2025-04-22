@@ -47,7 +47,7 @@ ms-base:
     tls: [] 
     #  - secretName: chart-example-tls
     #    hosts:
-    #      - services.codedesignplus.com
+    #      - services.codedesignplus.com 
 
   resources: {}
     # limits:
