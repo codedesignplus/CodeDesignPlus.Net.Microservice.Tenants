@@ -24,7 +24,7 @@ jobs:
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Staging
+      environment: ${{ github.event.inputs.environment }}
     secrets: inherit
 
   container:
@@ -34,7 +34,7 @@ jobs:
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Staging
+      environment:  ${{ github.event.inputs.environment }}
     secrets: inherit
   
   deploy:
@@ -47,5 +47,5 @@ jobs:
       enable-rest: true
       enable-grpc: false
       enable-worker: false
-      environment: Staging
+      environment:  ${{ github.event.inputs.environment }}
     secrets: inherit

@@ -19,7 +19,7 @@ jobs:
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Staging
+      environment: Development
     secrets: inherit
   
   sonarqube:
@@ -29,5 +29,5 @@ jobs:
     with:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
-      environment: Staging
+      environment: Development
     secrets: inherit
