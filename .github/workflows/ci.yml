@@ -1,5 +1,5 @@
 name: Continuous Integration
-
+ 
 on: 
   push:
     branches:
@@ -30,4 +30,4 @@ jobs:
       project-name: CodeDesignPlus.Net.Microservice.Tenants
       microservice-name: ms-tenants
       environment: Development
-    secrets: inherit
+    secrets: inherit 
