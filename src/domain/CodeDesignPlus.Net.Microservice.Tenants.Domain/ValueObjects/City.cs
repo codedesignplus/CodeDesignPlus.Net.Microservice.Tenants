@@ -13,7 +13,6 @@ public sealed partial class City
     {
         DomainGuard.IsNullOrEmpty(name, Errors.CityNameIsEmpty);
         DomainGuard.GuidIsEmpty(id, Errors.CityIdIsEmpty);
-        DomainGuard.IsNullOrEmpty(timezone, Errors.CityTimezoneIsEmpty);
 
         this.Id = id;
         this.Name = name;
