@@ -7,7 +7,7 @@ public sealed partial class Country
     public Guid Id { get; private set; }
     public string Name { get; private set; }
     public ushort Code { get; private set; }
-    public string Timezone { get; private set; }
+    public string TimeZone { get; private set; }
     public Currency Currency { get; private set; }
 
     [JsonConstructor]
@@ -16,12 +16,12 @@ public sealed partial class Country
         DomainGuard.GuidIsEmpty(id, Errors.CountryIdIsEmpty);
         DomainGuard.IsNullOrEmpty(name, Errors.CountryNameIsEmpty);
         DomainGuard.IsLessThan(code, 1, Errors.CountryCodeIsInvalid);
-        DomainGuard.IsNullOrEmpty(timezone, Errors.CountryTimezoneIsEmpty);
+        DomainGuard.IsNullOrEmpty(timezone, Errors.CountryTimeZoneIsEmpty);
 
         this.Id = id;
         this.Name = name;
         this.Code = code;
-        this.Timezone = timezone;
+        this.TimeZone = timezone;
         this.Currency = currency;
     }
 

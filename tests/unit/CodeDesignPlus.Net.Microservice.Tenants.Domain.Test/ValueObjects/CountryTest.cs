@@ -23,7 +23,7 @@ public class CountryTest
         Assert.Equal(id, country.Id);
         Assert.Equal(name, country.Name);
         Assert.Equal(code, country.Code);
-        Assert.Equal(timezone, country.Timezone);
+        Assert.Equal(timezone, country.TimeZone);
         Assert.Equal(currency, country.Currency);
     }
 
@@ -82,7 +82,7 @@ public class CountryTest
     }
 
     [Fact]
-    public void Create_TimezoneIsEmpty_ThrowsException()
+    public void Create_TimeZoneIsEmpty_ThrowsException()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -94,8 +94,8 @@ public class CountryTest
         // Act & Assert
         var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
 
-        Assert.Equal(Errors.CountryTimezoneIsEmpty.GetMessage(), exception.Message);
-        Assert.Equal(Errors.CountryTimezoneIsEmpty.GetCode(), exception.Code);
+        Assert.Equal(Errors.CountryTimeZoneIsEmpty.GetMessage(), exception.Message);
+        Assert.Equal(Errors.CountryTimeZoneIsEmpty.GetCode(), exception.Code);
         Assert.Equal(Layer.Domain, exception.Layer);
     }
 }

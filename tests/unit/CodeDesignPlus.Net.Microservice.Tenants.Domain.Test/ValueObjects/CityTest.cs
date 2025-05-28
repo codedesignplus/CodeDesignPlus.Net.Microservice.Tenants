@@ -19,7 +19,7 @@ public class CityTest
         Assert.NotNull(city);
         Assert.Equal(id, city.Id);
         Assert.Equal(name, city.Name);
-        Assert.Equal(timezone, city.Timezone);
+        Assert.Equal(timezone, city.TimeZone);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class CityTest
     }
 
     [Fact]
-    public void Create_EmptyTimezone_ShouldThrowException()
+    public void Create_EmptyTimeZone_ShouldThrowException()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -65,8 +65,8 @@ public class CityTest
         // Act & Assert
         var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timezone));
         
-        Assert.Equal(Errors.CityTimezoneIsEmpty.GetMessage(), exception.Message);
-        Assert.Equal(Errors.CityTimezoneIsEmpty.GetCode(), exception.Code);
+        Assert.Equal(Errors.CityTimeZoneIsEmpty.GetMessage(), exception.Message);
+        Assert.Equal(Errors.CityTimeZoneIsEmpty.GetCode(), exception.Code);
         Assert.Equal(Layer.Domain , exception.Layer);
     }
 }

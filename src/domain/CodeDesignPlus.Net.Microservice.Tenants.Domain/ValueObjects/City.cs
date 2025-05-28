@@ -6,7 +6,7 @@ public sealed partial class City
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; }
-    public string Timezone { get; private set; }
+    public string TimeZone { get; private set; }
 
     [JsonConstructor]
     public City(Guid id, string name, string timezone)
@@ -16,7 +16,7 @@ public sealed partial class City
 
         this.Id = id;
         this.Name = name;
-        this.Timezone = timezone;
+        this.TimeZone = timezone;
     }
 
     public static City Create(Guid id, string name, string timezone)
