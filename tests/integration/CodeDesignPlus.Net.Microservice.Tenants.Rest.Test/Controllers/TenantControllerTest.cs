@@ -124,7 +124,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.Country.Id, tenant.Location.Country.Id);
         Assert.Equal(data.Location.Country.Name, tenant.Location.Country.Name);
         Assert.Equal(data.Location.Country.Code, tenant.Location.Country.Code);
-        Assert.Equal(data.Location.Country.TimeZone, tenant.Location.Country.TimeZone);
+        Assert.Equal(data.Location.Country.Timezone, tenant.Location.Country.Timezone);
         Assert.Equal(data.Location.Country.Currency.Id, tenant.Location.Country.Currency.Id);
         Assert.Equal(data.Location.Country.Currency.Code, tenant.Location.Country.Currency.Code);
         Assert.Equal(data.Location.Country.Currency.Name, tenant.Location.Country.Currency.Name);
@@ -132,7 +132,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.State.Name, tenant.Location.State.Name);
         Assert.Equal(data.Location.City.Id, tenant.Location.City.Id);
         Assert.Equal(data.Location.City.Name, tenant.Location.City.Name);
-        Assert.Equal(data.Location.City.TimeZone, tenant.Location.City.TimeZone);
+        Assert.Equal(data.Location.City.Timezone, tenant.Location.City.Timezone);
         Assert.Equal(data.Location.Locality.Id, tenant.Location.Locality.Id);
         Assert.Equal(data.Location.Locality.Name, tenant.Location.Locality.Name);
         Assert.Equal(data.Location.Neighborhood.Id, tenant.Location.Neighborhood.Id);
@@ -175,7 +175,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.Country.Id, Tenant.Location.Country.Id);
         Assert.Equal(data.Location.Country.Name, Tenant.Location.Country.Name);
         Assert.Equal(data.Location.Country.Code, Tenant.Location.Country.Code);
-        Assert.Equal(data.Location.Country.TimeZone, Tenant.Location.Country.TimeZone);
+        Assert.Equal(data.Location.Country.Timezone, Tenant.Location.Country.Timezone);
         Assert.Equal(data.Location.Country.Currency.Id, Tenant.Location.Country.Currency.Id);
         Assert.Equal(data.Location.Country.Currency.Code, Tenant.Location.Country.Currency.Code);
         Assert.Equal(data.Location.Country.Currency.Name, Tenant.Location.Country.Currency.Name);
@@ -183,7 +183,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.State.Name, Tenant.Location.State.Name);
         Assert.Equal(data.Location.City.Id, Tenant.Location.City.Id);
         Assert.Equal(data.Location.City.Name, Tenant.Location.City.Name);
-        Assert.Equal(data.Location.City.TimeZone, Tenant.Location.City.TimeZone);
+        Assert.Equal(data.Location.City.Timezone, Tenant.Location.City.Timezone);
         Assert.Equal(data.Location.Locality.Id, Tenant.Location.Locality.Id);
         Assert.Equal(data.Location.Locality.Name, Tenant.Location.Locality.Name);
         Assert.Equal(data.Location.Neighborhood.Id, Tenant.Location.Neighborhood.Id);

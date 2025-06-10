@@ -17,7 +17,7 @@ public class Errors : IErrorCodes
 
     public const string CityNameIsEmpty = "110 : The city name is invalid.";
     public const string CityIdIsEmpty = "111 : The city id is invalid.";
-    public const string CityTimeZoneIsEmpty = "112 : The city timeZone is invalid.";
+    public const string CityTimezoneIsEmpty = "112 : The city timezone is invalid.";
 
     public const string StateNameIsEmpty = "113 : The state name is invalid.";
     public const string StateIdIsEmpty = "114 : The state id is invalid.";
@@ -26,11 +26,11 @@ public class Errors : IErrorCodes
     public const string CountryNameIsEmpty = "116 : The country name is invalid.";
     public const string CountryIdIsEmpty = "117 : The country id is invalid.";
     public const string CountryCodeIsInvalid = "118 : The country code is invalid.";
-    public const string CountryTimeZoneIsEmpty = "119 : The country timeZone is invalid.";
+    public const string CountryTimezoneIsEmpty = "119 : The country timezone is invalid.";
 
     public const string CurrencyIdIsEmpty = "120 : The currency id is invalid.";
     public const string CurrencyNameIsEmpty = "121 : The currency name is invalid.";
-    public const string CurrencyTimeZoneIsEmpty = "122 : The currency code is invalid.";
+    public const string CurrencyTimezoneIsEmpty = "122 : The currency code is invalid.";
     public const string CurrencySymbolIsEmpty = "123 : The currency symbol is invalid.";
 
     public const string IdTenantIsInvalid = "124 : The tenant id is invalid."; 

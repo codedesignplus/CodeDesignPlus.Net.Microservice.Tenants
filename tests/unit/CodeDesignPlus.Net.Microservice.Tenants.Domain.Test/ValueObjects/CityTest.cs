@@ -10,16 +10,16 @@ public class CityTest
         // Arrange
         var id = Guid.NewGuid();
         var name = "Test City";
-        var timeZone = "UTC";
+        var timezone = "UTC";
 
         // Act
-        var city = City.Create(id, name, timeZone);
+        var city = City.Create(id, name, timezone);
 
         // Assert
         Assert.NotNull(city);
         Assert.Equal(id, city.Id);
         Assert.Equal(name, city.Name);
-        Assert.Equal(timeZone, city.TimeZone);
+        Assert.Equal(timezone, city.Timezone);
     }
 
     [Fact]
@@ -28,10 +28,10 @@ public class CityTest
         // Arrange
         var id = Guid.NewGuid();
         var name = string.Empty;
-        var timeZone = "UTC";
+        var timezone = "UTC";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timeZone));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timezone));
 
         Assert.Equal(Errors.CityNameIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CityNameIsEmpty.GetCode(), exception.Code);
@@ -44,10 +44,10 @@ public class CityTest
         // Arrange
         var id = Guid.Empty;
         var name = "Test City";
-        var timeZone = "UTC";
+        var timezone = "UTC";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timeZone));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timezone));
 
         Assert.Equal(Errors.CityIdIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CityIdIsEmpty.GetCode(), exception.Code);
@@ -55,18 +55,18 @@ public class CityTest
     }
 
     [Fact]
-    public void Create_EmptyTimeZone_ShouldThrowException()
+    public void Create_EmptyTimezone_ShouldThrowException()
     {
         // Arrange
         var id = Guid.NewGuid();
         var name = "Test City";
-        var timeZone = string.Empty;
+        var timezone = string.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timeZone));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => City.Create(id, name, timezone));
         
-        Assert.Equal(Errors.CityTimeZoneIsEmpty.GetMessage(), exception.Message);
-        Assert.Equal(Errors.CityTimeZoneIsEmpty.GetCode(), exception.Code);
+        Assert.Equal(Errors.CityTimezoneIsEmpty.GetMessage(), exception.Message);
+        Assert.Equal(Errors.CityTimezoneIsEmpty.GetCode(), exception.Code);
         Assert.Equal(Layer.Domain , exception.Layer);
     }
 }

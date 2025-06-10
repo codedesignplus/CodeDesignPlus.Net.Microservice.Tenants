@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "CodeDesignPlus.Net.Microservice.Tenants.gRpc.Test";
+
+package Tenant;
+
+
+service Tenant {
+  rpc GetTenant (stream GetTenantRequest) returns (stream GetTenantResponse);
+}
+
+message GetTenantRequest {
+  string Id = 1;
+}
+
+message GetTenantResponse {
+
+}
