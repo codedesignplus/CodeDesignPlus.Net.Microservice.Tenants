@@ -4,6 +4,7 @@ using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.gRpc.Interceptors;
 using CodeDesignPlus.Net.Microservice.Commons.FluentValidation;
 using CodeDesignPlus.Net.Microservice.Commons.HealthChecks;
 using CodeDesignPlus.Net.Microservice.Commons.MediatR;
+using CodeDesignPlus.Net.Microservice.Tenants.gRpc.Core.Mapster;
 using CodeDesignPlus.Net.Microservice.Tenants.gRpc.Services;
 using CodeDesignPlus.Net.Mongo.Extensions;
 using CodeDesignPlus.Net.Observability.Extensions;
@@ -16,6 +17,8 @@ using CodeDesignPlus.Net.Vault.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+MapsterConfig.Configure();
 
 builder.Host.UseSerilog();
 
