@@ -42,7 +42,7 @@ message Country {
   string id = 1;
   string name = 2;
   uint32 code = 3; // ISO 3166-1 numeric code
-  google.protobuf.StringValue timezone = 4; // IANA Time Zone Database format
+  string timezone = 4; // IANA Time Zone Database format
   Currency currency = 5;
 }
 
@@ -55,7 +55,7 @@ message State {
 message City {
   string id = 1;
   string name = 2;
-  string timezone = 3; // IANA Time Zone Database format
+  google.protobuf.StringValue timezone = 3; // IANA Time Zone Database format
 }
 
 message Locality {
