@@ -7,8 +7,12 @@ public class TenantAggregate(Guid id) : AggregateRootBase(id)
     public License License { get; private set; } = null!;
     public Location Location { get; private set; } = null!;
 
-    private TenantAggregate(Guid id, string name, Uri? domain, License license, Location location,  Guid createdBy): this(id)
+    private TenantAggregate(Guid id, string name, Uri? domain, License license, Location location, Guid createdBy) : this(id)
     {
+        DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
+        DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
+        DomainGuard.GuidIsEmpty(createdBy, Errors.CreatedByIsInvalid);
+
         this.Name = name;
         this.Domain = domain;
         this.IsActive = true;
@@ -20,12 +24,8 @@ public class TenantAggregate(Guid id) : AggregateRootBase(id)
         AddEvent(TenantCreatedDomainEvent.Create(id, name, domain, License, Location, IsActive));
     }
 
-    public static TenantAggregate Create(Guid id, string name, Uri? domain, License license, Location location,  Guid createdBy)
+    public static TenantAggregate Create(Guid id, string name, Uri? domain, License license, Location location, Guid createdBy)
     {
-        DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
-        DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
-        DomainGuard.GuidIsEmpty(createdBy, Errors.CreatedByIsInvalid);
-
         return new TenantAggregate(id, name, domain, license, location, createdBy);
     }
 
