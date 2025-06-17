@@ -59,4 +59,6 @@ public class Errors : IErrorCodes
 
     public const string AddressIsNullOrEmpty = "142 : The address is null or empty.";
     public const string PostalCodeIsNullOrEmpty = "143 : The postal code is null or empty.";
+
+    public const string EmailTenantIsInvalid = "144 : The email tenant is invalid.";
 }

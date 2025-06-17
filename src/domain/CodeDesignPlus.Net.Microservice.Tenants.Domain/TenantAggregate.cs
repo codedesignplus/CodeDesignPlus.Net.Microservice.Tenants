@@ -2,7 +2,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Domain;
 
 public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
 {
-    
+
     [GeneratedRegex(@"^\+?[1-9]\d{1,14}$", RegexOptions.Compiled)]
     private static partial Regex PhoneRegex();
 
@@ -10,11 +10,12 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public TypeDocument TypeDocument { get; private set; } = null!;
     public string NumberDocument { get; private set; } = null!;
     public string Phone { get; private set; } = null!;
+    public string Email { get; private set; } = null!;
     public Uri? Domain { get; private set; }
     public License License { get; private set; } = null!;
     public Location Location { get; private set; } = null!;
 
-    private TenantAggregate(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, Location location, License license, bool isActive, Guid createdBy) : this(id)
+    private TenantAggregate(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy) : this(id)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
@@ -23,37 +24,29 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
         DomainGuard.IsTrue(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
+        DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
 
         this.Name = name;
         this.TypeDocument = typeDocument;
         this.Phone = phone;
         this.NumberDocument = numberDocument;
         this.Domain = domain;
+        this.Email = email;
         this.IsActive = isActive;
         this.License = license;
         this.Location = location;
         this.CreatedBy = createdBy;
         this.CreatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantCreatedDomainEvent.Create(id, name, domain, License, Location, IsActive));
+        AddEvent(TenantCreatedDomainEvent.Create(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive));
     }
 
-    public static TenantAggregate Create(
-        Guid id,
-        string name,
-        TypeDocument typeDocument,
-        string numberDocument,
-        Uri? domain,
-        string phone,
-        Location location,
-        License license,
-        bool isActive,
-        Guid createdBy)
+    public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy)
     {
-        return new TenantAggregate(id, name, typeDocument, numberDocument, domain, phone, location, license, isActive, createdBy);
+        return new TenantAggregate(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, createdBy);
     }
 
-    public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, bool isActive, Guid updatedBy)
+    public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, bool isActive, Guid updatedBy)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
         DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
@@ -61,17 +54,19 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
         DomainGuard.IsTrue(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
+        DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
 
         Name = name;
         Domain = domain;
         TypeDocument = typeDocument;
         Phone = phone;
+        Email = email;
         NumberDocument = numberDocument;
         IsActive = isActive;
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantUpdatedDomainEvent.Create(Id, Name, Domain, License, Location, IsActive));
+        AddEvent(TenantUpdatedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive));
     }
 
     public void UpdateLicense(License license, Guid updatedBy)
@@ -106,7 +101,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantDeletedDomainEvent.Create(Id, Name, Domain, License, Location, IsActive));
+        AddEvent(TenantDeletedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive));
     }
 
 }

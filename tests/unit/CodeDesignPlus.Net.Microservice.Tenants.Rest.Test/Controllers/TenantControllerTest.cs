@@ -97,7 +97,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
             // Arrange
             var data = new CreateTenantDto();
             var cancellationToken = new CancellationToken();
-            mapperMock.Setup(m => m.Map<CreateTenantCommand>(data)).Returns(new CreateTenantCommand(Guid.NewGuid(), "Tenant", typeDocument, "123456789", new Uri("http://localhost"), "31075684951", location, license, true));
+            mapperMock.Setup(m => m.Map<CreateTenantCommand>(data)).Returns(new CreateTenantCommand(Guid.NewGuid(), "Tenant", typeDocument, "123456789", new Uri("http://localhost"), "31075684951", "fake@fake.com", location, license, true));
 
             // Act
             var result = await controller.CreateTenant(data, cancellationToken);
@@ -115,7 +115,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
             var id = Guid.NewGuid();
             var data = new UpdateTenantDto();
             var cancellationToken = new CancellationToken();
-            mapperMock.Setup(m => m.Map<UpdateTenantCommand>(data)).Returns(new UpdateTenantCommand(id, "Tenant",  typeDocument, "123456789", new Uri("http://localhost"), "31075684951", location, license, true));
+            mapperMock.Setup(m => m.Map<UpdateTenantCommand>(data)).Returns(new UpdateTenantCommand(id, "Tenant",  typeDocument, "123456789", new Uri("http://localhost"), "31075684951", "fake@fake.com",location, license, true));
 
             // Act
             var result = await controller.UpdateTenant(id, data, cancellationToken);

@@ -18,6 +18,7 @@ public static class MapsterConfig
                 src.NumbreDocument,
                 string.IsNullOrEmpty(src.Domain) ? null : new Uri(src.Domain),
                 src.Phone,
+                src.Email,
                 Domain.ValueObjects.Location.Create(
                     Domain.ValueObjects.Country.Create(Guid.Parse(src.Location.Country.Id), src.Location.Country.Name, (ushort)src.Location.Country.Code, src.Location.Country.Timezone, Domain.ValueObjects.Currency.Create(Guid.Parse(src.Location.Country.Currency.Id), src.Location.Country.Currency.Name, src.Location.Country.Currency.Code, src.Location.Country.Currency.Symbol)),
                     Domain.ValueObjects.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),

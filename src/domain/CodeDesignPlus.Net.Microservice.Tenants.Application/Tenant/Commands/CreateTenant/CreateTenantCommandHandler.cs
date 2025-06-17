@@ -10,7 +10,7 @@ public class CreateTenantCommandHandler(ITenantRepository repository, IUserConte
 
         ApplicationGuard.IsTrue(exist, Errors.TenantAlreadyExists);
 
-        var tenant = TenantAggregate.Create(request.Id, request.Name, request.TypeDocument, request.NumberDocument, request.Domain, request.Phone, request.Location, request.License, request.IsActive, user.IdUser);
+        var tenant = TenantAggregate.Create(request.Id, request.Name, request.TypeDocument, request.NumberDocument, request.Domain, request.Phone, request.Email, request.Location, request.License, request.IsActive, user.IdUser);
 
         await repository.CreateAsync(tenant, cancellationToken);
 

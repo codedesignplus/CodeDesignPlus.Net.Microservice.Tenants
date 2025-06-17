@@ -11,11 +11,11 @@ public static class MapsterConfigTenant
         //Tenant
         TypeAdapterConfig<CreateTenantDto, CreateTenantCommand>
             .NewConfig()
-            .MapWith((dto) => new CreateTenantCommand(dto.Id, dto.Name, dto.TypeDocument, dto.NumberDocument, dto.Domain, dto.Phone, dto.Location, dto.License, dto.IsActive));
+            .MapWith((dto) => new CreateTenantCommand(dto.Id, dto.Name, dto.TypeDocument, dto.NumberDocument, dto.Domain, dto.Phone, dto.Email, dto.Location, dto.License, dto.IsActive));
 
         TypeAdapterConfig<UpdateTenantDto, UpdateTenantCommand>
             .NewConfig()
-            .MapWith((dto) => new UpdateTenantCommand(dto.Id, dto.Name, dto.TypeDocument, dto.NumberDocument, dto.Domain, dto.Phone, dto.Location, dto.License, dto.IsActive));
+            .MapWith((dto) => new UpdateTenantCommand(dto.Id, dto.Name, dto.TypeDocument, dto.NumberDocument, dto.Domain, dto.Phone, dto.Email, dto.Location, dto.License, dto.IsActive));
 
         TypeAdapterConfig<TenantAggregate, TenantDto>
             .NewConfig()

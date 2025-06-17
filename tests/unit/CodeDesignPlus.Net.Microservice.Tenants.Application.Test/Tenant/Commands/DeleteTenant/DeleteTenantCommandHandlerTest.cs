@@ -65,7 +65,7 @@ public class DeleteTenantCommandHandlerTest
         // Arrange
         var request = new DeleteTenantCommand(Guid.NewGuid());
         var cancellationToken = CancellationToken.None;
-        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", "fake@fake.com",Utils.Location, Utils.License, true, Guid.NewGuid());
 
         repositoryMock
             .Setup(r => r.FindAsync<TenantAggregate>(It.IsAny<Guid>(), cancellationToken))
