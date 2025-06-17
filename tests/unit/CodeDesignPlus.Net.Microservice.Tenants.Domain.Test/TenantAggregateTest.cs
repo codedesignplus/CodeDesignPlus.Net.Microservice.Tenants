@@ -17,7 +17,7 @@ public class TenantAggregateTest
         var createdBy = Guid.NewGuid();
 
         // Act
-        var tenant = TenantAggregate.Create(id, name, domain, Utils.License, Utils.Location, createdBy);
+        var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", Utils.Location, Utils.License, true, createdBy);
 
         // Assert
         Assert.NotNull(tenant);
@@ -37,18 +37,25 @@ public class TenantAggregateTest
         var name = "Test Tenant";
         var domain = new Uri("http://test.com");
         var createdBy = Guid.NewGuid();
-        var tenant = TenantAggregate.Create(id, name, domain, Utils.License, Utils.Location, createdBy);
+        var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", Utils.Location, Utils.License, true, createdBy);
 
+        // New values for update
         var newName = "Updated Tenant";
+        var newTypeDocument = Utils.TypeDocument;
+        var newDocument = "987654321";
+        var newPhone = "3101234567";
         var newDomain = new Uri("http://updated.com");
         var updatedBy = Guid.NewGuid();
 
         // Act
-        tenant.Update(newName, newDomain, false, updatedBy);
+        tenant.Update(newName, newTypeDocument, newDocument, newDomain, newPhone, false, updatedBy);
 
         // Assert
         Assert.Equal(newName, tenant.Name);
+        Assert.Equal(newTypeDocument, tenant.TypeDocument);
+        Assert.Equal(newDocument, tenant.NumberDocument);
         Assert.Equal(newDomain, tenant.Domain);
+        Assert.Equal(newPhone, tenant.Phone);
         Assert.False(tenant.IsActive);
     }
 
@@ -60,7 +67,7 @@ public class TenantAggregateTest
         var name = "Test Tenant";
         var domain = new Uri("http://test.com");
         var createdBy = Guid.NewGuid();
-        var tenant = TenantAggregate.Create(id, name, domain, Utils.License, Utils.Location, createdBy);
+        var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", Utils.Location, Utils.License, true, createdBy);
 
         var newLicense = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), new Dictionary<string, string>{
             { "User", "20" },
@@ -84,10 +91,10 @@ public class TenantAggregateTest
         var name = "Test Tenant";
         var domain = new Uri("http://test.com");
         var createdBy = Guid.NewGuid();
-        var tenant = TenantAggregate.Create(id, name, domain, Utils.License, Utils.Location, createdBy);
+        var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", Utils.Location, Utils.License, true, createdBy);
 
-        var country = Country.Create(Guid.NewGuid(), "Mexico", 602, "America/Mexico_City", Utils.Currency);        
-        var newLocation = Location.Create(country, Utils.State, Utils.City, Utils.Locality, Utils.Neighborhood);
+        var country = Country.Create(Guid.NewGuid(), "Mexico", 602, "America/Mexico_City", Utils.Currency);
+        var newLocation = Location.Create(country, Utils.State, Utils.City, Utils.Locality, Utils.Neighborhood, "Calle Falsa 123", "01000");
         var updatedBy = Guid.NewGuid();
 
         // Act
@@ -105,7 +112,7 @@ public class TenantAggregateTest
         var name = "Test Tenant";
         var domain = new Uri("http://test.com");
         var createdBy = Guid.NewGuid();
-        var tenant = TenantAggregate.Create(id, name, domain, Utils.License, Utils.Location, createdBy);
+        var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", Utils.Location, Utils.License, true, createdBy);
 
         var updatedBy = Guid.NewGuid();
 

@@ -44,7 +44,7 @@ public class UpdateTenantCommandHandlerTest
     public async Task Handle_TenantNotFound_ThrowsCodeDesignPlusException()
     {
         // Arrange
-        var request = new UpdateTenantCommand(Guid.NewGuid(), "Test Tenant", new Uri("http://test.com"), Utils.License, Utils.Location, true);
+        var request = new UpdateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "12345678", new Uri("http://test.com"), "3105682451", Utils.Location, Utils.License, true);
         var cancellationToken = CancellationToken.None;
 
         repositoryMock
@@ -63,8 +63,8 @@ public class UpdateTenantCommandHandlerTest
     public async Task Handle_ValidRequest_UpdatesTenantAndPublishesEvents()
     {
         // Arrange
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Old Tenant", new Uri("http://test.com"), Utils.License, Utils.Location, Guid.NewGuid());
-        var request = new UpdateTenantCommand(tenant.Id, "Test New Tenant", new Uri("http://test.com"), Utils.License, Utils.Location, true);
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Old Tenant", Utils.TypeDocument, "12345678", new Uri("http://test.com"), "31112364578", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var request = new UpdateTenantCommand(tenant.Id, "Test New Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "31112364578", Utils.Location, Utils.License, true);
         var cancellationToken = CancellationToken.None;
 
         repositoryMock.

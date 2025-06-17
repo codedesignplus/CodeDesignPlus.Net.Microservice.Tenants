@@ -4,6 +4,7 @@ using CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Tenant.Queries.GetTenantById;
+
 public class GetTenantByIdQueryHandlerTest
 {
     private readonly Mock<ITenantRepository> repositoryMock;
@@ -59,7 +60,7 @@ public class GetTenantByIdQueryHandlerTest
     {
         // Arrange
         var request = new GetTenantByIdQuery(Guid.NewGuid());
-        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "Tenant Test", new Uri("http://example.com"), Utils.License, Utils.Location, Guid.NewGuid());
+        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "Tenant Test", Utils.TypeDocument, "12345678", new Uri("http://example.com"), "3105682451", Utils.Location, Utils.License, true, Guid.NewGuid());
         var tenantDto = new TenantDto()
         {
             Id = tenantAggregate.Id,

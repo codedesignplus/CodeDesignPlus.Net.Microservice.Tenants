@@ -10,7 +10,7 @@ public class UpdateTenantCommandHandler(ITenantRepository repository, IUserConte
 
         ApplicationGuard.IsNull(tenant, Errors.TenantNotFound);
 
-        tenant.Update(request.Name, request.Domain, request.IsActive, user.IdUser);
+        tenant.Update(request.Name, request.TypeDocument, request.NumberDocument, request.Domain, request.Phone, request.IsActive, user.IdUser);
         tenant.UpdateLocation(request.Location, user.IdUser);
         tenant.UpdateLicense(request.License, user.IdUser);
 

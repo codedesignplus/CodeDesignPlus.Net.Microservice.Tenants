@@ -17,9 +17,18 @@ service Tenant {
 message CreateTenantRequest {
   string id = 1;
   string name = 2;
-  google.protobuf.StringValue domain = 3;
-  License license = 4;
-  Location location = 5;
+  TypeDocument typeDocument = 3;
+  string NumbreDocument = 4;
+  google.protobuf.StringValue domain = 5;
+  string Phone = 6;
+  Location location = 7;
+  License license = 8;
+  bool isActive = 9;
+}
+
+message TypeDocument {
+  string name = 2;
+  string code = 3;
 }
 
 message License {
@@ -36,6 +45,8 @@ message Location {
   City city = 3;
   Locality locality = 4;
   Neighborhood neighborhood = 5;
+  string Address = 6;
+  string PostalCode = 7;
 }
 
 message Country {

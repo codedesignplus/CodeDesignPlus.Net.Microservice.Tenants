@@ -46,6 +46,17 @@ public class Errors : IErrorCodes
     public const string StateIsNull = "132 : The state is null."; 
     public const string CityIsNull = "133 : The city is null."; 
     public const string LocalityIsNull = "134 : The locality is null."; 
-    public const string NeighborhoodIsNull = "135 : The neighborhood is null."; 
+    public const string NeighborhoodIsNull = "135 : The neighborhood is null.";
 
+    public const string CodeTypeDocumentIsInvalid = "136 : The code type document is invalid.";
+    public const string NameTypeDocumentIsInvalid = "137 : The name type document is invalid.";
+    public const string CodeTypeDocumentCannotBeNullOrEmpty = "138 : The code type document cannot be null or empty.";
+
+    public const string TypeDocumentIsInvalid = "139 : The type document is invalid.";
+
+    public const string PhoneTenantIsInvalid = "140 : The phone tenant is invalid.";
+    public const string NumberDocumentTenantIsInvalid = "141 : The number document tenant is invalid.";
+
+    public const string AddressIsNullOrEmpty = "142 : The address is null or empty.";
+    public const string PostalCodeIsNullOrEmpty = "143 : The postal code is null or empty.";
 }

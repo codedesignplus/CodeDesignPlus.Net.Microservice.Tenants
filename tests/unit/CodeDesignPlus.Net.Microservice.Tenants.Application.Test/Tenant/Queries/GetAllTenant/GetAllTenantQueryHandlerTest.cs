@@ -45,7 +45,7 @@ public class GetAllTenantQueryHandlerTest
         // Arrange
         var request = new GetAllTenantQuery(null!);
         var cancellationToken = CancellationToken.None;
-        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "TenantName", new Uri("http://example.com"), Utils.License, Utils.Location, Guid.NewGuid());
+        var tenantAggregate = TenantAggregate.Create(Guid.NewGuid(), "TenantName", Utils.TypeDocument, "12345678", new Uri("http://example.com"), "3105682451", Utils.Location, Utils.License, true, Guid.NewGuid());
         var tenantDto = new TenantDto
         {
             Id = tenantAggregate.Id,

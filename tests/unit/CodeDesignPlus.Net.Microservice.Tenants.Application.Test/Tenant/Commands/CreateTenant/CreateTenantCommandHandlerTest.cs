@@ -44,7 +44,7 @@ public class CreateTenantCommandHandlerTest
     public async Task Handle_TenantAlreadyExists_ThrowsCodeDesignPlusException()
     {
         // Arrange
-        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", new Uri("http://test.com"), Utils.License, Utils.Location);
+        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", Utils.Location, Utils.License, true);
 
         var cancellationToken = CancellationToken.None;
 
@@ -64,7 +64,7 @@ public class CreateTenantCommandHandlerTest
     public async Task Handle_ValidRequest_CreatesTenantAndPublishesEvents()
     {
         // Arrange
-        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", new Uri("http://test.com"), Utils.License, Utils.Location);
+        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", Utils.Location, Utils.License, true);
         var cancellationToken = CancellationToken.None;
 
         repositoryMock

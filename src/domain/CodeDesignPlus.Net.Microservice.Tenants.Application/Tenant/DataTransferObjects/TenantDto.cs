@@ -6,8 +6,11 @@ public class TenantDto: IDtoBase
 {
     public required Guid Id { get; set; }    
     public string Name { get; set; } = null!;
+    public TypeDocument TypeDocument { get; set; } = null!;
+    public string NumberDocument { get; set; } = null!;
     public Uri? Domain { get; set; }
-    public License License { get; set; } = null!;
+    public string Phone { get; set; } = null!;
     public Location Location { get; set; } = null!;
+    public License License { get; set; } = null!;
     public bool IsActive { get; set; }
 }

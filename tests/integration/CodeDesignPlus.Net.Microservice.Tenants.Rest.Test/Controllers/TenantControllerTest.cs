@@ -30,7 +30,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         this.city = City.Create(Guid.NewGuid(), "Bogota", "America/Bogota");
         this.locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");
         this.neighborhood = Neighborhood.Create(Guid.NewGuid(), "Galán");
-        this.location = Location.Create(this.country, this.state, this.city, this.locality, this.neighborhood);
+        this.location = Location.Create(this.country, this.state, this.city, this.locality, this.neighborhood, "Calle 123 #45-67", "110111");
 
         this.license = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), new Dictionary<string, string>{
             { "User", "10" },
