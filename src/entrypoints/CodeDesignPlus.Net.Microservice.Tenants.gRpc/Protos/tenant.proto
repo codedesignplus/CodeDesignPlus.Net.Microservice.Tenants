@@ -93,7 +93,11 @@ message GetTenantRequest {
 message GetTenantResponse {
   string id = 1;
   string name = 2;
-  string domain = 3;
-  License license = 4;
-  Location location = 5;
+  TypeDocument typeDocument = 3;
+  string numberDocument = 4;
+  string domain = 5;
+  string phone = 6;
+  License license = 7;
+  Location location = 8;
+  bool isActive = 9;
 }
