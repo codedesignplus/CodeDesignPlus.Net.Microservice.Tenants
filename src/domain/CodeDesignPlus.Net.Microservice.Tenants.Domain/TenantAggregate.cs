@@ -23,7 +23,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNull(typeDocument, Errors.TypeDocumentIsInvalid);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
-        DomainGuard.IsTrue(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
+        DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
 
         this.Name = name;
@@ -53,7 +53,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNull(typeDocument, Errors.TypeDocumentIsInvalid);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
-        DomainGuard.IsTrue(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
+        DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
 
         Name = name;
