@@ -9,7 +9,7 @@ public sealed partial class TypeDocument
     public string Name { get; private set; }
 
     [JsonConstructor]
-    private TypeDocument(string code, string name)
+    public TypeDocument(string code, string name)
     {
         DomainGuard.IsNullOrEmpty(code, Errors.CodeTypeDocumentCannotBeNullOrEmpty);
         DomainGuard.IsNullOrEmpty(name, Errors.NameTypeDocumentIsInvalid);
