@@ -10,6 +10,7 @@ public class TenantDto: IDtoBase
     public string NumberDocument { get; set; } = null!;
     public Uri? Domain { get; set; }
     public string Phone { get; set; } = null!;
+    public string Email { get; set; } = null!;
     public Location Location { get; set; } = null!;
     public License License { get; set; } = null!;
     public bool IsActive { get; set; }
