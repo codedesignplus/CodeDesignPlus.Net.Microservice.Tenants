@@ -26,6 +26,7 @@ public static class MapsterConfigTenant
                 TypeDocument = tenant.TypeDocument,
                 NumberDocument = tenant.NumberDocument,
                 Domain = tenant.Domain,
+                Email = tenant.Email,
                 Phone = tenant.Phone,
                 License = tenant.License,
                 Location = tenant.Location,
