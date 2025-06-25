@@ -6,7 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.gRpc.Services;
 
-public class TenantService(IMediator mediator, IMapper mapper) : Tenant.TenantBase
+public class TenantService(IMediator mediator, IMapper mapper, ILogger<TenantService> logger) : Tenant.TenantBase
 {
     public override async Task<Empty> CreateTenant(CreateTenantRequest request, ServerCallContext context)
     {
@@ -23,10 +23,21 @@ public class TenantService(IMediator mediator, IMapper mapper) : Tenant.TenantBa
 
         var queryCommand = new GetTenantByIdQuery(idTenant);
 
-        var tenant = await mediator.Send(queryCommand, context.CancellationToken);
+        try
+        {
 
-        var response = mapper.Map<GetTenantResponse>(tenant);
+            var tenant = await mediator.Send(queryCommand, context.CancellationToken);
 
-        return response;
+            var response = mapper.Map<GetTenantResponse>(tenant);
+
+            return response;
+
+        }
+        catch (CodeDesignPlusException ex)
+        {
+            logger.LogInformation("Error retrieving tenant with ID {Id}: {Message}", request.Id, ex.Message);
+        }
+
+        return null!;
     }
 }
