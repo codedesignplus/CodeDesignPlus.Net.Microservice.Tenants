@@ -23,21 +23,11 @@ public class TenantService(IMediator mediator, IMapper mapper, ILogger<TenantSer
 
         var queryCommand = new GetTenantByIdQuery(idTenant);
 
-        try
-        {
+        var tenant = await mediator.Send(queryCommand, context.CancellationToken);
 
-            var tenant = await mediator.Send(queryCommand, context.CancellationToken);
+        var response = mapper.Map<GetTenantResponse>(tenant);
 
-            var response = mapper.Map<GetTenantResponse>(tenant);
+        return response;
 
-            return response;
-
-        }
-        catch (CodeDesignPlusException ex)
-        {
-            logger.LogInformation("Error retrieving tenant with ID {Id}: {Message}", request.Id, ex.Message);
-        }
-
-        return null!;
     }
 }
