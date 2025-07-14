@@ -115,10 +115,10 @@ public class TenantAggregateTest
         var createdBy = Guid.NewGuid();
         var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, createdBy);
 
-        var updatedBy = Guid.NewGuid();
+        var deleteBy = Guid.NewGuid();
 
         // Act
-        tenant.Delete(updatedBy);
+        tenant.Delete(deleteBy);
 
         // Assert
         Assert.False(tenant.IsActive);

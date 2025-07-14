@@ -6,7 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.gRpc.Services;
 
-public class TenantService(IMediator mediator, IMapper mapper, ILogger<TenantService> logger) : Tenant.TenantBase
+public class TenantService(IMediator mediator, IMapper mapper) : Tenant.TenantBase
 {
     public override async Task<Empty> CreateTenant(CreateTenantRequest request, ServerCallContext context)
     {

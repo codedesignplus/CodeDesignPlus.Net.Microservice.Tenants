@@ -72,7 +72,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public void UpdateLicense(License license, Guid updatedBy)
     {
         DomainGuard.IsNull(license, Errors.LicenseMetadataIsNull);
-        DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
+        DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
 
         License = license;
         UpdatedBy = updatedBy;
@@ -84,7 +84,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public void UpdateLocation(Location location, Guid updatedBy)
     {
         DomainGuard.IsNull(location, Errors.LicenseMetadataIsNull);
-        DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
+        DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
 
         Location = location;
         UpdatedBy = updatedBy;
@@ -93,13 +93,14 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         AddEvent(TenantLocationUpdatedDomainEvent.Create(Id, location));
     }
 
-    public void Delete(Guid updatedBy)
+    public void Delete(Guid deletedBy)
     {
-        DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
+        DomainGuard.GuidIsEmpty(deletedBy, Errors.DeletedByIsInvalid);
 
-        IsActive = false;
-        UpdatedBy = updatedBy;
-        UpdatedAt = SystemClock.Instance.GetCurrentInstant();
+        this.IsDeleted = true;
+        this.IsActive = false;
+        this.DeletedAt = SystemClock.Instance.GetCurrentInstant();
+        this.DeletedBy = deletedBy;
 
         AddEvent(TenantDeletedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive));
     }

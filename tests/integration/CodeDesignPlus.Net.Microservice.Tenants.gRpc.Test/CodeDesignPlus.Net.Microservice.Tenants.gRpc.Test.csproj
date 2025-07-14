@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -13,41 +13,41 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Google.Protobuf" Version="3.30.2"/>
-    <PackageReference Include="Grpc.Net.Client" Version="2.70.0"/>
-    <PackageReference Include="Grpc.Tools" Version="2.70.0">
+    <PackageReference Include="Google.Protobuf" Version="3.31.1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.2"/>
-    <PackageReference Include="CodeDesignPlus.Net.xUnit.Microservice" Version="0.7.0-beta.79"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.4"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.4"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
-    <PackageReference Include="xunit" Version="2.9.3"/>
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+    <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.2" />
+    <PackageReference Include="CodeDesignPlus.Net.xUnit.Microservice" Version="0.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.7" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Ductus.FluentDocker.XUnit" Version="2.10.59"/>
+    <PackageReference Include="Ductus.FluentDocker.XUnit" Version="2.83.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\entrypoints\CodeDesignPlus.Net.Microservice.Tenants.gRpc\CodeDesignPlus.Net.Microservice.Tenants.gRpc.csproj"/>
+    <ProjectReference Include="..\..\..\src\entrypoints\CodeDesignPlus.Net.Microservice.Tenants.gRpc\CodeDesignPlus.Net.Microservice.Tenants.gRpc.csproj" />
   </ItemGroup>
   <ItemGroup Label="Protos">
-    <Protobuf Include="Protos\tenant.proto" GrpcServices="Client"/>
-    <Protobuf Include="Protos\tenant.proto" GrpcServices="Server"/>
+    <Protobuf Include="Protos\tenant.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\tenant.proto" GrpcServices="Server" />
   </ItemGroup>
   <ItemGroup>
-    <Using Include="Xunit"/>
+    <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\"/>
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CodeDesignPlus.Net.Generator'"/>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CodeDesignPlus.Net.Generator'" />
     </ItemGroup>
   </Target>
 </Project>
