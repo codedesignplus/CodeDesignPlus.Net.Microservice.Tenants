@@ -11,8 +11,8 @@
     <Protobuf Include="Protos\tenant.proto" GrpcServices="Server" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CodeDesignPlus.Net.Microservice.Commons" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Vault" Version="0.9.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Microservice.Commons" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Vault" Version="0.11.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
     <PackageReference Include="Grpc.Tools" Version="2.72.0">
@@ -28,12 +28,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\domain\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.csproj" />
     <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.2" />
-    <PackageReference Include="CodeDesignPlus.Net.Redis" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.RabbitMQ" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Logger" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Observability" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Security" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Exceptions" Version="0.9.0" />
-    <PackageReference Include="CodeDesignPlus.Net.Redis.Cache" Version="0.9.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Redis" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.RabbitMQ" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Logger" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Observability" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Security" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Exceptions" Version="0.11.0" />
+    <PackageReference Include="CodeDesignPlus.Net.Redis.Cache" Version="0.11.0" />
   </ItemGroup>
 </Project>
