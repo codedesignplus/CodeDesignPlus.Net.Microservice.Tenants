@@ -100,7 +100,7 @@ ms-base:
     hosts:
       - services.codedesignplus.com
     gateways:
-      - istio-ingress/istio-codedesignplus-gateway
+      - istio-ingress/istio-gateway
     http:
     - name: ms-tenants
       match:
