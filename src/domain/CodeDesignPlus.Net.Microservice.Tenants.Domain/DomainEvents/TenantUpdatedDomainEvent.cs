@@ -12,13 +12,16 @@ public class TenantUpdatedDomainEvent(
     Location location,
     License license,
     bool isActive,
+    Guid updatedBy,
     Guid? eventId = null,
     Instant? occurredAt = null,
     Dictionary<string, object>? metadata = null
 ) : TenantBaseDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, license, location, isActive, eventId, occurredAt, metadata)
 {
-    public static TenantUpdatedDomainEvent Create(Guid aggregateId, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive)
+    public Guid UpdatedBy { get; } = updatedBy;
+
+    public static TenantUpdatedDomainEvent Create(Guid aggregateId, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid updatedBy)
     {
-        return new TenantUpdatedDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive);
+        return new TenantUpdatedDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, updatedBy);
     }
 }
