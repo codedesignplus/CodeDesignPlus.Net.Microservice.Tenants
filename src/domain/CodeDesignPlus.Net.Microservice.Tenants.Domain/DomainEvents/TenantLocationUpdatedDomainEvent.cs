@@ -4,15 +4,17 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 public class TenantLocationUpdatedDomainEvent(
     Guid aggregateId,
     Location location,
+    Guid updatedBy,
     Guid? eventId = null,
     Instant? occurredAt = null,
     Dictionary<string, object>? metadata = null
 ) : DomainEvent(aggregateId, eventId, occurredAt, metadata)
 {
     public Location Location { get; } = location;
-    
-    public static TenantLocationUpdatedDomainEvent Create(Guid aggregateId, Location location)
+    public Guid UpdatedBy { get; } = updatedBy;
+
+    public static TenantLocationUpdatedDomainEvent Create(Guid aggregateId, Location location, Guid updatedBy)
     {
-        return new TenantLocationUpdatedDomainEvent(aggregateId, location);
+        return new TenantLocationUpdatedDomainEvent(aggregateId, location, updatedBy);
     }
 }
