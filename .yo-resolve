@@ -1,0 +1,5 @@
+src\domain\CodeDesignPlus.Net.Microservice.Tenants.Domain\TenantAggregate.cs skip
+src\domain\CodeDesignPlus.Net.Microservice.Tenants.Domain\Repositories\ITenantRepository.cs skip
+src\domain\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure\Repositories\TenantRepository.cs skip
+src\domain\CodeDesignPlus.Net.Microservice.Tenants.Application\Tenant\Commands\CreateTenant\CreateTenantCommand.cs skip
+src\domain\CodeDesignPlus.Net.Microservice.Tenants.Application\Tenant\Commands\CreateTenant\CreateTenantCommandHandler.cs skip

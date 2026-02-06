@@ -15,6 +15,7 @@ using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.Update
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 using CodeDesignPlus.Net.Core.Abstractions.Models.Pager;
+using CodeDesignPlus.Net.Security.Abstractions;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
 {
@@ -42,7 +43,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
         {
             mediatorMock = new Mock<IMediator>();
             mapperMock = new Mock<IMapper>();
-            controller = new TenantController(mediatorMock.Object, mapperMock.Object);
+            controller = new TenantController(mediatorMock.Object, mapperMock.Object, Mock.Of<IUserContext>());
         }
 
         [Fact]
@@ -97,7 +98,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
             // Arrange
             var data = new CreateTenantDto();
             var cancellationToken = new CancellationToken();
-            mapperMock.Setup(m => m.Map<CreateTenantCommand>(data)).Returns(new CreateTenantCommand(Guid.NewGuid(), "Tenant", typeDocument, "123456789", new Uri("http://localhost"), "31075684951", "fake@fake.com", location, license, true));
+            mapperMock.Setup(m => m.Map<CreateTenantCommand>(data)).Returns(new CreateTenantCommand(Guid.NewGuid(), "Tenant", typeDocument, "123456789", new Uri("http://localhost"), "31075684951", "fake@fake.com", location, license, Guid.NewGuid(), true));
 
             // Act
             var result = await controller.CreateTenant(data, cancellationToken);

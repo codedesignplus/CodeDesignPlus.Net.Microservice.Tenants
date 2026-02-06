@@ -13,16 +13,14 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Tenant.Comman
 public class CreateTenantCommandHandlerTest
 {
     private readonly Mock<ITenantRepository> repositoryMock;
-    private readonly Mock<IUserContext> userContextMock;
     private readonly Mock<IPubSub> pubSubMock;
     private readonly CreateTenantCommandHandler handler;
 
     public CreateTenantCommandHandlerTest()
     {
         repositoryMock = new Mock<ITenantRepository>();
-        userContextMock = new Mock<IUserContext>();
         pubSubMock = new Mock<IPubSub>();
-        handler = new CreateTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object);
+        handler = new CreateTenantCommandHandler(repositoryMock.Object,  pubSubMock.Object);
     }
 
     [Fact]
@@ -44,7 +42,7 @@ public class CreateTenantCommandHandlerTest
     public async Task Handle_TenantAlreadyExists_ThrowsCodeDesignPlusException()
     {
         // Arrange
-        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456","fake@fake.com", Utils.Location, Utils.License, true);
+        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", "fake@fake.com", Utils.Location, Utils.License, Guid.NewGuid(), true);
 
         var cancellationToken = CancellationToken.None;
 
@@ -64,14 +62,12 @@ public class CreateTenantCommandHandlerTest
     public async Task Handle_ValidRequest_CreatesTenantAndPublishesEvents()
     {
         // Arrange
-        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", "fake@fake.com",Utils.Location, Utils.License, true);
+        var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", "fake@fake.com", Utils.Location, Utils.License, Guid.NewGuid(), true);
         var cancellationToken = CancellationToken.None;
 
         repositoryMock
             .Setup(r => r.ExistsAsync<TenantAggregate>(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
-
-        userContextMock.Setup(u => u.IdUser).Returns(Guid.NewGuid());
 
         // Act
         await handler.Handle(request, cancellationToken);

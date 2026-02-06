@@ -15,7 +15,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public License License { get; private set; } = null!;
     public Location Location { get; private set; } = null!;
 
-    private TenantAggregate(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy) : this(id)
+    public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
@@ -26,24 +26,24 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
 
-        this.Name = name;
-        this.TypeDocument = typeDocument;
-        this.Phone = phone;
-        this.NumberDocument = numberDocument;
-        this.Domain = domain;
-        this.Email = email;
-        this.IsActive = isActive;
-        this.License = license;
-        this.Location = location;
-        this.CreatedBy = createdBy;
-        this.CreatedAt = SystemClock.Instance.GetCurrentInstant();
+        var aggregate = new TenantAggregate(id)
+        {
+            Name = name,
+            TypeDocument = typeDocument,
+            Phone = phone,
+            NumberDocument = numberDocument,
+            Domain = domain,
+            Email = email,
+            IsActive = isActive,
+            License = license,
+            Location = location,
+            CreatedBy = createdBy,
+            CreatedAt = SystemClock.Instance.GetCurrentInstant()
+        };
 
-        AddEvent(TenantCreatedDomainEvent.Create(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive));
-    }
+        aggregate.AddEvent(TenantCreatedDomainEvent.Create(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive));
 
-    public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy)
-    {
-        return new TenantAggregate(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, createdBy);
+        return aggregate;
     }
 
     public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, bool isActive, Guid updatedBy)

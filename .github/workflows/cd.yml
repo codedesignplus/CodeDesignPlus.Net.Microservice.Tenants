@@ -46,6 +46,6 @@ jobs:
       microservice-name: ms-tenants
       enable-rest: true
       enable-grpc: true
-      enable-worker: false
+      enable-worker: true
       environment:  ${{ github.event.inputs.environment }}
     secrets: inherit

@@ -4,15 +4,16 @@ using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.Delete
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetTenantById;
 using CodeDesignPlus.Net.Microservice.Tenants.Infrastructure;
+using CodeDesignPlus.Net.Security.Abstractions;
 using Google.Protobuf.WellKnownTypes;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.gRpc.Services;
 
-public class TenantService(IMediator mediator, IMapper mapper) : Tenant.TenantBase
+public class TenantService(IMediator mediator, IMapper mapper, IUserContext user) : Tenant.TenantBase
 {
     public override async Task<Empty> CreateTenant(CreateTenantRequest request, ServerCallContext context)
     {
-        var command = mapper.Map<CreateTenantCommand>(request);
+        var command = mapper.Map<CreateTenantCommand>(request) with { IdUser = user.IdUser };
 
         await mediator.Send(command, context.CancellationToken);
 

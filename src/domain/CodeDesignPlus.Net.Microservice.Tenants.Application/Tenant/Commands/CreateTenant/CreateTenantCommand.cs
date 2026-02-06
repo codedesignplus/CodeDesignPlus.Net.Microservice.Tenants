@@ -3,7 +3,19 @@ using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 
 [DtoGenerator]
-public record CreateTenantCommand(Guid Id, string Name, TypeDocument TypeDocument, string NumberDocument, Uri? Domain, string Phone, string Email, Location Location, License License, bool IsActive) : IRequest;
+public record CreateTenantCommand(
+    Guid Id,
+    string Name,
+    TypeDocument TypeDocument,
+    string NumberDocument,
+    Uri? Domain,
+    string Phone,
+    string Email,
+    Location Location,
+    License License,
+    Guid IdUser,
+    bool IsActive
+) : IRequest;
 
 public class Validator : AbstractValidator<CreateTenantCommand>
 {

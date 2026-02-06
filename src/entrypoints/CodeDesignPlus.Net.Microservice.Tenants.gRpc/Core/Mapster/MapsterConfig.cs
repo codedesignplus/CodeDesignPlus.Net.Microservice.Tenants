@@ -36,6 +36,7 @@ public static class MapsterConfig
                     InstantPattern.General.Parse(src.License.EndDate).Value,
                     src.License.Metadata.ToDictionary()
                 ),
+                Guid.Empty,
                 src.IsActive
             ));
 

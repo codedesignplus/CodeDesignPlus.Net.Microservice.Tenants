@@ -1,3 +1,5 @@
+using CodeDesignPlus.Net.Security.Abstractions;
+
 namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Controllers;
 
 /// <summary>
@@ -5,9 +7,10 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Controllers;
 /// </summary>
 /// <param name="mediator">Mediator instance for sending commands and queries.</param>
 /// <param name="mapper">Mapper instance for mapping between DTOs and commands/queries.</param>
+/// <param name="user">User context instance for accessing user information.</param>
 [Route("api/[controller]")]
 [ApiController]
-public class TenantController(IMediator mediator, IMapper mapper) : ControllerBase
+public class TenantController(IMediator mediator, IMapper mapper, IUserContext user) : ControllerBase
 {
     /// <summary>
     /// Get all Tenants.
@@ -46,7 +49,7 @@ public class TenantController(IMediator mediator, IMapper mapper) : ControllerBa
     [HttpPost]
     public async Task<IActionResult> CreateTenant([FromBody] CreateTenantDto data, CancellationToken cancellationToken)
     {
-        await mediator.Send(mapper.Map<CreateTenantCommand>(data), cancellationToken);
+        await mediator.Send(mapper.Map<CreateTenantCommand>(data) with { IdUser = user.IdUser }, cancellationToken);
 
         return NoContent();
     }
