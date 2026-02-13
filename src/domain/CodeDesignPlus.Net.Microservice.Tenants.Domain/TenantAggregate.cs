@@ -41,7 +41,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
             CreatedAt = SystemClock.Instance.GetCurrentInstant()
         };
 
-        aggregate.AddEvent(TenantCreatedDomainEvent.Create(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive));
+        aggregate.AddEvent(TenantCreatedDomainEvent.Create(id, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, createdBy));
 
         return aggregate;
     }
@@ -49,7 +49,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, bool isActive, Guid updatedBy)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
-        DomainGuard.GuidIsEmpty(updatedBy, Errors.CreatedByIsInvalid);
+        DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
         DomainGuard.IsNull(typeDocument, Errors.TypeDocumentIsInvalid);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
@@ -66,7 +66,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantUpdatedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive));
+        AddEvent(TenantUpdatedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive, updatedBy));
     }
 
     public void UpdateLicense(License license, Guid updatedBy)
@@ -78,7 +78,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantLicenseUpdatedDomainEvent.Create(Id, license));
+        AddEvent(TenantLicenseUpdatedDomainEvent.Create(Id, license, updatedBy));
     }
 
     public void UpdateLocation(Location location, Guid updatedBy)
@@ -90,7 +90,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         UpdatedBy = updatedBy;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantLocationUpdatedDomainEvent.Create(Id, location));
+        AddEvent(TenantLocationUpdatedDomainEvent.Create(Id, location, updatedBy));
     }
 
     public void Delete(Guid deletedBy)
@@ -102,7 +102,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         this.DeletedAt = SystemClock.Instance.GetCurrentInstant();
         this.DeletedBy = deletedBy;
 
-        AddEvent(TenantDeletedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive));
+        AddEvent(TenantDeletedDomainEvent.Create(Id, Name, TypeDocument, NumberDocument, Domain, Phone, Email, Location, License, IsActive, deletedBy));
     }
 
 }
