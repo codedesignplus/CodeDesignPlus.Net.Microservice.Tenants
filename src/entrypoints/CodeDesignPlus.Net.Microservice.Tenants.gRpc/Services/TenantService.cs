@@ -53,4 +53,15 @@ public class TenantService(IMediator mediator, IMapper mapper, IUserContext user
         return response;
 
     }
+
+    public override async Task<BoolValue> ExistTenant(ExistTenantRequest request, ServerCallContext context)
+    {
+        DomainGuard.IsFalse(Guid.TryParse(request.Id, out var idTenant), Errors.TenantIdIsInvalid);
+
+        var queryCommand = new GetTenantByIdQuery(idTenant);
+
+        var tenant = await mediator.Send(queryCommand, context.CancellationToken);
+
+        return new BoolValue { Value = tenant != null };
+    }
 }
