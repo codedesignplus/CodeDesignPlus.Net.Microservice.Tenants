@@ -2,6 +2,7 @@ using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
+using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.ExistTenantById;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetTenantById;
 using CodeDesignPlus.Net.Microservice.Tenants.Infrastructure;
 using CodeDesignPlus.Net.Security.Abstractions;
@@ -58,10 +59,10 @@ public class TenantService(IMediator mediator, IMapper mapper, IUserContext user
     {
         DomainGuard.IsFalse(Guid.TryParse(request.Id, out var idTenant), Errors.TenantIdIsInvalid);
 
-        var queryCommand = new GetTenantByIdQuery(idTenant);
+        var queryCommand = new ExistTenantByIdQuery(idTenant);
 
-        var tenant = await mediator.Send(queryCommand, context.CancellationToken);
+        var exists = await mediator.Send(queryCommand, context.CancellationToken);
 
-        return new BoolValue { Value = tenant != null };
+        return new BoolValue { Value = exists };
     }
 }
