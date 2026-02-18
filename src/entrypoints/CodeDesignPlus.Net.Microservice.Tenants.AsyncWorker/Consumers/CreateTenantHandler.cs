@@ -5,10 +5,11 @@ using MediatR;
 namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Consumers;
 
 [QueueName<TenantAggregate>("CreateTenantHandler")]
-public class CreateTenantHandler(IMediator mediator) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
+public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
 {
     public Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
+        logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId} - {@TenantDetail}", data.TenantDetail.Id, data.TenantDetail);
         var command = new CreateTenantCommand(
             data.TenantDetail.Id,
             data.TenantDetail.Name,
