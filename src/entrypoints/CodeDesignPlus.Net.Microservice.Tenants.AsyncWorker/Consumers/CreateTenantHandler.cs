@@ -9,7 +9,7 @@ public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler
 {
     public Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
-        logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId} - {@TenantDetail}", data.TenantDetail.Id, data.TenantDetail);
+        logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId} - {@data}", data.TenantDetail.Id, data);
         var command = new CreateTenantCommand(
             data.TenantDetail.Id,
             data.TenantDetail.Name,
