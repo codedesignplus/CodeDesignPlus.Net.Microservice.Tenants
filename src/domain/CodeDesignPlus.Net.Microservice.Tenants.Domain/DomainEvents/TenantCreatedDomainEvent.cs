@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
-[EventKey<TenantAggregate>(1, "TenantCreatedDomainEvent")]
+[EventKey<TenantAggregate>(1, "TenantCreatedDomainEvent", autoCreate: false)]
 public class TenantCreatedDomainEvent(
     Guid aggregateId,
     string name,

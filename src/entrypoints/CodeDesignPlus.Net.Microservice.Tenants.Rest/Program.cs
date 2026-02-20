@@ -10,6 +10,7 @@ using CodeDesignPlus.Net.Vault.Extensions;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Serialization.JsonNet;
+using CodeDesignPlus.Net.gRpc.Clients.Extensions;
 
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -44,6 +45,7 @@ builder.Services.AddCoreSwagger<Program>(builder.Configuration);
 builder.Services.AddCache(builder.Configuration);
 builder.Services.AddResources<Program>(builder.Configuration);
 builder.Services.AddHealthChecksServices();
+builder.Services.AddGrpcClients(builder.Configuration);
 
 
 var app = builder.Build();
