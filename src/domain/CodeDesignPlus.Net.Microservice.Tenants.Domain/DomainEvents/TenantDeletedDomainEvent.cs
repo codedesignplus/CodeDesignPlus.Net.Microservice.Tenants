@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
-[EventKey<TenantAggregate>(1, "TenantDeletedDomainEvent", autoCreate: false)]
+[EventKey<TenantAggregate>(1, "TenantDeletedDomainEvent")]
 public class TenantDeletedDomainEvent(
     Guid aggregateId,
     string name,

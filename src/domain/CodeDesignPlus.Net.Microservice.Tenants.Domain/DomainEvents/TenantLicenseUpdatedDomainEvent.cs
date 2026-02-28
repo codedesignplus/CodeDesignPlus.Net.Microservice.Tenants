@@ -2,7 +2,7 @@ using System;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
-[EventKey<TenantAggregate>(1, "TenantLicenseUpdatedDomainEvent", autoCreate: false)]
+[EventKey<TenantAggregate>(1, "TenantLicenseUpdatedDomainEvent")]
 public class TenantLicenseUpdatedDomainEvent(
     Guid aggregateId,
     License license,

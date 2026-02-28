@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
-[EventKey<TenantAggregate>(1, "TenantLocationUpdatedDomainEvent", autoCreate: false)]
+[EventKey<TenantAggregate>(1, "TenantLocationUpdatedDomainEvent")]
 public class TenantLocationUpdatedDomainEvent(
     Guid aggregateId,
     Location location,
