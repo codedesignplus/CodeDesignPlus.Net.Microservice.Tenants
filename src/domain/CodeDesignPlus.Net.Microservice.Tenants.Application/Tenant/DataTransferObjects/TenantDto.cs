@@ -1,4 +1,6 @@
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
+using CodeDesignPlus.Net.ValueObjects.Location;
+using CodeDesignPlus.Net.ValueObjects.Financial;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.DataTransferObjects;
 

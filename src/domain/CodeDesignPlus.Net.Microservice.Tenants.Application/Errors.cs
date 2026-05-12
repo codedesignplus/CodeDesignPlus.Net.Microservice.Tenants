@@ -6,4 +6,5 @@ public class Errors : IErrorCodes
     public const string InvalidRequest = "201 : The request is invalid.";
     public const string TenantAlreadyExists = "202 : The tenant already exists.";
     public const string TenantNotFound = "203 : The tenant was not found.";
+    public const string DuplicateDocument = "204 : A tenant with the same document type and number already exists.";
 }

@@ -20,12 +20,27 @@ public static class MapsterConfig
                 string.IsNullOrEmpty(src.Domain) ? null : new Uri(src.Domain),
                 src.Phone,
                 src.Email,
-                Domain.ValueObjects.Location.Create(
-                    Domain.ValueObjects.Country.Create(Guid.Parse(src.Location.Country.Id), src.Location.Country.Name, (ushort)src.Location.Country.Code, src.Location.Country.Timezone, Domain.ValueObjects.Currency.Create(Guid.Parse(src.Location.Country.Currency.Id), src.Location.Country.Currency.Name, src.Location.Country.Currency.Code, src.Location.Country.Currency.Symbol)),
-                    Domain.ValueObjects.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
-                    Domain.ValueObjects.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
-                    Domain.ValueObjects.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
-                    Domain.ValueObjects.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
+                CodeDesignPlus.Net.ValueObjects.Location.Location.Create(
+                    CodeDesignPlus.Net.ValueObjects.Location.Country.Create(
+                        Guid.Parse(src.Location.Country.Id),
+                        src.Location.Country.Name,
+                        src.Location.Country.Alpha2,
+                        src.Location.Country.Alpha3,
+                        (ushort)src.Location.Country.Code,
+                        src.Location.Country.Timezone,
+                        CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(
+                            Guid.Parse(src.Location.Country.Currency.Id),
+                            src.Location.Country.Currency.Name,
+                            src.Location.Country.Currency.Code,
+                            src.Location.Country.Currency.Symbol,
+                            (short)src.Location.Country.Currency.DecimalDigits,
+                            (short)src.Location.Country.Currency.NumericCode
+                        )
+                    ),
+                    CodeDesignPlus.Net.ValueObjects.Location.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
+                    CodeDesignPlus.Net.ValueObjects.Location.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
+                    CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
+                    CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
                     src.Location.Address,
                     src.Location.PostalCode
                 ),
@@ -50,12 +65,27 @@ public static class MapsterConfig
                 string.IsNullOrEmpty(src.Domain) ? null : new Uri(src.Domain),
                 src.Phone,
                 src.Email,
-                Domain.ValueObjects.Location.Create(
-                    Domain.ValueObjects.Country.Create(Guid.Parse(src.Location.Country.Id), src.Location.Country.Name, (ushort)src.Location.Country.Code, src.Location.Country.Timezone, Domain.ValueObjects.Currency.Create(Guid.Parse(src.Location.Country.Currency.Id), src.Location.Country.Currency.Name, src.Location.Country.Currency.Code, src.Location.Country.Currency.Symbol)),
-                    Domain.ValueObjects.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
-                    Domain.ValueObjects.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
-                    Domain.ValueObjects.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
-                    Domain.ValueObjects.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
+                CodeDesignPlus.Net.ValueObjects.Location.Location.Create(
+                    CodeDesignPlus.Net.ValueObjects.Location.Country.Create(
+                        Guid.Parse(src.Location.Country.Id),
+                        src.Location.Country.Name,
+                        src.Location.Country.Alpha2,
+                        src.Location.Country.Alpha3,
+                        (ushort)src.Location.Country.Code,
+                        src.Location.Country.Timezone,
+                        CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(
+                            Guid.Parse(src.Location.Country.Currency.Id),
+                            src.Location.Country.Currency.Name,
+                            src.Location.Country.Currency.Code,
+                            src.Location.Country.Currency.Symbol,
+                            (short)src.Location.Country.Currency.DecimalDigits,
+                            (short)src.Location.Country.Currency.NumericCode
+                        )
+                    ),
+                    CodeDesignPlus.Net.ValueObjects.Location.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
+                    CodeDesignPlus.Net.ValueObjects.Location.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
+                    CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
+                    CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
                     src.Location.Address,
                     src.Location.PostalCode
                 ),

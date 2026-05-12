@@ -24,8 +24,8 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
     public TenantControllerTest(Server<Program> server) : base(server)
     {
 
-        this.currency = Currency.Create(Guid.NewGuid(), "COP", "Colombian Peso", "COP");
-        this.country = Country.Create(Guid.NewGuid(), "Colombia", 102, "America/Bogota", this.currency);
+        this.currency = Currency.Create(Guid.NewGuid(), "Colombian Peso", "COP", "$", 2, 170);
+        this.country = Country.Create(Guid.NewGuid(), "Colombia", "CO", "COL", 102, "America/Bogota", this.currency);
         this.state = State.Create(Guid.NewGuid(), "Bogota", "DC");
         this.city = City.Create(Guid.NewGuid(), "Bogota", "America/Bogota");
         this.locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");
@@ -125,7 +125,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.Country.Name, tenant.Location.Country.Name);
         Assert.Equal(data.Location.Country.Code, tenant.Location.Country.Code);
         Assert.Equal(data.Location.Country.Timezone, tenant.Location.Country.Timezone);
-        Assert.Equal(data.Location.Country.Currency.Id, tenant.Location.Country.Currency.Id);
+        Assert.Equal(data.Location.Country.Currency.CurrencyId, tenant.Location.Country.Currency.CurrencyId);
         Assert.Equal(data.Location.Country.Currency.Code, tenant.Location.Country.Currency.Code);
         Assert.Equal(data.Location.Country.Currency.Name, tenant.Location.Country.Currency.Name);
         Assert.Equal(data.Location.State.Id, tenant.Location.State.Id);
@@ -176,7 +176,7 @@ public class TenantControllerTest : ServerBase<Program>, IClassFixture<Server<Pr
         Assert.Equal(data.Location.Country.Name, Tenant.Location.Country.Name);
         Assert.Equal(data.Location.Country.Code, Tenant.Location.Country.Code);
         Assert.Equal(data.Location.Country.Timezone, Tenant.Location.Country.Timezone);
-        Assert.Equal(data.Location.Country.Currency.Id, Tenant.Location.Country.Currency.Id);
+        Assert.Equal(data.Location.Country.Currency.CurrencyId, Tenant.Location.Country.Currency.CurrencyId);
         Assert.Equal(data.Location.Country.Currency.Code, Tenant.Location.Country.Currency.Code);
         Assert.Equal(data.Location.Country.Currency.Name, Tenant.Location.Country.Currency.Name);
         Assert.Equal(data.Location.State.Id, Tenant.Location.State.Id);

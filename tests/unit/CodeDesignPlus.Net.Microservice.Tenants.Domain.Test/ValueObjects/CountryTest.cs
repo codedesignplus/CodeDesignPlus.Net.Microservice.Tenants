@@ -14,10 +14,10 @@ public class CountryTest
         var name = "United States";
         var code = (ushort)625;
         var timezone = "America/New_York";
-        var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
+        var currency = Currency.Create(Guid.NewGuid(), "Dollar", "USD", "$", 2, 840);
 
         // Act
-        var country = Country.Create(id, name, code, timezone, currency);
+        var country = Country.Create(id, name, "US", "USA", code, timezone, currency);
 
         // Assert
         Assert.Equal(id, country.Id);
@@ -35,10 +35,10 @@ public class CountryTest
         var name = "United States";
         var code = (ushort)625;
         var timezone = "America/New_York";
-        var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
+        var currency = Currency.Create(Guid.NewGuid(), "Dollar", "USD", "$", 2, 840);
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, "US", "USA", code, timezone, currency));
 
         Assert.Equal(Errors.CountryIdIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CountryIdIsEmpty.GetCode(), exception.Code);
@@ -53,10 +53,10 @@ public class CountryTest
         var name = string.Empty;
         var code = (ushort)625;
         var timezone = "America/New_York";
-        var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
+        var currency = Currency.Create(Guid.NewGuid(), "Dollar", "USD", "$", 2, 840);
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, "US", "USA", code, timezone, currency));
 
         Assert.Equal(Errors.CountryNameIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CountryNameIsEmpty.GetCode(), exception.Code);
@@ -71,10 +71,10 @@ public class CountryTest
         var name = "United States";
         var code = (ushort)0;
         var timezone = "America/New_York";
-        var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
+        var currency = Currency.Create(Guid.NewGuid(), "Dollar", "USD", "$", 2, 840);
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, "US", "USA", code, timezone, currency));
 
         Assert.Equal(Errors.CountryCodeIsInvalid.GetMessage(), exception.Message);
         Assert.Equal(Errors.CountryCodeIsInvalid.GetCode(), exception.Code);
@@ -89,10 +89,10 @@ public class CountryTest
         var name = "United States";
         var code = (ushort)625;
         var timezone = string.Empty;
-        var currency = Currency.Create(Guid.NewGuid(), "USD", "Dollar", "$");
+        var currency = Currency.Create(Guid.NewGuid(), "Dollar", "USD", "$", 2, 840);
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, code, timezone, currency));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Country.Create(id, name, "US", "USA", code, timezone, currency));
 
         Assert.Equal(Errors.CountryTimezoneIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CountryTimezoneIsEmpty.GetCode(), exception.Code);

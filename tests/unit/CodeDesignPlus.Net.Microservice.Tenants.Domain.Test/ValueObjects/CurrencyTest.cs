@@ -17,10 +17,10 @@ public class CurrencyTest
         var symbol = "$";
 
         // Act
-        var currency = Currency.Create(id, name, code, symbol);
+        var currency = Currency.Create(id, name, code, symbol, 2, 840);
 
         // Assert
-        Assert.Equal(id, currency.Id);
+        Assert.Equal(id, currency.CurrencyId);
         Assert.Equal(name, currency.Name);
         Assert.Equal(code, currency.Code);
         Assert.Equal(symbol, currency.Symbol);
@@ -36,7 +36,7 @@ public class CurrencyTest
         var symbol = "$";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code, symbol));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code, symbol, 2, 840));
 
         Assert.Equal(Errors.CurrencyIdIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CurrencyIdIsEmpty.GetCode(), exception.Code);
@@ -54,7 +54,7 @@ public class CurrencyTest
         var symbol = "$";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name!, code, symbol));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name!, code, symbol, 2, 840));
 
         Assert.Equal(Errors.CurrencyNameIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CurrencyNameIsEmpty.GetCode(), exception.Code);
@@ -72,7 +72,7 @@ public class CurrencyTest
         var symbol = "$";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code!, symbol));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code!, symbol, 2, 840));
         
         Assert.Equal(Errors.CurrencyCodeIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CurrencyCodeIsEmpty.GetCode(), exception.Code);
@@ -90,7 +90,7 @@ public class CurrencyTest
         var code = "USD";
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code, symbol!));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => Currency.Create(id, name, code, symbol!, 2, 840));
 
         Assert.Equal(Errors.CurrencySymbolIsEmpty.GetMessage(), exception.Message);
         Assert.Equal(Errors.CurrencySymbolIsEmpty.GetCode(), exception.Code);

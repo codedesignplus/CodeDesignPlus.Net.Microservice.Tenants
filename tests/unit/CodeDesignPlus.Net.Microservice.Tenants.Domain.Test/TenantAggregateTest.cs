@@ -94,7 +94,7 @@ public class TenantAggregateTest
         var createdBy = Guid.NewGuid();
         var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, createdBy);
 
-        var country = Country.Create(Guid.NewGuid(), "Mexico", 602, "America/Mexico_City", Utils.Currency);
+        var country = Country.Create(Guid.NewGuid(), "Mexico", "MX", "MEX", 602, "America/Mexico_City", Utils.Currency);
         var newLocation = Location.Create(country, Utils.State, Utils.City, Utils.Locality, Utils.Neighborhood, "Calle Falsa 123", "01000");
         var updatedBy = Guid.NewGuid();
 

@@ -6,6 +6,7 @@ global using CodeDesignPlus.Net.Serializers;
 global using System.Text.RegularExpressions;
 global using NodaTime;
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
+global using CodeDesignPlus.Net.ValueObjects.Location;
 
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 

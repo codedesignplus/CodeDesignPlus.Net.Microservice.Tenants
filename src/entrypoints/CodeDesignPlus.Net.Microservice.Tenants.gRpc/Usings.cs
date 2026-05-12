@@ -8,5 +8,7 @@ global using CodeDesignPlus.Net.Exceptions.Models;
 global using Grpc.Core.Interceptors;
 global using CodeDesignPlus.Net.Serializers;
 global using NodaTime;
+global using CodeDesignPlus.Net.ValueObjects.Location;
+global using CodeDesignPlus.Net.ValueObjects.Financial;
 
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.DataTransferObjects;

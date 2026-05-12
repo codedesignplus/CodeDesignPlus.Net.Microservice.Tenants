@@ -1,4 +1,5 @@
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
+using CodeDesignPlus.Net.ValueObjects.Location;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
 
