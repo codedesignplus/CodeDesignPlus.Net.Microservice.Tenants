@@ -100,7 +100,8 @@ public static class MapsterConfig
             ));
 
         TypeAdapterConfig.GlobalSettings
-            .NewConfig<TenantDto, GetTenantResponse>();
+            .NewConfig<TenantDto, GetTenantResponse>()
+            .Map(dest => dest.Domain, src => src.Domain != null ? src.Domain.ToString() : string.Empty);
 
     }
 }
