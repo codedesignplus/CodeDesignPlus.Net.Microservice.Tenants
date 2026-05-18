@@ -12,7 +12,7 @@ A production-ready microservice for managing tenants and organizations in multi-
 
 ## What is this microservice?
 
-The Tenants microservice represents each organization (residential complex, condominium, or building) within the Kappali platform. It solves the fundamental problem of multi-tenancy: ensuring that every organization's data is completely isolated and that each one has a valid, active subscription (license) to use the platform. When a new customer purchases a plan, this microservice automatically provisions their organization, making it the entry point for onboarding. It is used by the system itself during provisioning and by platform administrators who manage organization data. Every other microservice in the ecosystem depends on Tenants to know which organization a request belongs to.
+The Tenants microservice represents each organization (company, organization, or business unit) within the platform. It solves the fundamental problem of multi-tenancy: ensuring that every organization's data is completely isolated and that each one has a valid, active subscription (license) to use the platform. When a new customer purchases a plan, this microservice automatically provisions their organization, making it the entry point for onboarding. It is used by the system itself during provisioning and by platform administrators who manage organization data. Every other microservice in the ecosystem depends on Tenants to know which organization a request belongs to.
 
 ---
 
@@ -579,7 +579,7 @@ Console.WriteLine($"Tenant: {response.Name}");
 
 #### What is it and what is it for?
 
-The TenantAggregate represents a single organization (residential complex or condominium) in the system. It holds the organization's identity information (name, tax document, contact details), its geographic location, and its active license (subscription plan). Every data operation in the platform is scoped to a specific tenant, making this the foundational entity that enables multi-tenancy and data isolation.
+The TenantAggregate represents a single organization (organization or business unit) in the system. It holds the organization's identity information (name, tax document, contact details), its geographic location, and its active license (subscription plan). Every data operation in the platform is scoped to a specific tenant, making this the foundational entity that enables multi-tenancy and data isolation.
 
 **Properties**:
 - `Id` (Guid): Unique tenant identifier
