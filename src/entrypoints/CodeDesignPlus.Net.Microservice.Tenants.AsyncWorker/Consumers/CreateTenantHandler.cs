@@ -10,6 +10,10 @@ public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler
     public Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
         logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId} - {@data}", data.TenantDetail.Id, data);
+        var modules = data.License.Modules?
+            .Select(m => new Domain.ValueObjects.ModuleInfo(m.Id, m.Name))
+            .ToList() ?? [];
+
         var command = new CreateTenantCommand(
             data.TenantDetail.Id,
             data.TenantDetail.Name,
@@ -19,7 +23,7 @@ public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler
             data.TenantDetail.Phone,
             data.TenantDetail.Email,
             data.TenantDetail.Location,
-            Domain.ValueObjects.License.Create(data.License.Id, data.License.Name, data.License.StartDate, data.License.EndDate, data.License.Metadata),
+            Domain.ValueObjects.License.Create(data.License.Id, data.License.Name, data.License.StartDate, data.License.EndDate, modules, data.License.Metadata),
             data.BuyerId,
             true
         );

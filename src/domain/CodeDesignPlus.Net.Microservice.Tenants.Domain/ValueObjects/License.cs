@@ -11,11 +11,12 @@ public sealed partial class License
     public string Name { get; private set; }
     public Instant StartDate { get; private set; }
     public Instant EndDate { get; private set; }
-    public Dictionary<string, string> Metadata { get; private set; } 
+    public List<ModuleInfo> Modules { get; private set; }
+    public Dictionary<string, string> Metadata { get; private set; }
 
     [JsonConstructor]
-    public License(Guid Id, string Name, Instant StartDate, Instant EndDate, Dictionary<string, string> Metadata)
-    {        
+    public License(Guid Id, string Name, Instant StartDate, Instant EndDate, List<ModuleInfo> Modules, Dictionary<string, string> Metadata)
+    {
         DomainGuard.GuidIsEmpty(Id, Errors.LicenseIdIsEmpty);
         DomainGuard.IsNullOrEmpty(Name, Errors.LicenseNameIsEmpty);
         DomainGuard.IsGreaterThan(StartDate, EndDate, Errors.LicenseStartDateGreaterThanEndDate);
@@ -27,11 +28,13 @@ public sealed partial class License
         this.Name = Name;
         this.StartDate = StartDate;
         this.EndDate = EndDate;
+        this.Modules = Modules ?? [];
         this.Metadata = Metadata;
     }
 
-    public static License Create(Guid Id, string Name, Instant StartDate, Instant EndDate, Dictionary<string, string> Metadata)
+    public static License Create(Guid Id, string Name, Instant StartDate, Instant EndDate, List<ModuleInfo> Modules, Dictionary<string, string> Metadata)
     {
-        return new License(Id, Name, StartDate, EndDate, Metadata);
+        return new License(Id, Name, StartDate, EndDate, Modules, Metadata);
     }
 }
+

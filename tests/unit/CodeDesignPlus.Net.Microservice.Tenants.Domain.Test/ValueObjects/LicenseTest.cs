@@ -19,7 +19,7 @@ public class LicenseTest
         var metadata = new Dictionary<string, string> { { "key", "value" } };
 
         // Act
-        var license = License.Create(id, name, startDate, endDate, metadata);
+        var license = License.Create(id, name, startDate, endDate, [], metadata);
 
         // Assert
         Assert.Equal(id, license.Id);
@@ -40,7 +40,7 @@ public class LicenseTest
         var metadata = new Dictionary<string, string> { { "key", "value" } };
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, metadata));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, [], metadata));
 
         Assert.Equal(Errors.LicenseNameIsInvalid.GetMessage(), exception.Message);
         Assert.Equal(Errors.LicenseNameIsInvalid.GetCode(), exception.Code);
@@ -58,7 +58,7 @@ public class LicenseTest
         var metadata = new Dictionary<string, string> { { "key", "value" } };
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, metadata));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, [], metadata));
 
         Assert.Equal(Errors.LicenseStartDateGreaterThanEndDate.GetMessage(), exception.Message);
         Assert.Equal(Errors.LicenseStartDateGreaterThanEndDate.GetCode(), exception.Code);
@@ -76,7 +76,7 @@ public class LicenseTest
         Dictionary<string, string> metadata = null!;
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, metadata));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => License.Create(id, name, startDate, endDate, [], metadata));
 
         Assert.Equal(Errors.LicenseMetadataIsNull.GetMessage(), exception.Message);
         Assert.Equal(Errors.LicenseMetadataIsNull.GetCode(), exception.Code);

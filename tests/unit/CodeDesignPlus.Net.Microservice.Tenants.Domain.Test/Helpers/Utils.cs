@@ -13,7 +13,7 @@ public static class Utils
     public readonly static Locality Locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");
     public readonly static Neighborhood Neighborhood = Neighborhood.Create(Guid.NewGuid(), "Galán");
     public readonly static Location Location = Location.Create(Country, State, City, Locality, Neighborhood, "Calle 123 #45-67", "110111");
-    public readonly static License License = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), new Dictionary<string, string>{
+    public readonly static License License = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), [], new Dictionary<string, string>{
         { "User", "10" },
         { "Admin", "1" },
         { "Invoice", "1" }

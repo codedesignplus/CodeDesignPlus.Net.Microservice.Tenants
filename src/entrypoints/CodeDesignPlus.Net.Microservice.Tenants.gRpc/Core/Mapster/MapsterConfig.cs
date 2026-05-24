@@ -49,6 +49,7 @@ public static class MapsterConfig
                     src.License.Name,
                     InstantPattern.General.Parse(src.License.StartDate).Value,
                     InstantPattern.General.Parse(src.License.EndDate).Value,
+                    new List<Domain.ValueObjects.ModuleInfo>(),
                     src.License.Metadata.ToDictionary()
                 ),
                 Guid.Empty,
@@ -94,6 +95,7 @@ public static class MapsterConfig
                     src.License.Name,
                     InstantPattern.General.Parse(src.License.StartDate).Value,
                     InstantPattern.General.Parse(src.License.EndDate).Value,
+                    new List<Domain.ValueObjects.ModuleInfo>(),
                     src.License.Metadata.ToDictionary()
                 ),
                 src.IsActive

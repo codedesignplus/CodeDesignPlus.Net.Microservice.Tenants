@@ -70,7 +70,7 @@ public class TenantAggregateTest
         var createdBy = Guid.NewGuid();
         var tenant = TenantAggregate.Create(id, name, Utils.TypeDocument, "123456789", domain, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, createdBy);
 
-        var newLicense = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), new Dictionary<string, string>{
+        var newLicense = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), [], new Dictionary<string, string>{
             { "User", "20" },
             { "Admin", "2" },
             { "Invoice", "2" }

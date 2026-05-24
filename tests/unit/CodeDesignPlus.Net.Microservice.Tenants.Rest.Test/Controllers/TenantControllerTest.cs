@@ -29,7 +29,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
         private readonly static Locality locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");
         private readonly static Neighborhood neighborhood = Neighborhood.Create(Guid.NewGuid(), "Galán");
         private readonly static Location location = Location.Create(country, state, city, locality, neighborhood, "Calle 123 #45-67", "110111");
-        private readonly static License license = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), new Dictionary<string, string>{
+        private readonly static License license = License.Create(Guid.NewGuid(), "License Test", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(30)), [], new Dictionary<string, string>{
             { "User", "10" },
             { "Admin", "1" },
             { "Invoice", "1" }
