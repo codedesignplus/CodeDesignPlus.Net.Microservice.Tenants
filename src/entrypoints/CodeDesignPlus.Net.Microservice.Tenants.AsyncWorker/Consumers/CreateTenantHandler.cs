@@ -1,15 +1,25 @@
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.DomainEvents;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.Repositories;
 using MediatR;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Consumers;
 
 [QueueName<TenantAggregate>("CreateTenantHandler")]
-public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
+public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRepository, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
 {
-    public Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
+    public async Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
-        logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId} - {@data}", data.TenantDetail.Id, data);
+        var exists = await tenantRepository.ExistsAsync<TenantAggregate>(data.TenantDetail.Id, token);
+
+        if (exists)
+        {
+            logger.LogInformation("Tenant {TenantId} already exists. Skipping.", data.TenantDetail.Id);
+            return;
+        }
+
+        logger.LogInformation("Handling OrderPaidAndReadyForProvisioningDomainEvent for TenantId: {TenantId}", data.TenantDetail.Id);
+
         var modules = data.License.Modules?
             .Select(m => new Domain.ValueObjects.ModuleInfo(m.Id, m.Name))
             .ToList() ?? [];
@@ -28,6 +38,6 @@ public class CreateTenantHandler(IMediator mediator, ILogger<CreateTenantHandler
             true
         );
 
-        return mediator.Send(command, token);
+        await mediator.Send(command, token);
     }
 }
