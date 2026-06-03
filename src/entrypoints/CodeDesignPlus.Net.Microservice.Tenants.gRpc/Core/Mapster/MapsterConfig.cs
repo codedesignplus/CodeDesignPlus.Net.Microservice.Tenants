@@ -27,6 +27,7 @@ public static class MapsterConfig
                         src.Location.Country.Alpha2,
                         src.Location.Country.Alpha3,
                         (ushort)src.Location.Country.Code,
+                        src.Location.Country.PhoneCode,
                         src.Location.Country.Timezone,
                         CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(
                             Guid.Parse(src.Location.Country.Currency.Id),
@@ -73,6 +74,7 @@ public static class MapsterConfig
                         src.Location.Country.Alpha2,
                         src.Location.Country.Alpha3,
                         (ushort)src.Location.Country.Code,
+                        src.Location.Country.PhoneCode,
                         src.Location.Country.Timezone,
                         CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(
                             Guid.Parse(src.Location.Country.Currency.Id),

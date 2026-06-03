@@ -23,7 +23,7 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Test.Controllers
     {
         private readonly static TypeDocument typeDocument = TypeDocument.Create("CC", "Cédula de Ciudadanía");
         private readonly static Currency currency = Currency.Create(Guid.NewGuid(), "Colombian Peso", "COP", "$", 2, 170);
-        private readonly static Country country = Country.Create(Guid.NewGuid(), "Colombia", "CO", "COL", 102, "America/Bogota", currency);
+        private readonly static Country country = Country.Create(Guid.NewGuid(), "Colombia", "CO", "COL", 170, "+57", "America/Bogota", currency);
         private readonly static State state = State.Create(Guid.NewGuid(), "Bogota", "DC");
         private readonly static City city = City.Create(Guid.NewGuid(), "Bogota", "America/Bogota");
         private readonly static Locality locality = Locality.Create(Guid.NewGuid(), "Punta Aranda");
