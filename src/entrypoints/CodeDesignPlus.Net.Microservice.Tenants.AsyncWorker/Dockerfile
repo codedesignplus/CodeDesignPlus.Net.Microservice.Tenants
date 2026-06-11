@@ -3,6 +3,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/domain/", "domain/"]
 COPY ["src/entrypoints/CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker/", "entrypoints/CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker/"]
+COPY ["nuget.config", "nuget.config"]
 RUN dotnet restore "./entrypoints/CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker/CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.csproj"
 
 FROM build AS publish

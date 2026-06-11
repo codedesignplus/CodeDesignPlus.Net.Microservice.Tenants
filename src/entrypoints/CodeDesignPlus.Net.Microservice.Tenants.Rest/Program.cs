@@ -1,3 +1,4 @@
+using CodeDesignPlus.Net.Observability.Extensions;
 using CodeDesignPlus.Net.Microservice.Commons.Application;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Middlewares;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Resources;
@@ -51,10 +52,17 @@ builder.Services.AddGrpcClients(builder.Configuration);
 var app = builder.Build();
 
 app.UseCors(builder => builder
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
     .AllowAnyOrigin()
     .AllowAnyMethod()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
     .AllowAnyHeader()
 );
+
+app.UseTraceContext();
+napp.UseTraceContext();
 app.UsePath();
 app.UseExceptionMiddleware();
 app.UseHealthChecks();
