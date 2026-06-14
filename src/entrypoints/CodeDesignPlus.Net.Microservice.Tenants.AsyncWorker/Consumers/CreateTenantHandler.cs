@@ -1,12 +1,13 @@
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.DomainEvents;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.Repositories;
 using MediatR;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Consumers;
 
 [QueueName<TenantAggregate>("CreateTenantHandler")]
-public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRepository, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
+public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRepository, IPubSub pubsub, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
 {
     public async Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
@@ -39,5 +40,12 @@ public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRep
         );
 
         await mediator.Send(command, token);
+
+        var provisionedEvent = TenantProvisionedForOrderDomainEvent.Create(
+            data.TenantDetail.Id,
+            data.AggregateId
+        );
+
+        await pubsub.PublishAsync(provisionedEvent, token);
     }
 }
