@@ -23,8 +23,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CodeDesignPlus.Net.Serializers" Version="1.0.14" />
-    <PackageReference Include="CodeDesignPlus.Net.xUnit.Microservice" Version="1.0.14" />
+    <PackageReference Include="CodeDesignPlus.Net.Serializers" Version="1.0.19" />
+    <PackageReference Include="CodeDesignPlus.Net.xUnit.Microservice" Version="1.0.19" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\domain\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.csproj" />
