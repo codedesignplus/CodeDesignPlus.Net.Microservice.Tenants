@@ -1,3 +1,4 @@
+using CodeDesignPlus.Net.Exceptions;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.DomainEvents;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
@@ -15,7 +16,13 @@ public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRep
 
         if (exists)
         {
-            logger.LogInformation("Tenant {TenantId} already exists. Skipping.", data.TenantDetail.Id);
+            logger.LogInformation("Tenant {TenantId} already exists. Publishing success (idempotent).", data.TenantDetail.Id);
+
+            var provisionedEvent = TenantProvisionedForOrderDomainEvent.Create(
+                data.TenantDetail.Id,
+                data.AggregateId
+            );
+            await pubsub.PublishAsync(provisionedEvent, token);
             return;
         }
 
@@ -39,13 +46,28 @@ public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRep
             true
         );
 
-        await mediator.Send(command, token);
+        try
+        {
+            await mediator.Send(command, token);
+        }
+        catch (CodeDesignPlusException ex)
+        {
+            logger.LogWarning(ex, "Tenant creation failed for Order {OrderId}: {Message}", data.AggregateId, ex.Message);
 
-        var provisionedEvent = TenantProvisionedForOrderDomainEvent.Create(
+            var failedEvent = TenantProvisioningFailedForOrderDomainEvent.Create(
+                data.TenantDetail.Id,
+                data.AggregateId,
+                ex.Message
+            );
+            await pubsub.PublishAsync(failedEvent, token);
+            return;
+        }
+
+        var provisionedSuccessEvent = TenantProvisionedForOrderDomainEvent.Create(
             data.TenantDetail.Id,
             data.AggregateId
         );
 
-        await pubsub.PublishAsync(provisionedEvent, token);
+        await pubsub.PublishAsync(provisionedSuccessEvent, token);
     }
 }
