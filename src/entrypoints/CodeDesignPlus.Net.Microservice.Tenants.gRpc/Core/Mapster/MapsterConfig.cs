@@ -50,7 +50,7 @@ public static class MapsterConfig
                     src.License.Name,
                     InstantPattern.General.Parse(src.License.StartDate).Value,
                     InstantPattern.General.Parse(src.License.EndDate).Value,
-                    new List<Domain.ValueObjects.ModuleInfo>(),
+                    ToModuleInfo(src.License.Modules),
                     src.License.Metadata.ToDictionary()
                 ),
                 Guid.Empty,
@@ -97,7 +97,7 @@ public static class MapsterConfig
                     src.License.Name,
                     InstantPattern.General.Parse(src.License.StartDate).Value,
                     InstantPattern.General.Parse(src.License.EndDate).Value,
-                    new List<Domain.ValueObjects.ModuleInfo>(),
+                    ToModuleInfo(src.License.Modules),
                     src.License.Metadata.ToDictionary()
                 ),
                 src.IsActive
@@ -105,7 +105,27 @@ public static class MapsterConfig
 
         TypeAdapterConfig.GlobalSettings
             .NewConfig<TenantDto, GetTenantResponse>()
-            .Map(dest => dest.Domain, src => src.Domain != null ? src.Domain.ToString() : string.Empty);
+            .Map(dest => dest.Domain, src => src.Domain != null ? src.Domain.ToString() : string.Empty)
+            // RepeatedField<T> no tiene setter, asi que la convencion de Mapster no lo llena.
+            .AfterMapping((src, dest) =>
+            {
+                if (src.License?.Modules is null || dest.License is null)
+                    return;
 
+                dest.License.Modules.Clear();
+                dest.License.Modules.AddRange(src.License.Modules.Select(module => new LicenseModule
+                {
+                    Id = module.Id.ToString(),
+                    Name = module.Name
+                }));
+            });
+    }
+
+    private static List<Domain.ValueObjects.ModuleInfo> ToModuleInfo(Google.Protobuf.Collections.RepeatedField<LicenseModule> modules)
+    {
+        if (modules is null)
+            return [];
+
+        return [.. modules.Select(module => new Domain.ValueObjects.ModuleInfo(Guid.Parse(module.Id), module.Name))];
     }
 }

@@ -1,28 +1,59 @@
+using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.DataTransferObjects;
+using CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Helpers;
+
 namespace CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Validations;
 
 /// <summary>
-/// A class for validating data transfer objects (DTOs).
+/// Validates the data transfer objects of the microservice.
 /// </summary>
+/// <remarks>
+/// Asserted explicitly instead of through the reflection-driven attribute of the SDK: that
+/// attribute feeds every string with "Test", which a <see cref="Domain.ValueObjects.TypeDocument"/>
+/// code cannot be.
+/// </remarks>
 public class DataTransferObjectTests
 {
-    /// <summary>
-    /// Validates that DTOs can be created and their properties can be set and retrieved correctly.
-    /// </summary>
-    [Theory]
-    [DataTransferObject<Application.Errors>]
-    public void Dtos_GetAndSet_Application(Type dto, object instance)
+    [Fact]
+    public void TenantDto_GetAndSet_RoundTripsEveryValue()
     {
-        // Assert
-        Assert.NotNull(instance);
+        // Arrange
+        var id = Guid.NewGuid();
 
-        var properties = dto.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var property in properties)
+        // Act
+        var dto = new TenantDto
         {
-            var value = property.GetValue(instance);
-            Assert.NotNull(value);
-            Assert.NotEqual(value, property.PropertyType.GetDefaultValue());
-        }
+            Id = id,
+            Name = Utils.Name,
+            TypeDocument = Utils.TypeDocument,
+            NumberDocument = Utils.NumberDocument,
+            Domain = Utils.Domain,
+            Phone = Utils.Phone,
+            Email = Utils.Email,
+            Location = Utils.Location,
+            License = Utils.License,
+            IsActive = true
+        };
+
+        // Assert
+        Assert.Equal(id, dto.Id);
+        Assert.Equal(Utils.Name, dto.Name);
+        Assert.Equal(Utils.TypeDocument, dto.TypeDocument);
+        Assert.Equal(Utils.NumberDocument, dto.NumberDocument);
+        Assert.Equal(Utils.Domain, dto.Domain);
+        Assert.Equal(Utils.Phone, dto.Phone);
+        Assert.Equal(Utils.Email, dto.Email);
+        Assert.Equal(Utils.Location, dto.Location);
+        Assert.Equal(Utils.License, dto.License);
+        Assert.True(dto.IsActive);
     }
 
+    [Fact]
+    public void TenantDto_WithoutDomain_IsAllowed()
+    {
+        // Act
+        var dto = new TenantDto { Id = Guid.NewGuid(), Domain = null };
+
+        // Assert
+        Assert.Null(dto.Domain);
+    }
 }

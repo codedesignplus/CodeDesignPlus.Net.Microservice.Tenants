@@ -15,14 +15,16 @@ public class DeleteTenantCommandHandlerTest
     private readonly Mock<ITenantRepository> repositoryMock;
     private readonly Mock<IUserContext> userContextMock;
     private readonly Mock<IPubSub> pubSubMock;
+    private readonly Mock<ITenantSnapshotPublisher> snapshotPublisherMock;
     private readonly DeleteTenantCommandHandler handler;
-    
+
     public DeleteTenantCommandHandlerTest()
     {
         repositoryMock = new Mock<ITenantRepository>();
         userContextMock = new Mock<IUserContext>();
         pubSubMock = new Mock<IPubSub>();
-        handler = new DeleteTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object);
+        snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
+        handler = new DeleteTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
     }
 
     [Fact]
@@ -78,6 +80,7 @@ public class DeleteTenantCommandHandlerTest
 
         // Assert
         repositoryMock.Verify(r => r.DeleteAsync<TenantAggregate>(It.IsAny<Guid>(),  cancellationToken), Times.Once);
+        snapshotPublisherMock.Verify(p => p.RemoveAsync(It.IsAny<Guid>(), cancellationToken), Times.Once);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantDeletedDomainEvent>>(), cancellationToken), Times.AtMostOnce);
     }
 }

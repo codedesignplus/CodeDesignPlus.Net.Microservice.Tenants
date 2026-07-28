@@ -32,6 +32,7 @@ builder.Services.AddMediatR<CodeDesignPlus.Net.Microservice.Tenants.Application.
 builder.Services.AddHealthChecksServices();
 builder.Services.AddObservability(builder.Configuration, builder.Environment);
 builder.Services.AddGrpcClients(builder.Configuration);
+builder.Services.AddHostedService<CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Services.TenantSnapshotReconciliationService>();
 
 var app = builder.Build();
 

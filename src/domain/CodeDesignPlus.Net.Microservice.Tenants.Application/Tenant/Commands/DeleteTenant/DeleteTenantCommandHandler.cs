@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 
-public class DeleteTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub) : IRequestHandler<DeleteTenantCommand>
-{    
+public class DeleteTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub, ITenantSnapshotPublisher snapshotPublisher) : IRequestHandler<DeleteTenantCommand>
+{
     public async Task Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
@@ -13,6 +13,8 @@ public class DeleteTenantCommandHandler(ITenantRepository repository, IUserConte
         aggregate.Delete(user.IdUser);
 
         await repository.DeleteAsync<TenantAggregate>(aggregate.Id, cancellationToken);
+
+        await snapshotPublisher.RemoveAsync(aggregate.Id, cancellationToken);
 
         await pubsub.PublishAsync(aggregate.GetAndClearEvents(), cancellationToken);
     }

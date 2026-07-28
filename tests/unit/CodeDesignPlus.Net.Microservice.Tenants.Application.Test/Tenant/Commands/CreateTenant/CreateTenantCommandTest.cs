@@ -41,11 +41,13 @@ public class CreateTenantCommandTest
     }
 
     [Fact]
-    public void Should_Have_Error_When_Domain_Is_Null()
+    public void Should_Not_Have_Error_When_Domain_Is_Null()
     {
-        var command = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null!, "3107545632", "fake@fake.com", Utils.Location, Utils.License, Guid.NewGuid(), true);
+        // El dominio es opcional al crear: el comando lo declara Uri?, el agregado lo admite nulo y
+        // el mapeo gRPC traduce el valor ausente a null.
+        var command = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null, "3107545632", "fake@fake.com", Utils.Location, Utils.License, Guid.NewGuid(), true);
         var result = validator.TestValidate(command);
-        result.ShouldHaveValidationErrorFor(x => x.Domain);
+        result.ShouldNotHaveValidationErrorFor(x => x.Domain);
     }
 
     [Fact]

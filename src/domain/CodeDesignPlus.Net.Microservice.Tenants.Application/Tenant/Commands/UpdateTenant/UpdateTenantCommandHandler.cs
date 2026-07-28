@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
 
-public class UpdateTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub) : IRequestHandler<UpdateTenantCommand>
-{    
+public class UpdateTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub, ITenantSnapshotPublisher snapshotPublisher) : IRequestHandler<UpdateTenantCommand>
+{
     public async Task Handle(UpdateTenantCommand request, CancellationToken cancellationToken)
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
@@ -15,6 +15,8 @@ public class UpdateTenantCommandHandler(ITenantRepository repository, IUserConte
         tenant.UpdateLicense(request.License, user.IdUser);
 
         await repository.UpdateAsync(tenant, cancellationToken);
+
+        await snapshotPublisher.PublishAsync(tenant, cancellationToken);
 
         await pubsub.PublishAsync(tenant.GetAndClearEvents(), cancellationToken);
     }

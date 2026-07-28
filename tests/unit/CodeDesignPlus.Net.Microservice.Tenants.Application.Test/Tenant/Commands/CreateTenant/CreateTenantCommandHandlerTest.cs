@@ -14,13 +14,15 @@ public class CreateTenantCommandHandlerTest
 {
     private readonly Mock<ITenantRepository> repositoryMock;
     private readonly Mock<IPubSub> pubSubMock;
+    private readonly Mock<ITenantSnapshotPublisher> snapshotPublisherMock;
     private readonly CreateTenantCommandHandler handler;
 
     public CreateTenantCommandHandlerTest()
     {
         repositoryMock = new Mock<ITenantRepository>();
         pubSubMock = new Mock<IPubSub>();
-        handler = new CreateTenantCommandHandler(repositoryMock.Object,  pubSubMock.Object);
+        snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
+        handler = new CreateTenantCommandHandler(repositoryMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
     }
 
     [Fact]
@@ -74,6 +76,7 @@ public class CreateTenantCommandHandlerTest
 
         // Assert
         repositoryMock.Verify(r => r.CreateAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Once);
+        snapshotPublisherMock.Verify(p => p.PublishAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Once);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantCreatedDomainEvent>>(), It.IsAny<CancellationToken>()), Times.AtMostOnce);
     }
 }

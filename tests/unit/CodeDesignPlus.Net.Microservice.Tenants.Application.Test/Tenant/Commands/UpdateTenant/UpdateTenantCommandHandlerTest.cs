@@ -14,6 +14,7 @@ public class UpdateTenantCommandHandlerTest
     private readonly Mock<ITenantRepository> repositoryMock;
     private readonly Mock<IUserContext> userContextMock;
     private readonly Mock<IPubSub> pubSubMock;
+    private readonly Mock<ITenantSnapshotPublisher> snapshotPublisherMock;
     private readonly UpdateTenantCommandHandler handler;
 
     public UpdateTenantCommandHandlerTest()
@@ -21,7 +22,8 @@ public class UpdateTenantCommandHandlerTest
         repositoryMock = new Mock<ITenantRepository>();
         userContextMock = new Mock<IUserContext>();
         pubSubMock = new Mock<IPubSub>();
-        handler = new UpdateTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object);
+        snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
+        handler = new UpdateTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
     }
 
     [Fact]
@@ -78,6 +80,7 @@ public class UpdateTenantCommandHandlerTest
 
         // Assert
         repositoryMock.Verify(r => r.UpdateAsync(tenant, cancellationToken), Times.Once);
+        snapshotPublisherMock.Verify(p => p.PublishAsync(tenant, cancellationToken), Times.Once);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantUpdatedDomainEvent>>(), cancellationToken), Times.AtMostOnce);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantLocationUpdatedDomainEvent>>(), cancellationToken), Times.AtMostOnce);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantLicenseUpdatedDomainEvent>>(), cancellationToken), Times.AtMostOnce);

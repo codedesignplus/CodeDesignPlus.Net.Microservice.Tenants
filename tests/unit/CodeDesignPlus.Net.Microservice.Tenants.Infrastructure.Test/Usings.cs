@@ -11,4 +11,5 @@ global using NodaTime;
 
 global using CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Repositories;
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain;
+global using CodeDesignPlus.Net.ValueObjects.Location;
 

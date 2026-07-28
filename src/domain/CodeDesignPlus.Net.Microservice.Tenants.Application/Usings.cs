@@ -17,4 +17,5 @@ global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.DataTran
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain;
 
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain.Repositories;
+global using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
 

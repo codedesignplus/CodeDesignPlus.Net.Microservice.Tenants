@@ -1,42 +1,120 @@
+using CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Helpers;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
+
 namespace CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Validations;
 
 /// <summary>
-/// A class for validating domain events.
+/// Validates the domain events of the microservice.
 /// </summary>
+/// <remarks>
+/// Asserted explicitly instead of through the reflection-driven attribute of the SDK: that
+/// attribute feeds every string with "Test", which a <see cref="Domain.ValueObjects.TypeDocument"/>
+/// code cannot be.
+/// </remarks>
 public class DomainEventTest
 {
-    /// <summary>
-    /// Validates that domain events can be created using the constructor and their properties can be set and retrieved correctly.
-    /// </summary>
-    [Theory]
-    [DomainEvent<Domain.Errors>(false)]
-    public void DomainEvent_Constructor_ShouldSetAndRetrievePropertiesCorrectly(Type domainEvent, object instance, Dictionary<ParameterInfo, object> data)
+    [Fact]
+    public void TenantCreatedDomainEvent_Create_CarriesTheWholeTenant()
     {
-        // Assert
-        Assert.NotNull(instance);
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var createdBy = Guid.NewGuid();
 
-        Assert.All(domainEvent.GetProperties(), property =>
-        {
-            var value = property.GetValue(instance);
-            var valueExpected = data.FirstOrDefault(x => x.Key.Name!.Equals(property.Name, StringComparison.OrdinalIgnoreCase)).Value;
-            Assert.Equal(valueExpected, value);
-        });
+        // Act
+        var @event = TenantCreatedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, createdBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(Utils.Name, @event.Name);
+        Assert.Equal(Utils.TypeDocument, @event.TypeDocument);
+        Assert.Equal(Utils.NumberDocument, @event.NumberDocument);
+        Assert.Equal(Utils.Domain, @event.Domain);
+        Assert.Equal(Utils.Phone, @event.Phone);
+        Assert.Equal(Utils.Email, @event.Email);
+        Assert.Equal(Utils.Location, @event.Location);
+        Assert.Equal(Utils.License, @event.License);
+        Assert.True(@event.IsActive);
+        Assert.Equal(createdBy, @event.CreatedBy);
+        Assert.NotEqual(Guid.Empty, @event.EventId);
     }
 
-    /// <summary>
-    /// Validates that domain events can be created using the named constructor with custom values.
-    /// </summary>
-    [Theory]
-    [DomainEvent<Domain.Errors>(true)]
-    public void DomainEvent_CreateMethod_ShouldCreateInstanceWithCustomValues(Type domainEvent, object instance, Dictionary<ParameterInfo, object> values)
+    [Fact]
+    public void TenantUpdatedDomainEvent_Create_CarriesTheWholeTenant()
     {
-        // Assert
-        Assert.NotEmpty(values);
-        Assert.NotNull(instance);
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var updatedBy = Guid.NewGuid();
 
-        var property = domainEvent.GetProperty(nameof(DomainEvent.AggregateId));
-        var value = property!.GetValue(instance, null);
-        var valueExpected = property.PropertyType.GetDefaultValue();
-        Assert.NotEqual(valueExpected, value);
+        // Act
+        var @event = TenantUpdatedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, updatedBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(Utils.Location, @event.Location);
+        Assert.Equal(Utils.License, @event.License);
+        Assert.Equal(updatedBy, @event.UpdatedBy);
+    }
+
+    [Fact]
+    public void TenantDeletedDomainEvent_Create_CarriesTheWholeTenant()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var deletedBy = Guid.NewGuid();
+
+        // Act
+        var @event = TenantDeletedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, false, deletedBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.False(@event.IsActive);
+        Assert.Equal(deletedBy, @event.DeletedBy);
+    }
+
+    [Fact]
+    public void TenantLicenseUpdatedDomainEvent_Create_CarriesTheLicense()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var updatedBy = Guid.NewGuid();
+
+        // Act
+        var @event = TenantLicenseUpdatedDomainEvent.Create(aggregateId, Utils.License, updatedBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(Utils.License, @event.License);
+        Assert.Equal(updatedBy, @event.UpdatedBy);
+    }
+
+    [Fact]
+    public void TenantLocationUpdatedDomainEvent_Create_CarriesTheLocation()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var updatedBy = Guid.NewGuid();
+
+        // Act
+        var @event = TenantLocationUpdatedDomainEvent.Create(aggregateId, Utils.Location, updatedBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(Utils.Location, @event.Location);
+        Assert.Equal(updatedBy, @event.UpdatedBy);
+    }
+
+    [Fact]
+    public void TenantProvisionedForOrderDomainEvent_Create_CarriesTheOrder()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var orderId = Guid.NewGuid();
+
+        // Act
+        var @event = TenantProvisionedForOrderDomainEvent.Create(aggregateId, orderId);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(orderId, @event.OrderId);
     }
 }

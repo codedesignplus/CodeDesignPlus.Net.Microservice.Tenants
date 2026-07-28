@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 
-public class CreateTenantCommandHandler(ITenantRepository repository, IPubSub pubsub) : IRequestHandler<CreateTenantCommand>
+public class CreateTenantCommandHandler(ITenantRepository repository, IPubSub pubsub, ITenantSnapshotPublisher snapshotPublisher) : IRequestHandler<CreateTenantCommand>
 {
     public async Task Handle(CreateTenantCommand request, CancellationToken cancellationToken)
     {
@@ -18,6 +18,8 @@ public class CreateTenantCommandHandler(ITenantRepository repository, IPubSub pu
         var tenant = TenantAggregate.Create(request.Id, request.Name, request.TypeDocument, request.NumberDocument, request.Domain, request.Phone, request.Email, request.Location, request.License, request.IsActive, request.IdUser);
 
         await repository.CreateAsync(tenant, cancellationToken);
+
+        await snapshotPublisher.PublishAsync(tenant, cancellationToken);
 
         await pubsub.PublishAsync(tenant.GetAndClearEvents(), cancellationToken);
     }
