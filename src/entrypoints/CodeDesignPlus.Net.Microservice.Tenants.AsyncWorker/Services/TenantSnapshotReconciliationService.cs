@@ -14,7 +14,9 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Services;
 /// <param name="logger">The logger service.</param>
 public class TenantSnapshotReconciliationService(IServiceProvider serviceProvider, ILogger<TenantSnapshotReconciliationService> logger) : BackgroundService
 {
-    private static readonly TimeSpan Interval = TimeSpan.FromMinutes(15);
+    // Del mismo sitio que el TTL del snapshot, para que no se puedan separar. Cuando estuvieron
+    // sueltos (job cada 15 min, TTL de 5) la cache quedaba fria dos tercios del tiempo.
+    private static readonly TimeSpan Interval = TenantSnapshotCadence.ReconciliationInterval;
     private const int PageSize = 500;
 
     /// <inheritdoc/>

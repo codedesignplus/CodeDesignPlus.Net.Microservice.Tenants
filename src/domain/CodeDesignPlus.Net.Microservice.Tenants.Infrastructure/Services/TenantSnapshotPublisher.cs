@@ -19,7 +19,10 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
 
         try
         {
-            await cacheManager.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), Map(tenant));
+            // Con TTL explicito y no el global de `RedisCache:Expiration`: ese lo comparte todo el
+            // mundo para otras cosas y quien lo baje no tiene por que saber que deja sin tenant a la
+            // plataforma entera. El de aqui va atado al job de reconciliacion.
+            await cacheManager.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), Map(tenant), TenantSnapshotCadence.SnapshotTtl);
 
             if (tenant.IsActive && !tenant.IsDeleted)
                 await cacheManager.AddToGlobalSetAsync(TenantCacheKeys.ActiveTenants, tenant.Id.ToString());
