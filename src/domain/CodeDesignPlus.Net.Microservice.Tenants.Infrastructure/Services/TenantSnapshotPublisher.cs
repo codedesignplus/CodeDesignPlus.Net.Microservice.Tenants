@@ -22,7 +22,7 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
             // Con TTL explicito y no el global de `RedisCache:Expiration`: ese lo comparte todo el
             // mundo para otras cosas y quien lo baje no tiene por que saber que deja sin tenant a la
             // plataforma entera. El de aqui va atado al job de reconciliacion.
-            await cacheManager.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), Map(tenant), TenantSnapshotCadence.SnapshotTtl);
+            await cacheManager.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), TenantSnapshotMapper.Map(tenant), TenantSnapshotCadence.SnapshotTtl);
 
             if (tenant.IsActive && !tenant.IsDeleted)
                 await cacheManager.AddToGlobalSetAsync(TenantCacheKeys.ActiveTenants, tenant.Id.ToString());
@@ -55,25 +55,5 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
         }
     }
 
-    private static Models.Tenant Map(TenantAggregate tenant) => new()
-    {
-        Id = tenant.Id,
-        Name = tenant.Name,
-        Domain = tenant.Domain,
-        Location = tenant.Location,
-        Metadata = tenant.License?.Metadata ?? [],
-        License = new Models.License
-        {
-            Id = tenant.License?.Id ?? Guid.Empty,
-            Name = tenant.License?.Name,
-            StartDate = tenant.License?.StartDate ?? Instant.MinValue,
-            ExpirationDate = tenant.License?.EndDate ?? Instant.MaxValue,
-            Metadata = tenant.License?.Metadata ?? [],
-            Modules = [.. (tenant.License?.Modules ?? []).Select(module => new Models.LicenseModule
-            {
-                Id = module.Id,
-                Name = module.Name
-            })]
-        }
-    };
+
 }
