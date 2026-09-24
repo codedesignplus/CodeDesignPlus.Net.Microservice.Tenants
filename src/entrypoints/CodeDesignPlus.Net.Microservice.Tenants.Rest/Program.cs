@@ -61,9 +61,11 @@ app.UseCors(builder => builder
 app.UseTraceContext();
 app.UseTraceContext();
 app.UsePath();
+app.UseLanguageMiddleware();
 app.UseExceptionMiddleware();
 app.UseHealthChecks();
 app.UseCodeErrors();
+app.UseCodeErrorsValidation();
 
 app.UseCoreSwagger();
 
