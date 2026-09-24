@@ -1,0 +1,10 @@
+{
+  "language": "en",
+  "errors": {
+    "200": "UnknownError",
+    "201": "The request is invalid.",
+    "202": "The tenant already exists.",
+    "203": "The tenant was not found.",
+    "204": "A tenant with the same document type and number already exists."
+  }
+}

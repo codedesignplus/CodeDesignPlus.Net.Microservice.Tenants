@@ -1,0 +1,7 @@
+{
+  "language": "en",
+  "errors": {
+    "300": "UnknownError",
+    "301": "TenantIdIsInvalid"
+  }
+}
