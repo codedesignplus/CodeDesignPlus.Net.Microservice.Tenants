@@ -1,0 +1,10 @@
+{
+  "language": "fr",
+  "errors": {
+    "200": "Erreur inconnue.",
+    "201": "La requête n'est pas valide.",
+    "202": "Cette copropriété existe déjà.",
+    "203": "Copropriété introuvable.",
+    "204": "Une copropriété avec ce type et ce numéro de document existe déjà."
+  }
+}

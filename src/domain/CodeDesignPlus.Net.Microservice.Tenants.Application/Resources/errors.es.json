@@ -1,10 +1,10 @@
 {
   "language": "es",
   "errors": {
-    "200": "",
-    "201": "",
-    "202": "",
-    "203": "",
-    "204": ""
+    "200": "Error desconocido.",
+    "201": "La petición no es válida.",
+    "202": "Esa copropiedad ya existe.",
+    "203": "No encontramos esa copropiedad.",
+    "204": "Ya existe una copropiedad con ese tipo y número de documento."
   }
 }

@@ -1,0 +1,7 @@
+{
+  "language": "fr",
+  "errors": {
+    "300": "Erreur inconnue.",
+    "301": "L'identifiant de la copropriété n'est pas valide."
+  }
+}

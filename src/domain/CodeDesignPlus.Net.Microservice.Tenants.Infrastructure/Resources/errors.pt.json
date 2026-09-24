@@ -1,0 +1,7 @@
+{
+  "language": "pt",
+  "errors": {
+    "300": "Erro desconhecido.",
+    "301": "O identificador do condomínio não é válido."
+  }
+}

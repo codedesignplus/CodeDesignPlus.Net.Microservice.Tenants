@@ -1,0 +1,10 @@
+{
+  "language": "pt",
+  "errors": {
+    "200": "Erro desconhecido.",
+    "201": "A requisição não é válida.",
+    "202": "Esse condomínio já existe.",
+    "203": "Não encontramos esse condomínio.",
+    "204": "Já existe um condomínio com esse tipo é número de documento."
+  }
+}

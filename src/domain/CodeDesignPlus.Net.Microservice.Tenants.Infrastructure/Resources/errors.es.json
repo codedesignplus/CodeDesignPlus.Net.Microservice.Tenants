@@ -1,7 +1,7 @@
 {
   "language": "es",
   "errors": {
-    "300": "",
-    "301": ""
+    "300": "Error desconocido.",
+    "301": "El identificador de la copropiedad no es válido."
   }
 }
