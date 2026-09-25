@@ -47,7 +47,19 @@ public class TenantService(IMediator mediator, IMapper mapper, IUserContext user
 
         var queryCommand = new GetTenantByIdQuery(idTenant);
 
-        var tenant = await mediator.Send(queryCommand, context.CancellationToken);
+        TenantDto tenant;
+
+        try
+        {
+            tenant = await mediator.Send(queryCommand, context.CancellationToken);
+        }
+        catch (CodeDesignPlusException exception) when (exception.Code == Application.Errors.TenantNotFound.GetCode())
+        {
+            // NotFound, no FailedPrecondition: es la unica forma de que quien pregunta sepa que el tenant no existe
+            // y no confundirlo con una caida. El directorio de tenants del SDK responde entonces 400 en vez de 503
+            // (pendings/028). El ErrorInterceptor deja pasar la RpcException tal cual.
+            throw new RpcException(new Status(StatusCode.NotFound, exception.Message));
+        }
 
         var response = mapper.Map<GetTenantResponse>(tenant);
 
