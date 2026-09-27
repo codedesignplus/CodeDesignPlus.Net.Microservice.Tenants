@@ -3,33 +3,34 @@ using Microsoft.Extensions.Options;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Options;
 
 /// <summary>
-/// How long a deleted tenant can be restored before every microservice purges its data.
+/// Cuánto tiempo se puede restaurar una copropiedad eliminada antes de que cada micro purgue sus datos.
 /// </summary>
 /// <remarks>
-/// It changes per environment (30, 60, 90 days…), so it lives in the <c>appsettings</c>. The period is fixed when the
-/// tenant is deleted, in <see cref="TenantAggregate.PurgeAfter"/>: changing it later does not move the tenants
-/// already deleted.
+/// Cambia por entorno (30, 60, 90 días…), por eso vive en el <c>appsettings</c>. El plazo queda fijado al eliminar
+/// la copropiedad, en <see cref="TenantAggregate.PurgeAfter"/>: cambiarlo después no mueve las que ya estaban
+/// eliminadas.
 /// </remarks>
 public class TenantPurgeOptions
 {
     public const string Section = "TenantPurge";
 
     /// <summary>
-    /// Days a deleted tenant can be restored.
+    /// Días durante los que se puede restaurar una copropiedad eliminada.
     /// </summary>
     public int RetentionDays { get; set; }
 
     /// <summary>
-    /// The retention as a duration.
+    /// El plazo como duración.
     /// </summary>
     public Duration Retention => Duration.FromDays(RetentionDays);
 }
 
 /// <summary>
-/// Checks at startup that the environment defined the retention.
+/// Comprueba al arrancar que el entorno definió el plazo.
 /// </summary>
 /// <remarks>
-/// Without it a deleted tenant would be purged on the next run of the job, with no chance to restore it.
+/// Sin él, una copropiedad eliminada se purgaría en la siguiente pasada del job, sin opción de restaurarla. Un micro
+/// que no arranca se ve en el primer despliegue.
 /// </remarks>
 public class TenantPurgeOptionsValidator : IValidateOptions<TenantPurgeOptions>
 {
@@ -40,6 +41,6 @@ public class TenantPurgeOptionsValidator : IValidateOptions<TenantPurgeOptions>
             return ValidateOptionsResult.Success;
         }
 
-        return ValidateOptionsResult.Fail($"The section '{TenantPurgeOptions.Section}' must define {nameof(TenantPurgeOptions.RetentionDays)} greater than zero.");
+        return ValidateOptionsResult.Fail($"La sección '{TenantPurgeOptions.Section}' debe definir {nameof(TenantPurgeOptions.RetentionDays)} mayor que cero.");
     }
 }

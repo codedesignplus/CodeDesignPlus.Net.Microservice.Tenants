@@ -6,18 +6,18 @@ using Hangfire;
 namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Jobs;
 
 /// <summary>
-/// Purges the deleted tenants whose retention ended: tells every microservice to delete their data, then deletes
-/// the tenant itself.
+/// Purga las copropiedades eliminadas cuyo plazo venció: avisa a cada micro de que borre sus datos y después borra
+/// la copropiedad.
 /// </summary>
 /// <remarks>
 /// <para>
-/// The event goes out <b>before</b> the tenant is deleted. The other way round, a failure between both steps would
-/// leave the data of the tenant in every microservice with nobody left to ask for its purge. This way the tenant
-/// stays until the event is out, and the next run publishes it again: the consumers are idempotent.
+/// El evento sale <b>antes</b> de borrar la copropiedad. Al revés, un fallo entre los dos pasos dejaría sus datos en
+/// cada micro sin nadie que pidiera purgarlos. Así la copropiedad se queda hasta que el evento sale, y la siguiente
+/// pasada lo vuelve a publicar: los consumidores son idempotentes.
 /// </para>
 /// <para>
-/// A restore cannot race with the purge: restoring requires the retention not to have ended, and this job only
-/// takes the tenants whose retention ended.
+/// Una restauración no puede cruzarse con la purga: restaurar exige que el plazo no haya vencido, y este job solo
+/// toma las copropiedades cuyo plazo venció.
 /// </para>
 /// </remarks>
 [RecurringJobOptions("0 * * * *", jobId: "tenant-purge-job")]

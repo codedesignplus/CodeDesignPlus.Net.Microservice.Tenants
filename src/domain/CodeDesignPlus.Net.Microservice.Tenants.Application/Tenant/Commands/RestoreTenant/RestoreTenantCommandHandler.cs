@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.RestoreTenant;
 
 /// <summary>
-/// Brings back a deleted tenant while its retention has not ended.
+/// Devuelve una copropiedad eliminada mientras no haya vencido el plazo.
 /// </summary>
 public class RestoreTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub, ITenantSnapshotPublisher snapshotPublisher) : IRequestHandler<RestoreTenantCommand>
 {

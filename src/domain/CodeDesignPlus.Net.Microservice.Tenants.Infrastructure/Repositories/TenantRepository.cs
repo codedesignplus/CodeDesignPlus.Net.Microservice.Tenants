@@ -40,7 +40,7 @@ public class TenantRepository(IServiceProvider serviceProvider, IOptions<MongoOp
 
     public async Task<bool> RestoreAsync(TenantAggregate tenant, CancellationToken cancellationToken)
     {
-        // Conditional on still being deleted: a purge that ran meanwhile must not be undone by bringing the document back.
+        // Condicionado a que siga eliminada: una purga que corrió entretanto no se deshace devolviendo el documento.
         var filter = Builders<TenantAggregate>.Filter.And(Builders<TenantAggregate>.Filter.Eq(x => x.Id, tenant.Id), Deleted);
 
         var result = await GetCollection<TenantAggregate>().ReplaceOneAsync(filter, tenant, cancellationToken: cancellationToken);
@@ -50,7 +50,7 @@ public class TenantRepository(IServiceProvider serviceProvider, IOptions<MongoOp
 
     public async Task<bool> PurgeAsync(Guid id, CancellationToken cancellationToken)
     {
-        // Conditional on still being deleted: a tenant restored meanwhile is kept.
+        // Condicionado a que siga eliminada: una copropiedad restaurada entretanto se conserva.
         var filter = Builders<TenantAggregate>.Filter.And(Builders<TenantAggregate>.Filter.Eq(x => x.Id, id), Deleted);
 
         var result = await GetCollection<TenantAggregate>().DeleteOneAsync(filter, cancellationToken);

@@ -40,7 +40,7 @@ public class TenantPurgeJobTest
     }
 
     /// <summary>
-    /// A tenant deleted with a retention that already ended: the job takes it as due.
+    /// Una copropiedad eliminada con un plazo que ya venció: el job la toma como vencida.
     /// </summary>
     private static TenantAggregate DueTenant()
     {

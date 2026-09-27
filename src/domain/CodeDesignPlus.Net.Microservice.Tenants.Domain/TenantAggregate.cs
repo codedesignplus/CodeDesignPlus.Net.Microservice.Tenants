@@ -16,7 +16,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public Location Location { get; private set; } = null!;
 
     /// <summary>
-    /// When a deleted tenant stops being restorable and its data is purged; <c>null</c> while the tenant is not deleted.
+    /// Cuándo una copropiedad eliminada deja de poder restaurarse y se purgan sus datos; <c>null</c> si no está eliminada.
     /// </summary>
     public Instant? PurgeAfter { get; private set; }
 
@@ -99,14 +99,14 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     }
 
     /// <summary>
-    /// Removes the tenant from the platform, keeping every data of it until <see cref="PurgeAfter"/>.
+    /// Da de baja la copropiedad en la plataforma, conservando todos sus datos hasta <see cref="PurgeAfter"/>.
     /// </summary>
     /// <remarks>
-    /// Deleting is a withdrawal, not a purge: the tenant stops being usable at once, and can be restored until the
-    /// retention ends. Only then <see cref="Purge"/> tells every microservice to delete what it keeps of the tenant.
+    /// Eliminar es dar de baja, no purgar: la copropiedad deja de poder usarse en el acto y se puede restaurar hasta
+    /// que vence el plazo. Solo entonces <see cref="Purge"/> avisa a cada micro de que borre lo que guarda de ella.
     /// </remarks>
-    /// <param name="deletedBy">The user who deletes the tenant.</param>
-    /// <param name="retention">How long the tenant can be restored before its data is purged.</param>
+    /// <param name="deletedBy">Quien la elimina.</param>
+    /// <param name="retention">Cuánto tiempo se puede restaurar antes de purgar sus datos.</param>
     public void Delete(Guid deletedBy, Duration retention)
     {
         DomainGuard.GuidIsEmpty(deletedBy, Errors.DeletedByIsInvalid);
@@ -124,10 +124,10 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     }
 
     /// <summary>
-    /// Brings back a deleted tenant while its retention has not ended.
+    /// Devuelve una copropiedad eliminada mientras no haya vencido su plazo.
     /// </summary>
-    /// <param name="restoredBy">The user who restores the tenant.</param>
-    /// <param name="now">The current instant, compared with <see cref="PurgeAfter"/>.</param>
+    /// <param name="restoredBy">Quien la restaura.</param>
+    /// <param name="now">El instante actual, que se compara con <see cref="PurgeAfter"/>.</param>
     public void Restore(Guid restoredBy, Instant now)
     {
         DomainGuard.GuidIsEmpty(restoredBy, Errors.UpdatedByIsInvalid);
@@ -146,9 +146,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     }
 
     /// <summary>
-    /// Announces that the retention of a deleted tenant ended and every microservice must delete its data.
+    /// Anuncia que venció el plazo de una copropiedad eliminada y que cada micro debe borrar sus datos.
     /// </summary>
-    /// <param name="now">The current instant, compared with <see cref="PurgeAfter"/>.</param>
+    /// <param name="now">El instante actual, que se compara con <see cref="PurgeAfter"/>.</param>
     public void Purge(Instant now)
     {
         DomainGuard.IsFalse(IsDeleted, Errors.TenantIsNotDeleted);

@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
 /// <summary>
-/// A deleted tenant was brought back before its retention ended.
+/// Se restauró una copropiedad eliminada antes de que venciera su plazo.
 /// </summary>
 [EventKey<TenantAggregate>(1, "TenantRestoredDomainEvent")]
 public class TenantRestoredDomainEvent(

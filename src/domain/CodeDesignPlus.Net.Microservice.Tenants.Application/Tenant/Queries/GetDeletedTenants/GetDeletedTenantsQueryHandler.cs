@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetDeletedTenants;
 
 /// <summary>
-/// Lists the deleted tenants that can still be restored.
+/// Lista las copropiedades eliminadas que todavía se pueden restaurar.
 /// </summary>
 public class GetDeletedTenantsQueryHandler(ITenantRepository repository, IMapper mapper) : IRequestHandler<GetDeletedTenantsQuery, List<TenantDto>>
 {

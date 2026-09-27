@@ -1,11 +1,11 @@
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 
 /// <summary>
-/// The retention of a deleted tenant ended: every microservice deletes what it keeps of the tenant.
+/// Venció el plazo de una copropiedad eliminada: cada micro borra lo que guarda de ella.
 /// </summary>
 /// <remarks>
-/// It can arrive more than once — the purge job publishes it before deleting the tenant, and retries while the
-/// tenant is still there — so every consumer must be idempotent.
+/// Puede llegar más de una vez —el job de purga lo publica antes de borrar la copropiedad, y reintenta mientras
+/// siga ahí—, así que todo consumidor tiene que ser idempotente.
 /// </remarks>
 [EventKey<TenantAggregate>(1, "TenantPurgedDomainEvent")]
 public class TenantPurgedDomainEvent(

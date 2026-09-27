@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Test.Repositories;
 
 /// <summary>
-/// The writes on a deleted tenant, against a real Mongo: the SDK leaves deleted documents out of its own methods,
-/// so these go to the collection directly and must hold their conditions by themselves.
+/// Las escrituras sobre una copropiedad eliminada, contra un Mongo real: el SDK deja fuera de sus métodos los
+/// documentos eliminados, así que estas van directamente a la colección y tienen que sostener solas sus condiciones.
 /// </summary>
 [Collection(MongoContainerFixture.Collection)]
 public class TenantRepositoryTest

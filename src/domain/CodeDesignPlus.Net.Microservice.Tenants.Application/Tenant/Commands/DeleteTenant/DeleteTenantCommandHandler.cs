@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 
 /// <summary>
-/// Deletes a tenant: it stops being usable at once and its data is purged when the retention ends.
+/// Elimina una copropiedad: deja de poder usarse en el acto y sus datos se purgan al vencer el plazo.
 /// </summary>
 public class DeleteTenantCommandHandler(ITenantRepository repository, IUserContext user, IPubSub pubsub, ITenantSnapshotPublisher snapshotPublisher, IOptions<TenantPurgeOptions> options) : IRequestHandler<DeleteTenantCommand>
 {
@@ -18,7 +18,7 @@ public class DeleteTenantCommandHandler(ITenantRepository repository, IUserConte
 
         aggregate.Delete(user.IdUser, options.Value.Retention);
 
-        // The document stays, marked as deleted, so the tenant can be restored; TenantPurgeJob deletes it later.
+        // El documento se queda, marcado como eliminado, para poder restaurarla; lo borra después TenantPurgeJob.
         await repository.UpdateAsync(aggregate, cancellationToken);
 
         await snapshotPublisher.RemoveAsync(aggregate.Id, cancellationToken);

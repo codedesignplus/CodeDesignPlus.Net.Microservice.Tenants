@@ -22,7 +22,7 @@ public class TenantDeletedDomainEvent(
     public Guid DeletedBy { get; } = deletedBy;
 
     /// <summary>
-    /// When the tenant stops being restorable and every microservice purges its data.
+    /// Cuándo deja de poder restaurarse y cada micro purga sus datos.
     /// </summary>
     public Instant PurgeAfter { get; } = purgeAfter;
 

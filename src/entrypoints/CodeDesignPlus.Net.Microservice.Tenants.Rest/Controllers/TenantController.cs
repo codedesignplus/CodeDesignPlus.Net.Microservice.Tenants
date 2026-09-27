@@ -27,10 +27,10 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     }
 
     /// <summary>
-    /// Get the deleted Tenants that can still be restored, the soonest to be purged first.
+    /// Las copropiedades eliminadas que todavía se pueden restaurar, primero las que antes se purgan.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Collection of deleted Tenants.</returns>
+    /// <returns>Las copropiedades eliminadas.</returns>
     [HttpGet("deleted")]
     public async Task<IActionResult> GetDeletedTenants(CancellationToken cancellationToken)
     {
@@ -99,7 +99,7 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     }
 
     /// <summary>
-    /// Restore a deleted Tenant before its data is purged.
+    /// Restaura una copropiedad eliminada antes de que se purguen sus datos.
     /// </summary>
     /// <param name="id">The unique identifier of the Tenant.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
