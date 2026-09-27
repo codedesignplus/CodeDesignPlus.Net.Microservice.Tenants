@@ -30,7 +30,9 @@ public static class MapsterConfigTenant
                 Phone = tenant.Phone,
                 License = tenant.License,
                 Location = tenant.Location,
-                IsActive = tenant.IsActive
+                IsActive = tenant.IsActive,
+                DeletedAt = tenant.DeletedAt,
+                PurgeAfter = tenant.PurgeAfter
             });
     }
 }

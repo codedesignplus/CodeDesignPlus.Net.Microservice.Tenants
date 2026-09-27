@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
@@ -118,9 +119,136 @@ public class TenantAggregateTest
         var deleteBy = Guid.NewGuid();
 
         // Act
-        tenant.Delete(deleteBy);
+        tenant.Delete(deleteBy, Retention);
 
         // Assert
         Assert.False(tenant.IsActive);
+    }
+
+    private static readonly Duration Retention = Duration.FromDays(30);
+
+    private static TenantAggregate NewTenant() => TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+
+    [Fact]
+    public void Delete_ValidRetention_KeepsTheTenantUntilTheRetentionEnds()
+    {
+        // Arrange
+        var tenant = NewTenant();
+        var before = SystemClock.Instance.GetCurrentInstant();
+
+        // Act
+        tenant.Delete(Guid.NewGuid(), Retention);
+
+        // Assert
+        Assert.True(tenant.IsDeleted);
+        Assert.NotNull(tenant.PurgeAfter);
+        Assert.InRange(tenant.PurgeAfter!.Value, before + Retention, SystemClock.Instance.GetCurrentInstant() + Retention);
+        Assert.Equal(tenant.PurgeAfter, tenant.GetAndClearEvents().OfType<TenantDeletedDomainEvent>().Single().PurgeAfter);
+    }
+
+    [Fact]
+    public void Delete_RetentionIsZero_ThrowsRetentionIsInvalid()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        // Act
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Delete(Guid.NewGuid(), Duration.Zero));
+
+        // Assert
+        Assert.Equal(Errors.RetentionIsInvalid.GetCode(), exception.Code);
+    }
+
+    [Fact]
+    public void Restore_WithinRetention_BringsTheTenantBack()
+    {
+        // Arrange
+        var tenant = NewTenant();
+        var restoredBy = Guid.NewGuid();
+
+        tenant.Delete(Guid.NewGuid(), Retention);
+        tenant.GetAndClearEvents();
+
+        // Act
+        tenant.Restore(restoredBy, SystemClock.Instance.GetCurrentInstant());
+
+        // Assert
+        Assert.False(tenant.IsDeleted);
+        Assert.True(tenant.IsActive);
+        Assert.Null(tenant.PurgeAfter);
+        Assert.Null(tenant.DeletedAt);
+        Assert.Equal(restoredBy, tenant.GetAndClearEvents().OfType<TenantRestoredDomainEvent>().Single().RestoredBy);
+    }
+
+    [Fact]
+    public void Restore_RetentionEnded_ThrowsRestoreWindowExpired()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        tenant.Delete(Guid.NewGuid(), Retention);
+
+        // Act
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Restore(Guid.NewGuid(), tenant.PurgeAfter!.Value));
+
+        // Assert
+        Assert.Equal(Errors.RestoreWindowExpired.GetCode(), exception.Code);
+    }
+
+    [Fact]
+    public void Restore_TenantNotDeleted_ThrowsTenantIsNotDeleted()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        // Act
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Restore(Guid.NewGuid(), SystemClock.Instance.GetCurrentInstant()));
+
+        // Assert
+        Assert.Equal(Errors.TenantIsNotDeleted.GetCode(), exception.Code);
+    }
+
+    [Fact]
+    public void Purge_RetentionEnded_AnnouncesThePurge()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        tenant.Delete(Guid.NewGuid(), Retention);
+        tenant.GetAndClearEvents();
+
+        // Act
+        tenant.Purge(tenant.PurgeAfter!.Value);
+
+        // Assert
+        Assert.Equal(tenant.Id, tenant.GetAndClearEvents().OfType<TenantPurgedDomainEvent>().Single().AggregateId);
+    }
+
+    [Fact]
+    public void Purge_WithinRetention_ThrowsTenantIsNotDueForPurge()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        tenant.Delete(Guid.NewGuid(), Retention);
+
+        // Act
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Purge(tenant.PurgeAfter!.Value - Duration.FromSeconds(1)));
+
+        // Assert
+        Assert.Equal(Errors.TenantIsNotDueForPurge.GetCode(), exception.Code);
+    }
+
+    [Fact]
+    public void Purge_TenantNotDeleted_ThrowsTenantIsNotDeleted()
+    {
+        // Arrange
+        var tenant = NewTenant();
+
+        // Act
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Purge(SystemClock.Instance.GetCurrentInstant()));
+
+        // Assert
+        Assert.Equal(Errors.TenantIsNotDeleted.GetCode(), exception.Code);
     }
 }

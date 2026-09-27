@@ -1,6 +1,9 @@
+using System.Linq;
+using System.Collections.Generic;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CodeDesignPlus.Net.Microservice.Tenants.Application.Options;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
@@ -24,7 +27,7 @@ public class DeleteTenantCommandHandlerTest
         userContextMock = new Mock<IUserContext>();
         pubSubMock = new Mock<IPubSub>();
         snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
-        handler = new DeleteTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
+        handler = new DeleteTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object, Microsoft.Extensions.Options.Options.Create(new TenantPurgeOptions { RetentionDays = 30 }));
     }
 
     [Fact]
@@ -62,7 +65,7 @@ public class DeleteTenantCommandHandlerTest
     }
 
     [Fact]
-    public async Task Handle_ValidRequest_DeletesTenantAndPublishesEvents()
+    public async Task Handle_ValidRequest_KeepsTheTenantMarkedForPurge()
     {
         // Arrange
         var request = new DeleteTenantCommand(Guid.NewGuid());
@@ -79,8 +82,9 @@ public class DeleteTenantCommandHandlerTest
         await handler.Handle(request, cancellationToken);
 
         // Assert
-        repositoryMock.Verify(r => r.DeleteAsync<TenantAggregate>(It.IsAny<Guid>(),  cancellationToken), Times.Once);
-        snapshotPublisherMock.Verify(p => p.RemoveAsync(It.IsAny<Guid>(), cancellationToken), Times.Once);
-        pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantDeletedDomainEvent>>(), cancellationToken), Times.AtMostOnce);
+        repositoryMock.Verify(r => r.DeleteAsync<TenantAggregate>(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+        repositoryMock.Verify(r => r.UpdateAsync(It.Is<TenantAggregate>(t => t.IsDeleted && t.PurgeAfter >= t.DeletedAt!.Value + Duration.FromDays(30)), cancellationToken), Times.Once);
+        snapshotPublisherMock.Verify(p => p.RemoveAsync(tenantAggregate.Id, cancellationToken), Times.Once);
+        pubSubMock.Verify(p => p.PublishAsync(It.Is<IReadOnlyList<IDomainEvent>>(e => e.OfType<TenantDeletedDomainEvent>().Any()), cancellationToken), Times.Once);
     }
 }

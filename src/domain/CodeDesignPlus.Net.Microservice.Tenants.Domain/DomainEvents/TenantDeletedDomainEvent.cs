@@ -13,14 +13,21 @@ public class TenantDeletedDomainEvent(
     License license,
     bool isActive,
     Guid deletedBy,
+    Instant purgeAfter,
     Guid? eventId = null,
     Instant? occurredAt = null,
     Dictionary<string, object>? metadata = null
 ) : TenantBaseDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, license, location, isActive, eventId, occurredAt, metadata)
 {
     public Guid DeletedBy { get; } = deletedBy;
-    public static TenantDeletedDomainEvent Create(Guid aggregateId, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid deletedBy)
+
+    /// <summary>
+    /// When the tenant stops being restorable and every microservice purges its data.
+    /// </summary>
+    public Instant PurgeAfter { get; } = purgeAfter;
+
+    public static TenantDeletedDomainEvent Create(Guid aggregateId, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid deletedBy, Instant purgeAfter)
     {
-        return new TenantDeletedDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, deletedBy);
+        return new TenantDeletedDomainEvent(aggregateId, name, typeDocument, numberDocument, domain, phone, email, location, license, isActive, deletedBy, purgeAfter);
     }
 }

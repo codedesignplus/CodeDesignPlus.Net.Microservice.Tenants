@@ -27,6 +27,19 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     }
 
     /// <summary>
+    /// Get the deleted Tenants that can still be restored, the soonest to be purged first.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Collection of deleted Tenants.</returns>
+    [HttpGet("deleted")]
+    public async Task<IActionResult> GetDeletedTenants(CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetDeletedTenantsQuery(), cancellationToken);
+
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Get a Tenant by its ID.
     /// </summary>
     /// <param name="id">The unique identifier of the Tenant.</param>
@@ -81,6 +94,20 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     public async Task<IActionResult> DeleteTenant(Guid id, CancellationToken cancellationToken)
     {
         await mediator.Send(new DeleteTenantCommand(id), cancellationToken);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Restore a deleted Tenant before its data is purged.
+    /// </summary>
+    /// <param name="id">The unique identifier of the Tenant.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>HTTP status code 204 (No Content).</returns>
+    [HttpPost("{id}/restore")]
+    public async Task<IActionResult> RestoreTenant(Guid id, CancellationToken cancellationToken)
+    {
+        await mediator.Send(new RestoreTenantCommand(id), cancellationToken);
 
         return NoContent();
     }

@@ -61,14 +61,46 @@ public class DomainEventTest
         // Arrange
         var aggregateId = Guid.NewGuid();
         var deletedBy = Guid.NewGuid();
+        var purgeAfter = SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(30);
 
         // Act
-        var @event = TenantDeletedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, false, deletedBy);
+        var @event = TenantDeletedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, false, deletedBy, purgeAfter);
 
         // Assert
         Assert.Equal(aggregateId, @event.AggregateId);
         Assert.False(@event.IsActive);
         Assert.Equal(deletedBy, @event.DeletedBy);
+        Assert.Equal(purgeAfter, @event.PurgeAfter);
+    }
+
+    [Fact]
+    public void TenantRestoredDomainEvent_Create_CarriesWhoRestored()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+        var restoredBy = Guid.NewGuid();
+
+        // Act
+        var @event = TenantRestoredDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, restoredBy);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.True(@event.IsActive);
+        Assert.Equal(restoredBy, @event.RestoredBy);
+    }
+
+    [Fact]
+    public void TenantPurgedDomainEvent_Create_CarriesTheTenant()
+    {
+        // Arrange
+        var aggregateId = Guid.NewGuid();
+
+        // Act
+        var @event = TenantPurgedDomainEvent.Create(aggregateId, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, false);
+
+        // Assert
+        Assert.Equal(aggregateId, @event.AggregateId);
+        Assert.Equal(Utils.Name, @event.Name);
     }
 
     [Fact]

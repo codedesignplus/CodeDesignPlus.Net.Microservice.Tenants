@@ -66,4 +66,9 @@ public class Errors : IErrorCodes
 
     public static readonly Error DeletedByIsInvalid = new("145");
     public static readonly Error UpdatedByIsInvalid = new("146");
+
+    public static readonly Error RetentionIsInvalid = new("147");
+    public static readonly Error TenantIsNotDeleted = new("148");
+    public static readonly Error RestoreWindowExpired = new("149");
+    public static readonly Error TenantIsNotDueForPurge = new("150");
 }

@@ -46,6 +46,10 @@
     "143": "O código postal é obrigatório.",
     "144": "O é-mail do condomínio não é válido.",
     "145": "O identificador de quem exclui não é válido.",
-    "146": "O identificador de quem altera não é válido."
+    "146": "O identificador de quem altera não é válido.",
+    "147": "O prazo para restaurar um condomínio excluído não é válido.",
+    "148": "O condomínio não está excluído.",
+    "149": "O prazo para restaurar o condomínio terminou.",
+    "150": "O condomínio ainda pode ser restaurado; seus dados ainda não foram apagados."
   }
 }

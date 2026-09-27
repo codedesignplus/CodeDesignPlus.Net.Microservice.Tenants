@@ -6,3 +6,7 @@ global using CodeDesignPlus.Net.Serializers;
 global using NodaTime;
 
 
+global using System.Collections.Generic;
+global using CodeDesignPlus.Net.ValueObjects.Location;
+global using CodeDesignPlus.Net.ValueObjects.Financial;
+global using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;

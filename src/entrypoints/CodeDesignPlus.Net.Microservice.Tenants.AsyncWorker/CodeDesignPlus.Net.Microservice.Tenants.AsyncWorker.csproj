@@ -16,6 +16,7 @@
     <PackageReference Include="CodeDesignPlus.Net.Observability" Version="1.0.0-beta.13481" />
     <PackageReference Include="CodeDesignPlus.Net.Security" Version="1.0.0-beta.13481" />
     <PackageReference Include="CodeDesignPlus.Net.Redis.Cache" Version="1.0.0-beta.13481" />
+    <PackageReference Include="CodeDesignPlus.Net.Hangfire" Version="1.0.0-beta.13481" />
   </ItemGroup>
   <ItemGroup>
     <SonarQubeSetting Include="sonar.coverage.exclusions">

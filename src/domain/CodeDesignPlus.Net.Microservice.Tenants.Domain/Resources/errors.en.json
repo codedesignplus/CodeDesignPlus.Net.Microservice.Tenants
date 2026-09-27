@@ -46,6 +46,10 @@
     "143": "The postal code is null or empty.",
     "144": "The email tenant is invalid.",
     "145": "The deleted by is invalid.",
-    "146": "The updated by is invalid."
+    "146": "The updated by is invalid.",
+    "147": "The period to restore a deleted tenant is not valid.",
+    "148": "The tenant is not deleted.",
+    "149": "The period to restore the tenant has ended.",
+    "150": "The tenant can still be restored; its data is not purged yet."
   }
 }

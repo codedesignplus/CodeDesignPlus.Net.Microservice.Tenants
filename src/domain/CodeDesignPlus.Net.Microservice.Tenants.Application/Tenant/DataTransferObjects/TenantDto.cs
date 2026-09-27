@@ -16,4 +16,6 @@ public class TenantDto: IDtoBase
     public Location Location { get; set; } = null!;
     public License License { get; set; } = null!;
     public bool IsActive { get; set; }
+    public Instant? DeletedAt { get; set; }
+    public Instant? PurgeAfter { get; set; }
 }

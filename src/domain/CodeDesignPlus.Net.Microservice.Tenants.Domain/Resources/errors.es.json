@@ -46,6 +46,10 @@
     "143": "El código postal es obligatorio.",
     "144": "El correo de la copropiedad no es válido.",
     "145": "El identificador de quien elimina no es válido.",
-    "146": "El identificador de quien modifica no es válido."
+    "146": "El identificador de quien modifica no es válido.",
+    "147": "El plazo para restaurar una copropiedad eliminada no es válido.",
+    "148": "La copropiedad no está eliminada.",
+    "149": "Venció el plazo para restaurar la copropiedad.",
+    "150": "La copropiedad todavía se puede restaurar; aún no se purgan sus datos."
   }
 }

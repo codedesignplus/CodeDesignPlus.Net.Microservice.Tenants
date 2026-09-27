@@ -25,5 +25,7 @@ global using NodaTime;
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant;
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.UpdateTenant;
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.DeleteTenant;
+global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.RestoreTenant;
+global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetDeletedTenants;
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetTenantById;
 global using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Queries.GetAllTenant;

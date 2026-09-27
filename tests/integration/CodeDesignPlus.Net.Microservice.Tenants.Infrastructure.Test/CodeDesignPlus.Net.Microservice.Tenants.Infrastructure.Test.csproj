@@ -5,19 +5,13 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <IsPackable>false</IsPackable>
-    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="CodeDesignPlus.Net.xUnit.Microservice" Version="1.0.0-beta.13481" />
+    <PackageReference Include="Ductus.FluentDocker.XUnit" Version="2.83.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -27,13 +21,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\domain\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure\CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.csproj" />
+  </ItemGroup>
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CodeDesignPlus.Net.Generator'" />
+    </ItemGroup>
+  </Target>
+  <ItemGroup>
+    <Compile Include="..\..\unit\CodeDesignPlus.Net.Microservice.Tenants.Application.Test\Helpers\Utils.cs" Link="Helpers\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\entrypoints\CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker\CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Consumers\" />
-    <Compile Include="..\CodeDesignPlus.Net.Microservice.Tenants.Application.Test\Helpers\Utils.cs" Link="Helpers\Utils.cs" />
   </ItemGroup>
 </Project>

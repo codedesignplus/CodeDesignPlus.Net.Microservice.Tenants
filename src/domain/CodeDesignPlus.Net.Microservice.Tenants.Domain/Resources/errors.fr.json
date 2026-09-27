@@ -46,6 +46,10 @@
     "143": "Le code postal est obligatoire.",
     "144": "L'e-mail de la copropriété n'est pas valide.",
     "145": "L'identifiant de l'auteur de la suppression n'est pas valide.",
-    "146": "L'identifiant de l'auteur de la modification n'est pas valide."
+    "146": "L'identifiant de l'auteur de la modification n'est pas valide.",
+    "147": "Le délai pour restaurer une copropriété supprimée n'est pas valide.",
+    "148": "La copropriété n'est pas supprimée.",
+    "149": "Le délai pour restaurer la copropriété est écoulé.",
+    "150": "La copropriété peut encore être restaurée ; ses données ne sont pas encore purgées."
   }
 }
