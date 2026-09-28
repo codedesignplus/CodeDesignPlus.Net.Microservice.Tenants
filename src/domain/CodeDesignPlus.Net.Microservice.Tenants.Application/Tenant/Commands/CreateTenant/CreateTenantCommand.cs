@@ -23,7 +23,7 @@ public class Validator : AbstractValidator<CreateTenantCommand>
     public Validator()
     {
         RuleFor(x => x.Id).NotEmpty().NotNull();
-        RuleFor(x => x.Name).NotEmpty().NotNull().MaximumLength(128);
+        RuleFor(x => x.Name).NotEmpty().NotNull().MaximumLength(FieldLength.Name);
         RuleFor(x => x.License).NotNull();
         RuleFor(x => x.Location).NotNull();
         RuleFor(x => x.TypeDocument).NotNull();
