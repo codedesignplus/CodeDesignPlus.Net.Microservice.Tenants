@@ -1,10 +1,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["nuget.config", "nuget.config"]
+COPY ["src/domain/CodeDesignPlus.Net.Microservice.Tenants.Application/CodeDesignPlus.Net.Microservice.Tenants.Application.csproj", "domain/CodeDesignPlus.Net.Microservice.Tenants.Application/"]
+COPY ["src/domain/CodeDesignPlus.Net.Microservice.Tenants.Domain/CodeDesignPlus.Net.Microservice.Tenants.Domain.csproj", "domain/CodeDesignPlus.Net.Microservice.Tenants.Domain/"]
+COPY ["src/domain/CodeDesignPlus.Net.Microservice.Tenants.Infrastructure/CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.csproj", "domain/CodeDesignPlus.Net.Microservice.Tenants.Infrastructure/"]
+COPY ["src/entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/CodeDesignPlus.Net.Microservice.Tenants.gRpc.csproj", "entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/"]
+RUN dotnet restore "./entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/CodeDesignPlus.Net.Microservice.Tenants.gRpc.csproj" /p:PublishReadyToRun=true
 COPY ["src/domain/", "domain/"]
 COPY ["src/entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/", "entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/"]
-COPY ["nuget.config", "nuget.config"]
-RUN dotnet restore "./entrypoints/CodeDesignPlus.Net.Microservice.Tenants.gRpc/CodeDesignPlus.Net.Microservice.Tenants.gRpc.csproj"
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
