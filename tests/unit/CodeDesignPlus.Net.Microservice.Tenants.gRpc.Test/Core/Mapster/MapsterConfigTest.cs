@@ -22,6 +22,54 @@ public class MapsterConfigTest
         Assert.NotEmpty(config.RuleMap);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void CreateTenantRequest_WithoutLocalityAndNeighborhood_MapsThemAsNull(bool asEmptyMessages)
+    {
+        // La mayoría de los municipios no tiene localidades ni barrios (pendings/130): la compra los manda ausentes.
+        CodeDesignPlus.Net.Microservice.Tenants.gRpc.Core.Mapster.MapsterConfig.Configure();
+
+        var request = new CreateTenantRequest
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Conjunto Chía",
+            TypeDocument = new TypeDocument { Code = "NIT", Name = "Número de Identificación Tributaria" },
+            NumbreDocument = "901234567",
+            Phone = "+573000000001",
+            Email = "admin@conjunto.com",
+            Location = new Location
+            {
+                Country = new Country
+                {
+                    Id = Guid.NewGuid().ToString(), Name = "Colombia", Alpha2 = "CO", Alpha3 = "COL", Code = 170,
+                    PhoneCode = "+57", Timezone = "America/Bogota",
+                    Currency = new Currency { Id = Guid.NewGuid().ToString(), Code = "COP", Name = "Peso colombiano", Symbol = "$", DecimalDigits = 2, NumericCode = 170 }
+                },
+                State = new State { Id = Guid.NewGuid().ToString(), Name = "Cundinamarca", Code = "CUN" },
+                City = new City { Id = Guid.NewGuid().ToString(), Name = "Chía", Timezone = "America/Bogota" },
+                Locality = asEmptyMessages ? new Locality() : null,
+                Neighborhood = asEmptyMessages ? new Neighborhood() : null,
+                Address = "Calle 10 # 5-20",
+                PostalCode = "250001"
+            },
+            License = new License
+            {
+                Id = Guid.NewGuid().ToString(), Name = "Élite",
+                StartDate = "2026-09-29T00:00:00Z", EndDate = "2026-10-29T00:00:00Z"
+            },
+            IsActive = true
+        };
+
+        // Act
+        var command = request.Adapt<CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.CreateTenant.CreateTenantCommand>();
+
+        // Assert
+        Assert.Equal("Chía", command.Location.City.Name);
+        Assert.Null(command.Location.Locality);
+        Assert.Null(command.Location.Neighborhood);
+    }
+
     [Fact]
     public void TenantDto_To_GetTenantResponse_MapsLicenseModules()
     {

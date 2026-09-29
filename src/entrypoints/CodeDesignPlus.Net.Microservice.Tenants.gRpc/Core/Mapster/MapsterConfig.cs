@@ -40,8 +40,13 @@ public static class MapsterConfig
                     ),
                     CodeDesignPlus.Net.ValueObjects.Location.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
                     CodeDesignPlus.Net.ValueObjects.Location.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
-                    CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
-                    CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
+                    // Localidad y barrio son opcionales: la mayoría de los municipios no tiene (pendings/130).
+                    src.Location.Locality == null || string.IsNullOrEmpty(src.Location.Locality.Id)
+                        ? null
+                        : CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
+                    src.Location.Neighborhood == null || string.IsNullOrEmpty(src.Location.Neighborhood.Id)
+                        ? null
+                        : CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
                     src.Location.Address,
                     src.Location.PostalCode
                 ),
@@ -87,8 +92,13 @@ public static class MapsterConfig
                     ),
                     CodeDesignPlus.Net.ValueObjects.Location.State.Create(Guid.Parse(src.Location.State.Id), src.Location.State.Name, src.Location.State.Code),
                     CodeDesignPlus.Net.ValueObjects.Location.City.Create(Guid.Parse(src.Location.City.Id), src.Location.City.Name, src.Location.City.Timezone),
-                    CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
-                    CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
+                    // Localidad y barrio son opcionales: la mayoría de los municipios no tiene (pendings/130).
+                    src.Location.Locality == null || string.IsNullOrEmpty(src.Location.Locality.Id)
+                        ? null
+                        : CodeDesignPlus.Net.ValueObjects.Location.Locality.Create(Guid.Parse(src.Location.Locality.Id), src.Location.Locality.Name),
+                    src.Location.Neighborhood == null || string.IsNullOrEmpty(src.Location.Neighborhood.Id)
+                        ? null
+                        : CodeDesignPlus.Net.ValueObjects.Location.Neighborhood.Create(Guid.Parse(src.Location.Neighborhood.Id), src.Location.Neighborhood.Name),
                     src.Location.Address,
                     src.Location.PostalCode
                 ),
