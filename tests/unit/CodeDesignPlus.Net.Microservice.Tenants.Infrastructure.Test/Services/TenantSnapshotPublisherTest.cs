@@ -22,7 +22,7 @@ public class TenantSnapshotPublisherTest
         await publisher.PublishAsync(tenant);
 
         // Assert
-        cacheManagerMock.Verify(c => c.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), It.IsAny<Models.Tenant>(), null), Times.Once);
+        cacheManagerMock.Verify(c => c.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>()), Times.Once);
         cacheManagerMock.Verify(c => c.AddToGlobalSetAsync(TenantCacheKeys.ActiveTenants, tenant.Id.ToString()), Times.Once);
         cacheManagerMock.Verify(c => c.RemoveFromGlobalSetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
@@ -38,7 +38,7 @@ public class TenantSnapshotPublisherTest
         await publisher.PublishAsync(tenant);
 
         // Assert
-        cacheManagerMock.Verify(c => c.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), It.IsAny<Models.Tenant>(), null), Times.Once);
+        cacheManagerMock.Verify(c => c.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>()), Times.Once);
         cacheManagerMock.Verify(c => c.RemoveFromGlobalSetAsync(TenantCacheKeys.ActiveTenants, tenant.Id.ToString()), Times.Once);
         cacheManagerMock.Verify(c => c.AddToGlobalSetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
@@ -51,7 +51,7 @@ public class TenantSnapshotPublisherTest
         Models.Tenant published = null!;
 
         cacheManagerMock
-            .Setup(c => c.SetGlobalAsync(It.IsAny<string>(), It.IsAny<Models.Tenant>(), null))
+            .Setup(c => c.SetGlobalAsync(It.IsAny<string>(), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>()))
             .Callback<string, Models.Tenant, TimeSpan?>((_, snapshot, _) => published = snapshot);
 
         var publisher = BuildPublisher();
@@ -73,7 +73,7 @@ public class TenantSnapshotPublisherTest
         // Arrange: la base ya quedo consistente, asi que el comando no puede fallar por el cache.
         var tenant = BuildTenant(isActive: true);
         cacheManagerMock
-            .Setup(c => c.SetGlobalAsync(It.IsAny<string>(), It.IsAny<Models.Tenant>(), null))
+            .Setup(c => c.SetGlobalAsync(It.IsAny<string>(), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>()))
             .ThrowsAsync(new InvalidOperationException("redis is down"));
 
         var publisher = BuildPublisher();
