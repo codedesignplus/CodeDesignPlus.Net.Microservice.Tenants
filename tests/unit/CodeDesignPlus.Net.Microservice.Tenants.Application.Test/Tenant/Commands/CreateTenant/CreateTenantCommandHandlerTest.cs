@@ -41,7 +41,7 @@ public class CreateTenantCommandHandlerTest
     }
 
     [Fact]
-    public async Task Handle_TenantAlreadyExists_ThrowsCodeDesignPlusException()
+    public async Task Handle_TenantAlreadyExists_IsTheRetryAndDoesNotCreateItAgain()
     {
         // Arrange
         var request = new CreateTenantCommand(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "1236456", "fake@fake.com", Utils.Location, Utils.License, Guid.NewGuid(), true);
@@ -52,12 +52,11 @@ public class CreateTenantCommandHandlerTest
             .Setup(r => r.ExistsAsync<TenantAggregate>(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        // Act & Assert
-        var exception = await Assert.ThrowsAsync<CodeDesignPlusException>(() => handler.Handle(request, cancellationToken));
+        // Act: el mismo id es el reintento del mismo formulario (pendings/589, regla 66), no un error.
+        await handler.Handle(request, cancellationToken);
 
-        Assert.Equal(Errors.TenantAlreadyExists.GetMessage(), exception.Message);
-        Assert.Equal(Errors.TenantAlreadyExists.GetCode(), exception.Code);
-        Assert.Equal(Layer.Application, exception.Layer);
+        // Assert
+        repositoryMock.Verify(x => x.CreateIfAbsentAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -70,12 +69,13 @@ public class CreateTenantCommandHandlerTest
         repositoryMock
             .Setup(r => r.ExistsAsync<TenantAggregate>(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
+        repositoryMock.Setup(r => r.CreateIfAbsentAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
         // Act
         await handler.Handle(request, cancellationToken);
 
         // Assert
-        repositoryMock.Verify(r => r.CreateAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(r => r.CreateIfAbsentAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Once);
         snapshotPublisherMock.Verify(p => p.PublishAsync(It.IsAny<TenantAggregate>(), It.IsAny<CancellationToken>()), Times.Once);
         pubSubMock.Verify(p => p.PublishAsync(It.IsAny<List<TenantCreatedDomainEvent>>(), It.IsAny<CancellationToken>()), Times.AtMostOnce);
     }

@@ -57,4 +57,19 @@ public class TenantRepository(IServiceProvider serviceProvider, IOptions<MongoOp
 
         return result.DeletedCount > 0;
     }
+
+    /// <inheritdoc />
+    public async Task<bool> CreateIfAbsentAsync(TenantAggregate tenant, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await CreateAsync(tenant, cancellationToken);
+
+            return true;
+        }
+        catch (MongoWriteException exception) when (exception.WriteError?.Category == ServerErrorCategory.DuplicateKey)
+        {
+            return false;
+        }
+    }
 }
