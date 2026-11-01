@@ -1,3 +1,5 @@
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
+using MongoDB.Bson;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Repositories;
 
 public class TenantRepository(IServiceProvider serviceProvider, IOptions<MongoOptions> mongoOptions, ILogger<TenantRepository> logger)
@@ -9,14 +11,30 @@ public class TenantRepository(IServiceProvider serviceProvider, IOptions<MongoOp
     {
         var collection = GetCollection<TenantAggregate>();
 
-        var filter = Builders<TenantAggregate>.Filter.And(
-            Builders<TenantAggregate>.Filter.Eq(x => x.TypeDocument.Code, typeDocumentCode),
-            Builders<TenantAggregate>.Filter.Eq(x => x.NumberDocument, numberDocument)
-        );
+        var filter = ByDocumentFilter(typeDocumentCode, numberDocument);
 
         var count = await collection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
         return count > 0;
+    }
+
+    /// <summary>
+    /// The tenants with that document, written with or without separators: «901888777-3», «901.888.777-3» and «9018887773» are
+    /// the same (pendings/733.155). The stored number is compared with an anchored regular expression, which DocumentDB supports
+    /// without collation.
+    /// </summary>
+    /// <param name="typeDocumentCode">The document type.</param>
+    /// <param name="numberDocument">The number as written.</param>
+    /// <returns>The filter.</returns>
+    public static FilterDefinition<TenantAggregate> ByDocumentFilter(string typeDocumentCode, string numberDocument)
+    {
+        var pattern = DocumentNumberMatch.Pattern(numberDocument);
+
+        var number = pattern is null
+            ? Builders<TenantAggregate>.Filter.Eq(x => x.NumberDocument, numberDocument)
+            : Builders<TenantAggregate>.Filter.Regex(x => x.NumberDocument, new BsonRegularExpression(pattern));
+
+        return Builders<TenantAggregate>.Filter.And(Builders<TenantAggregate>.Filter.Eq(x => x.TypeDocument.Code, typeDocumentCode), number);
     }
 
     public async Task<TenantAggregate?> FindDeletedAsync(Guid id, CancellationToken cancellationToken)
