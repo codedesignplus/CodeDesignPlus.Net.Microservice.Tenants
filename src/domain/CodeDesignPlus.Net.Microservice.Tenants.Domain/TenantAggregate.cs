@@ -86,6 +86,59 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         AddEvent(TenantLicenseUpdatedDomainEvent.Create(Id, license, updatedBy));
     }
 
+    /// <summary>
+    /// Aplica la renovación pagada de la licencia (pendings/735): la vigencia llega hasta el fin del periodo renovado. Si la
+    /// licencia ya estaba vencida cuando empieza el periodo nuevo, la vigencia empieza ahí; si no, conserva su inicio.
+    /// </summary>
+    /// <param name="renewed">La licencia con el periodo renovado, tal como la vendió ms-licenses.</param>
+    /// <param name="updatedBy">Quien pagó.</param>
+    /// <returns><c>false</c> si ya estaba aplicada: una reentrega del evento no cambia nada.</returns>
+    public bool RenewLicense(License renewed, Guid updatedBy)
+    {
+        DomainGuard.IsNull(renewed, Errors.LicenseMetadataIsNull);
+
+        // Nunca acorta: si llega tarde la renovación de un periodo anterior, la vigencia ya va más allá.
+        var end = License is null || renewed.EndDate > License.EndDate ? renewed.EndDate : License.EndDate;
+        var start = License is null || License.EndDate < renewed.StartDate ? renewed.StartDate : License.StartDate;
+
+        return ApplyLicense(License.Create(renewed.Id, renewed.Name, start, end, renewed.Modules, renewed.Metadata), updatedBy);
+    }
+
+    /// <summary>
+    /// Aplica el cambio pagado a otra licencia (pendings/738): la licencia nueva, con sus módulos, sus atributos y su periodo,
+    /// reemplaza entera a la anterior.
+    /// </summary>
+    /// <param name="changed">La licencia nueva con su periodo.</param>
+    /// <param name="updatedBy">Quien pagó.</param>
+    /// <returns><c>false</c> si ya estaba aplicada.</returns>
+    public bool ChangeLicense(License changed, Guid updatedBy)
+    {
+        DomainGuard.IsNull(changed, Errors.LicenseMetadataIsNull);
+
+        return ApplyLicense(changed, updatedBy);
+    }
+
+    private bool ApplyLicense(License license, Guid updatedBy)
+    {
+        if (License is not null && SameLicense(License, license))
+        {
+            return false;
+        }
+
+        UpdateLicense(license, updatedBy);
+
+        return true;
+    }
+
+    private static bool SameLicense(License a, License b) =>
+        a.Id == b.Id
+        && a.Name == b.Name
+        && a.StartDate == b.StartDate
+        && a.EndDate == b.EndDate
+        && a.Modules.Select(x => x.Id).OrderBy(x => x).SequenceEqual(b.Modules.Select(x => x.Id).OrderBy(x => x))
+        && a.Metadata.Count == b.Metadata.Count
+        && a.Metadata.All(x => b.Metadata.TryGetValue(x.Key, out var value) && value == x.Value);
+
     public void UpdateLocation(Location location, Guid updatedBy)
     {
         DomainGuard.IsNull(location, Errors.LicenseMetadataIsNull);
