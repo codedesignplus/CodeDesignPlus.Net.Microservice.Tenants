@@ -29,7 +29,7 @@
     "126": "El dominio de la copropiedad no es válido.",
     "127": "La copropiedad no es válida.",
     "128": "El identificador de quien crea no es válido.",
-    "129": "El nombre de la licencia no es válido.",
+    "129": "El nombre de la licencia solo admite letras, números, espacios y los signos · - + . , & ( ) / ', debe llevar al menos una letra o un número y puede tener hasta {0} caracteres.",
     "130": "El código de la moneda no es válido.",
     "131": "El país es obligatorio.",
     "132": "El departamento es obligatorio.",

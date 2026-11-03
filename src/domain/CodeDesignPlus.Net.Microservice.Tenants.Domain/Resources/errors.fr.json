@@ -29,7 +29,7 @@
     "126": "Le domaine de la copropriété n'est pas valide.",
     "127": "La copropriété n'est pas valide.",
     "128": "L'identifiant du créateur n'est pas valide.",
-    "129": "Le nom de la licence n'est pas valide.",
+    "129": "Le nom de la licence n'admet que des lettres, des chiffres, des espaces et les signes · - + . , & ( ) / ', doit contenir au moins une lettre ou un chiffre et peut compter jusqu'à {0} caractères.",
     "130": "Le code de la devise n'est pas valide.",
     "131": "Le pays est obligatoire.",
     "132": "La région est obligatoire.",

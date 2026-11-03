@@ -29,7 +29,7 @@
     "126": "O domínio do condomínio não é válido.",
     "127": "O condomínio não é válido.",
     "128": "O identificador de quem cria não é válido.",
-    "129": "O nome da licença não é válido.",
+    "129": "O nome da licença só admite letras, números, espaços e os sinais · - + . , & ( ) / ', deve ter ao menos uma letra ou um número e pode ter até {0} caracteres.",
     "130": "O código da moeda não é válido.",
     "131": "O país é obrigatório.",
     "132": "O estado é obrigatório.",

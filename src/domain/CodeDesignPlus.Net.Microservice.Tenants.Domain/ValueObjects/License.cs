@@ -1,12 +1,10 @@
 using System.Text.Json.Serialization;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 
-public sealed partial class License
+public sealed class License
 {
-    [GeneratedRegex(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{1,128}$")]
-    private static partial Regex Regex();
-
     public Guid Id { get; private set; }
     public string Name { get; private set; }
     public Instant StartDate { get; private set; }
@@ -22,7 +20,8 @@ public sealed partial class License
         DomainGuard.IsGreaterThan(StartDate, EndDate, Errors.LicenseStartDateGreaterThanEndDate);
         DomainGuard.IsNull(Metadata, Errors.LicenseMetadataIsNull);
 
-        DomainGuard.IsFalse(Regex().IsMatch(Name), Errors.LicenseNameIsInvalid);
+        // La misma regla que el catálogo de ms-licenses: una licencia que se pudo vender se puede aplicar (pendings/738).
+        DomainGuard.IsFalse(LicenseName.IsValid(Name), Errors.LicenseNameIsInvalid.With(FieldLength.Name));
 
         this.Id = Id;
         this.Name = Name;

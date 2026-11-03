@@ -29,7 +29,7 @@
     "126": "The tenant domain is invalid.",
     "127": "The tenant is invalid.",
     "128": "The created by is invalid.",
-    "129": "The license name is invalid.",
+    "129": "The license name may only contain letters, digits, spaces and the signs · - + . , & ( ) / ', must include a letter or a digit, and can be up to {0} characters long.",
     "130": "The currency code is invalid.",
     "131": "The country is null.",
     "132": "The state is null.",
