@@ -127,4 +127,52 @@ public class SubscriptionLicenseHandlersTest
         // Assert
         Assert.Equal((sold.Id, paidAt, 2, "24"), (tenant.License.Id, tenant.License.StartDate, tenant.License.Modules.Count, tenant.License.Metadata["meetings.perYear"]));
     }
+
+    private static PackageTenant Package(Guid? lineId = null) => new()
+    {
+        LineId = lineId ?? Guid.NewGuid(),
+        PackageId = Guid.NewGuid(),
+        Name = "Virtual Básico",
+        StartDate = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromMinutes(1)),
+        EndDate = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(300)),
+        Attributes = [new PackageTenantAttribute { Key = "assemblies_number_meetings", Value = "3", Combination = "Sum" }],
+    };
+
+    /// <summary>
+    /// Un paquete comprado para la copropiedad se suma a sus atributos efectivos y sale en <c>TenantLicenseUpdated</c>
+    /// (pendings/739); la licencia guardada no cambia.
+    /// </summary>
+    [Fact]
+    public async Task PackagesPurchased_AddsThePackageToTheEffectiveAttributes()
+    {
+        // Arrange
+        var handler = new ApplyTenantPackagesHandler(repository.Object, snapshots.Object, pubsub.Object, Mock.Of<ILogger<ApplyTenantPackagesHandler>>());
+        IReadOnlyList<IDomainEvent>? published = null;
+        pubsub.Setup(x => x.PublishAsync(It.IsAny<IReadOnlyList<IDomainEvent>>(), It.IsAny<CancellationToken>())).Callback<IReadOnlyList<IDomainEvent>, CancellationToken>((e, _) => published = e).Returns(Task.CompletedTask);
+
+        // Act
+        await handler.HandleAsync(new SubscriptionPackagesPurchasedDomainEvent(Guid.NewGuid(), Detail(), [Package()], Guid.NewGuid()), CancellationToken.None);
+
+        // Assert
+        var @event = published!.OfType<TenantLicenseUpdatedDomainEvent>().Single();
+        Assert.Equal(("3", "12", false), (@event.License.Metadata["assemblies_number_meetings"], @event.License.Metadata["meetings.perYear"], tenant.License.Metadata.ContainsKey("assemblies_number_meetings")));
+    }
+
+    /// <summary>
+    /// Un cambio de licencia sin paquetes (licencia mensual) conserva los que la copropiedad ya tenía.
+    /// </summary>
+    [Fact]
+    public async Task Changed_WithoutPackages_KeepsTheCurrentPackages()
+    {
+        // Arrange
+        tenant.ApplyPackages([Package().ToPackage()], SystemClock.Instance.GetCurrentInstant(), Guid.NewGuid());
+        tenant.GetAndClearEvents();
+        var handler = new ChangeTenantLicenseHandler(repository.Object, snapshots.Object, pubsub.Object, Mock.Of<ILogger<ChangeTenantLicenseHandler>>());
+
+        // Act
+        await handler.HandleAsync(new SubscriptionChangedDomainEvent(Guid.NewGuid(), Detail(), Sold(Start, Start.Plus(Duration.FromDays(31)), Guid.NewGuid(), "Élite"), tenant.License.Id, Guid.NewGuid()), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(("Élite", "3"), (tenant.License.Name, tenant.EffectiveLicense().Metadata["assemblies_number_meetings"]));
+    }
 }

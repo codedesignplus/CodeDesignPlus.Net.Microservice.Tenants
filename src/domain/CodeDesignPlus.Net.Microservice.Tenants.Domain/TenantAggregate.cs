@@ -20,6 +20,96 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     /// </summary>
     public Instant? PurgeAfter { get; private set; }
 
+    // Los miembros que siguen no van al constructor (regla 31): las copropiedades guardadas antes de los paquetes no los
+    // traen y leen nulo (pendings/739).
+
+    /// <summary>
+    /// Los paquetes complementarios pagados, con su periodo, tal como los vendió ms-licenses (pendings/739).
+    /// </summary>
+    public List<TenantPackage>? Packages { get; private set; }
+
+    /// <summary>
+    /// Los atributos efectivos que se publicaron por última vez: los de la licencia combinados con los de los paquetes que
+    /// contaban. Nulo hasta el primer cálculo; entonces valen los de la licencia.
+    /// </summary>
+    public Dictionary<string, string>? EffectiveMetadata { get; private set; }
+
+    /// <summary>
+    /// La licencia como la ven los demás micros: con los atributos efectivos (pendings/739). Es la que viaja en
+    /// <see cref="TenantLicenseUpdatedDomainEvent"/> y en la foto.
+    /// </summary>
+    /// <returns>La licencia con los atributos efectivos.</returns>
+    public License EffectiveLicense() => License is null
+        ? null!
+        : License.Create(License.Id, License.Name, License.StartDate, License.EndDate, License.Modules, new Dictionary<string, string>(EffectiveMetadata ?? License.Metadata));
+
+    /// <summary>
+    /// Suma los paquetes pagados: una línea que ya estaba no se repite, la que llega reemplaza a la que cita desde su inicio y
+    /// las ya vencidas se descartan. Recalcula los atributos efectivos (pendings/739).
+    /// </summary>
+    /// <param name="incoming">Los paquetes de la orden pagada.</param>
+    /// <param name="now">El instante.</param>
+    /// <param name="updatedBy">Quien pagó.</param>
+    /// <returns><c>false</c> si ya estaban aplicados: una reentrega no cambia nada.</returns>
+    public bool ApplyPackages(IReadOnlyCollection<TenantPackage> incoming, Instant now, Guid updatedBy)
+    {
+        DomainGuard.IsNull(incoming, Errors.LicenseMetadataIsNull);
+
+        var current = Packages ?? [];
+        var known = current.Select(x => x.LineId).ToHashSet();
+        var added = incoming.Where(x => !known.Contains(x.LineId)).ToList();
+
+        if (added.Count == 0)
+        {
+            return false;
+        }
+
+        // Una línea vencida ya no cuenta ni puede volver a contar: se descarta para que el documento no crezca sin fin.
+        Packages = [.. current.Concat(added).Where(x => x.EndDate > now)];
+        UpdatedBy = updatedBy;
+        UpdatedAt = now;
+
+        RefreshEffectiveLicense(now, updatedBy, force: true);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Recalcula los atributos efectivos y, si cambiaron, publica <see cref="TenantLicenseUpdatedDomainEvent"/>: lo llama
+    /// la reconciliación de la foto, para que un paquete que vence o una licencia que deja de estar pagada se noten sin
+    /// esperar a otro evento (pendings/739).
+    /// </summary>
+    /// <param name="now">El instante.</param>
+    /// <param name="updatedBy">Quien lo pide (el sistema en la reconciliación).</param>
+    /// <param name="force">Publicar aunque no hayan cambiado.</param>
+    /// <returns><c>true</c> si cambiaron (o se forzó) y se publicó el evento.</returns>
+    public bool RefreshEffectiveLicense(Instant now, Guid updatedBy, bool force = false)
+    {
+        if (License is null)
+        {
+            return false;
+        }
+
+        var effective = ServiceDomain.EffectiveAttributes.Combine(License.Metadata, Packages ?? [], License.EndDate, now);
+        var published = EffectiveMetadata ?? License.Metadata;
+        // Sin cálculo previo, lo publicado era la licencia sola: si da lo mismo no hay nada que avisar (al publicar el micro no
+        // salen avisos de todas las copropiedades).
+        var changed = effective.Count != published.Count || effective.Any(x => !published.TryGetValue(x.Key, out var value) || value != x.Value);
+
+        if (!changed && !force)
+        {
+            return false;
+        }
+
+        EffectiveMetadata = effective;
+        UpdatedBy = updatedBy;
+        UpdatedAt = now;
+
+        AddEvent(TenantLicenseUpdatedDomainEvent.Create(Id, EffectiveLicense(), updatedBy));
+
+        return true;
+    }
+
     public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
@@ -80,10 +170,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
 
         License = license;
-        UpdatedBy = updatedBy;
-        UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        AddEvent(TenantLicenseUpdatedDomainEvent.Create(Id, license, updatedBy));
+        // Los demás micros reciben la licencia con los paquetes que cuentan (pendings/739).
+        RefreshEffectiveLicense(SystemClock.Instance.GetCurrentInstant(), updatedBy, force: true);
     }
 
     /// <summary>

@@ -74,6 +74,23 @@ public class TenantSnapshotLocalFallbackTest
     private TenantSnapshotLocalFallback BuildFallback() =>
         new(repositoryMock.Object, Mock.Of<ILogger<TenantSnapshotLocalFallback>>());
 
+    /// <summary>
+    /// La foto lleva los atributos efectivos (licencia más paquetes que cuentan), que son los que leen los micros por el SDK
+    /// (pendings/739); la licencia guardada no cambia.
+    /// </summary>
+    [Fact]
+    public void Map_TenantWithAPackage_PublishesTheEffectiveAttributes()
+    {
+        var tenant = BuildTenant();
+        var now = SystemClock.Instance.GetCurrentInstant();
+
+        tenant.ApplyPackages([new VO.TenantPackage(Guid.NewGuid(), Guid.NewGuid(), "Virtual Básico", now.Minus(Duration.FromMinutes(1)), now.Plus(Duration.FromDays(30)), null, [new VO.TenantPackageAttribute("assemblies_number_meetings", "3", "Sum")])], now, Guid.NewGuid());
+
+        var snapshot = TenantSnapshotMapper.Map(tenant);
+
+        Assert.Equal(("3", "3", false), (snapshot.Metadata["assemblies_number_meetings"], snapshot.License.Metadata["assemblies_number_meetings"], tenant.License.Metadata.ContainsKey("assemblies_number_meetings")));
+    }
+
     private static TenantAggregate BuildTenant()
     {
         var currency = CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(Guid.NewGuid(), "Peso", "COP", "$", 2, 170);

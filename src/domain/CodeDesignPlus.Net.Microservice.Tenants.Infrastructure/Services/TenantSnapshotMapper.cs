@@ -19,14 +19,15 @@ public static class TenantSnapshotMapper
         Name = tenant.Name,
         Domain = tenant.Domain,
         Location = tenant.Location,
-        Metadata = tenant.License?.Metadata ?? [],
+        // Los atributos efectivos: la licencia más los paquetes que cuentan (pendings/739).
+        Metadata = tenant.EffectiveMetadata ?? tenant.License?.Metadata ?? [],
         License = new Models.License
         {
             Id = tenant.License?.Id ?? Guid.Empty,
             Name = tenant.License?.Name,
             StartDate = tenant.License?.StartDate ?? Instant.MinValue,
             ExpirationDate = tenant.License?.EndDate ?? Instant.MaxValue,
-            Metadata = tenant.License?.Metadata ?? [],
+            Metadata = tenant.EffectiveMetadata ?? tenant.License?.Metadata ?? [],
             Modules = [.. (tenant.License?.Modules ?? []).Select(module => new Models.LicenseModule
             {
                 Id = module.Id,

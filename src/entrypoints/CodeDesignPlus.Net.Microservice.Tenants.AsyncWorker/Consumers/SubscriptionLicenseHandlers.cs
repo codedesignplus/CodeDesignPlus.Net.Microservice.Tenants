@@ -50,6 +50,13 @@ public static class SubscriptionLicenseSync
     }
 
     /// <summary>
+    /// Los paquetes del tenant a partir de los que vendió ms-licenses (pendings/739).
+    /// </summary>
+    /// <param name="packages">Los paquetes del evento.</param>
+    /// <returns>Los paquetes del tenant.</returns>
+    public static List<Domain.ValueObjects.TenantPackage> ToPackages(IEnumerable<PackageTenant>? packages) => [.. (packages ?? []).Select(x => x.ToPackage())];
+
+    /// <summary>
     /// La licencia del tenant a partir de la que vendió ms-licenses.
     /// </summary>
     /// <param name="license">La licencia del evento.</param>
@@ -73,8 +80,10 @@ public class RenewTenantLicenseHandler(ITenantRepository repository, ITenantSnap
     public Task HandleAsync(SubscriptionRenewedDomainEvent data, CancellationToken token)
     {
         var license = SubscriptionLicenseSync.ToLicense(data.License);
+        var packages = SubscriptionLicenseSync.ToPackages(data.Packages);
 
-        return SubscriptionLicenseSync.ApplyAsync(repository, snapshots, pubsub, data.TenantDetail.Id, x => x.RenewLicense(license, data.BuyerId), logger, token);
+        // La licencia y los paquetes que se renuevan con ella (pendings/739); los dos son idempotentes.
+        return SubscriptionLicenseSync.ApplyAsync(repository, snapshots, pubsub, data.TenantDetail.Id, x => x.RenewLicense(license, data.BuyerId) | x.ApplyPackages(packages, SystemClock.Instance.GetCurrentInstant(), data.BuyerId), logger, token);
     }
 }
 
@@ -88,7 +97,25 @@ public class ChangeTenantLicenseHandler(ITenantRepository repository, ITenantSna
     public Task HandleAsync(SubscriptionChangedDomainEvent data, CancellationToken token)
     {
         var license = SubscriptionLicenseSync.ToLicense(data.License);
+        var packages = SubscriptionLicenseSync.ToPackages(data.Packages);
 
-        return SubscriptionLicenseSync.ApplyAsync(repository, snapshots, pubsub, data.TenantDetail.Id, x => x.ChangeLicense(license, data.BuyerId), logger, token);
+        // Con licencia anual llegan los paquetes recotizados; con mensual, ninguno y los vigentes siguen (pendings/739).
+        return SubscriptionLicenseSync.ApplyAsync(repository, snapshots, pubsub, data.TenantDetail.Id, x => x.ChangeLicense(license, data.BuyerId) | x.ApplyPackages(packages, SystemClock.Instance.GetCurrentInstant(), data.BuyerId), logger, token);
+    }
+}
+
+/// <summary>
+/// Suma a la copropiedad el paquete comprado o ampliado (pendings/739): sus atributos cuentan en los efectivos desde que
+/// empieza y, si amplía otro, reemplaza al anterior.
+/// </summary>
+[QueueName<TenantAggregate>("ApplyTenantPackagesHandler")]
+public class ApplyTenantPackagesHandler(ITenantRepository repository, ITenantSnapshotPublisher snapshots, IPubSub pubsub, ILogger<ApplyTenantPackagesHandler> logger) : IEventHandler<SubscriptionPackagesPurchasedDomainEvent>
+{
+    /// <inheritdoc/>
+    public Task HandleAsync(SubscriptionPackagesPurchasedDomainEvent data, CancellationToken token)
+    {
+        var packages = SubscriptionLicenseSync.ToPackages(data.Packages);
+
+        return SubscriptionLicenseSync.ApplyAsync(repository, snapshots, pubsub, data.TenantDetail.Id, x => x.ApplyPackages(packages, SystemClock.Instance.GetCurrentInstant(), data.BuyerId), logger, token);
     }
 }

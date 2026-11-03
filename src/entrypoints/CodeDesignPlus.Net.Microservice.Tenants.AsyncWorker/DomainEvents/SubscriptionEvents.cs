@@ -32,6 +32,9 @@ public class SubscriptionRenewedDomainEvent(
 
     /// <summary>Quien pagó.</summary>
     public Guid BuyerId { get; } = buyerId;
+
+    /// <summary>Los paquetes pagados con su periodo (pendings/739); vacío si la orden no trae.</summary>
+    public List<PackageTenant> Packages { get; init; } = [];
 }
 
 /// <summary>
@@ -66,6 +69,41 @@ public class SubscriptionChangedDomainEvent(
 
     /// <summary>La licencia que se reemplaza.</summary>
     public Guid PreviousLicenseId { get; } = previousLicenseId;
+
+    /// <summary>Quien pagó.</summary>
+    public Guid BuyerId { get; } = buyerId;
+
+    /// <summary>Los paquetes pagados con su periodo (pendings/739); vacío si la orden no trae.</summary>
+    public List<PackageTenant> Packages { get; init; } = [];
+}
+
+/// <summary>
+/// Gemelo de <c>SubscriptionPackagesPurchasedDomainEvent</c> de ms-licenses: se pagó la compra o la ampliación de un paquete
+/// de una copropiedad que ya existe (pendings/739). Solo lo que usa este micro.
+/// </summary>
+/// <param name="aggregateId">La orden del paquete.</param>
+/// <param name="tenantDetail">La copropiedad.</param>
+/// <param name="packages">El paquete con su periodo.</param>
+/// <param name="buyerId">Quien pagó.</param>
+/// <param name="eventId">El identificador del evento.</param>
+/// <param name="occurredAt">Cuándo ocurrió.</param>
+/// <param name="metadata">Los metadatos.</param>
+[EventKey("OrderAggregate", 1, "SubscriptionPackagesPurchasedDomainEvent", "ms-licenses")]
+public class SubscriptionPackagesPurchasedDomainEvent(
+    Guid aggregateId,
+    Tenant tenantDetail,
+    List<PackageTenant> packages,
+    Guid buyerId,
+    Guid? eventId = null,
+    Instant? occurredAt = null,
+    Dictionary<string, object>? metadata = null
+) : DomainEvent(aggregateId, eventId, occurredAt, metadata)
+{
+    /// <summary>La copropiedad.</summary>
+    public Tenant TenantDetail { get; } = tenantDetail;
+
+    /// <summary>El paquete con su periodo.</summary>
+    public List<PackageTenant> Packages { get; } = packages ?? [];
 
     /// <summary>Quien pagó.</summary>
     public Guid BuyerId { get; } = buyerId;

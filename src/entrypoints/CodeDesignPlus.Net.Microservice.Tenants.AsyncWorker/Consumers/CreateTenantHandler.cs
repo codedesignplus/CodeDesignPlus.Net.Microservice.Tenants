@@ -3,12 +3,13 @@ using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.Create
 using CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.DomainEvents;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.Repositories;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
 using MediatR;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.AsyncWorker.Consumers;
 
 [QueueName<TenantAggregate>("CreateTenantHandler")]
-public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRepository, IPubSub pubsub, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
+public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRepository, IPubSub pubsub, ITenantSnapshotPublisher snapshots, ILogger<CreateTenantHandler> logger) : IEventHandler<OrderPaidAndReadyForProvisioningDomainEvent>
 {
     public async Task HandleAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
     {
@@ -17,6 +18,9 @@ public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRep
         if (exists)
         {
             logger.LogInformation("Tenant {TenantId} already exists. Publishing success (idempotent).", data.TenantDetail.Id);
+
+            // Si la entrega anterior creó la copropiedad y se cayó antes de sumar los paquetes, aquí se completa.
+            await ApplyPackagesAsync(data, token);
 
             var provisionedEvent = TenantProvisionedForOrderDomainEvent.Create(
                 data.TenantDetail.Id,
@@ -63,11 +67,28 @@ public class CreateTenantHandler(IMediator mediator, ITenantRepository tenantRep
             return;
         }
 
+        await ApplyPackagesAsync(data, token);
+
         var provisionedSuccessEvent = TenantProvisionedForOrderDomainEvent.Create(
             data.TenantDetail.Id,
             data.AggregateId
         );
 
         await pubsub.PublishAsync(provisionedSuccessEvent, token);
+    }
+
+    /// <summary>
+    /// Los paquetes comprados con la licencia (pendings/739): la copropiedad nace con su licencia y enseguida se le suman.
+    /// </summary>
+    private Task ApplyPackagesAsync(OrderPaidAndReadyForProvisioningDomainEvent data, CancellationToken token)
+    {
+        var packages = SubscriptionLicenseSync.ToPackages(data.Packages);
+
+        if (packages.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        return SubscriptionLicenseSync.ApplyAsync(tenantRepository, snapshots, pubsub, data.TenantDetail.Id, x => x.ApplyPackages(packages, SystemClock.Instance.GetCurrentInstant(), data.BuyerId), logger, token);
     }
 }
