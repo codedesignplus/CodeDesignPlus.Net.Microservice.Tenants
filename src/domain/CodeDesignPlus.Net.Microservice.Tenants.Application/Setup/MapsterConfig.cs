@@ -28,7 +28,9 @@ public static class MapsterConfigTenant
                 Domain = tenant.Domain,
                 Email = tenant.Email,
                 Phone = tenant.Phone,
-                License = tenant.License,
+                // La efectiva, de la misma función que la foto, para que pantalla y micros vean los mismos cupos (pendings/739).
+                License = tenant.EffectiveLicense(),
+                BaseLicense = tenant.License,
                 Location = tenant.Location,
                 IsActive = tenant.IsActive,
                 DeletedAt = tenant.DeletedAt,

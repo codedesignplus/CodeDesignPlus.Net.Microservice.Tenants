@@ -13,26 +13,33 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Services;
 /// </remarks>
 public static class TenantSnapshotMapper
 {
-    public static Models.Tenant Map(TenantAggregate tenant) => new()
+    public static Models.Tenant Map(TenantAggregate tenant)
     {
-        Id = tenant.Id,
-        Name = tenant.Name,
-        Domain = tenant.Domain,
-        Location = tenant.Location,
-        // Los atributos efectivos: la licencia más los paquetes que cuentan (pendings/739).
-        Metadata = tenant.EffectiveMetadata ?? tenant.License?.Metadata ?? [],
-        License = new Models.License
+        // Los atributos efectivos (la licencia más los paquetes que cuentan) salen de una sola función del agregado, la
+        // misma que arma el TenantDto de la pantalla: si divergieran, la pantalla y los micros verían cupos distintos
+        // (pendings/739).
+        var license = tenant.EffectiveLicense();
+
+        return new()
         {
-            Id = tenant.License?.Id ?? Guid.Empty,
-            Name = tenant.License?.Name,
-            StartDate = tenant.License?.StartDate ?? Instant.MinValue,
-            ExpirationDate = tenant.License?.EndDate ?? Instant.MaxValue,
-            Metadata = tenant.EffectiveMetadata ?? tenant.License?.Metadata ?? [],
-            Modules = [.. (tenant.License?.Modules ?? []).Select(module => new Models.LicenseModule
+            Id = tenant.Id,
+            Name = tenant.Name,
+            Domain = tenant.Domain,
+            Location = tenant.Location,
+            Metadata = license?.Metadata ?? [],
+            License = new Models.License
             {
-                Id = module.Id,
-                Name = module.Name
-            })]
-        }
-    };
+                Id = license?.Id ?? Guid.Empty,
+                Name = license?.Name,
+                StartDate = license?.StartDate ?? Instant.MinValue,
+                ExpirationDate = license?.EndDate ?? Instant.MaxValue,
+                Metadata = license?.Metadata ?? [],
+                Modules = [.. (license?.Modules ?? []).Select(module => new Models.LicenseModule
+                {
+                    Id = module.Id,
+                    Name = module.Name
+                })]
+            }
+        };
+    }
 }
