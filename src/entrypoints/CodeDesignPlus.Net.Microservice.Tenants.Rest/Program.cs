@@ -1,4 +1,5 @@
-﻿using CodeDesignPlus.Net.Observability.Extensions;
+﻿using CodeDesignPlus.Net.Security.Abstractions;
+using CodeDesignPlus.Net.Observability.Extensions;
 using CodeDesignPlus.Net.Microservice.Commons.Application;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Middlewares;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Resources;
@@ -56,6 +57,8 @@ app.UseCors(builder => builder
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader()
+    // Sin esto el navegador no le deja leer al frontend en qué estado está la licencia (pendings/737).
+    .WithExposedHeaders(LicenseHeaders.Status, LicenseHeaders.GraceEnds)
 );
 
 app.UseTraceContext();
