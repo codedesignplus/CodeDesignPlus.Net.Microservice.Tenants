@@ -43,7 +43,10 @@ public class TenantSnapshotReconciliationService(IServiceProvider serviceProvide
         while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 
-    private async Task ReconcileAsync(CancellationToken cancellationToken)
+    /// <summary>
+    /// Recorre todas las copropiedades una vez: refresca sus atributos efectivos y vuelve a publicar su foto.
+    /// </summary>
+    internal async Task ReconcileAsync(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
 
@@ -54,6 +57,7 @@ public class TenantSnapshotReconciliationService(IServiceProvider serviceProvide
 
         var skip = 0;
         var published = 0;
+        var failed = 0;
 
         while (true)
         {
@@ -68,14 +72,17 @@ public class TenantSnapshotReconciliationService(IServiceProvider serviceProvide
 
             foreach (var tenant in tenants)
             {
-                // Un paquete que venció o una licencia que dejó de estar pagada cambian los atributos efectivos sin que llegue
-                // ningún evento: aquí se notan, se guardan y se avisa con TenantLicenseUpdated (pendings/739).
-                var current = tenant.RefreshEffectiveLicense(now, SystemUserId)
-                    ? await RefreshAsync(repository, pubsub, tenant.Id, now, cancellationToken) ?? tenant
-                    : tenant;
-
-                await publisher.PublishAsync(current, cancellationToken);
-                published++;
+                // Una copropiedad que falla no deja sin foto a las demás: se registra con su id y la pasada sigue (pendings/737).
+                try
+                {
+                    await ReconcileTenantAsync(repository, publisher, pubsub, tenant, now, cancellationToken);
+                    published++;
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    failed++;
+                    logger.LogError(exception, "The snapshot reconciliation of tenant {TenantId} failed; the pass continues with the other tenants", tenant.Id);
+                }
             }
 
             skip += tenants.Count;
@@ -84,7 +91,18 @@ public class TenantSnapshotReconciliationService(IServiceProvider serviceProvide
                 break;
         }
 
-        logger.LogInformation("Tenant snapshot reconciliation completed: {Published} snapshots republished", published);
+        logger.LogInformation("Tenant snapshot reconciliation completed: {Published} snapshots republished, {Failed} failed", published, failed);
+    }
+
+    private async Task ReconcileTenantAsync(ITenantRepository repository, ITenantSnapshotPublisher publisher, IPubSub pubsub, TenantAggregate tenant, Instant now, CancellationToken cancellationToken)
+    {
+        // Un paquete que venció o una licencia que dejó de estar pagada cambian los atributos efectivos sin que llegue
+        // ningún evento: aquí se notan, se guardan y se avisa con TenantLicenseUpdated (pendings/739).
+        var current = tenant.RefreshEffectiveLicense(now, SystemUserId)
+            ? await RefreshAsync(repository, pubsub, tenant.Id, now, cancellationToken) ?? tenant
+            : tenant;
+
+        await publisher.PublishAsync(current, cancellationToken);
     }
 
     /// <summary>

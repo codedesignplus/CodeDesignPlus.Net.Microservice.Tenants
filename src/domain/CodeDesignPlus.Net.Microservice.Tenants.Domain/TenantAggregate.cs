@@ -39,9 +39,13 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     /// <see cref="TenantLicenseUpdatedDomainEvent"/> y en la foto.
     /// </summary>
     /// <returns>La licencia con los atributos efectivos.</returns>
+    /// <remarks>
+    /// Es una lectura: copia la licencia guardada sin validarla, para que una guardada con datos que hoy se rechazarían no
+    /// tumbe la consulta ni la foto (pendings/737).
+    /// </remarks>
     public License EffectiveLicense() => License is null
         ? null!
-        : License.Create(License.Id, License.Name, License.StartDate, License.EndDate, License.Modules, new Dictionary<string, string>(EffectiveMetadata ?? License.Metadata));
+        : new License(License.Id, License.Name, License.StartDate, License.EndDate, License.Modules, new Dictionary<string, string>(EffectiveMetadata ?? License.Metadata));
 
     /// <summary>
     /// Suma los paquetes pagados: una línea que ya estaba no se repite, la que llega reemplaza a la que cita desde su inicio y
@@ -54,6 +58,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     public bool ApplyPackages(IReadOnlyCollection<TenantPackage> incoming, Instant now, Guid updatedBy)
     {
         DomainGuard.IsNull(incoming, Errors.LicenseMetadataIsNull);
+
+        // Se publica la licencia con los paquetes: una guardada con datos inválidos no se vuelve a publicar (pendings/737).
+        License?.EnsureValid();
 
         var current = Packages ?? [];
         var known = current.Select(x => x.LineId).ToHashSet();
@@ -120,6 +127,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
         DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
+        typeDocument.EnsureValid();
+        DomainGuard.IsNull(license, Errors.LicenseMetadataIsNull);
+        license.EnsureValid();
 
         var aggregate = new TenantAggregate(id)
         {
@@ -150,6 +160,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(numberDocument, Errors.NumberDocumentTenantIsInvalid);
         DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
+        typeDocument.EnsureValid();
 
         Name = name;
         Domain = domain;
@@ -168,6 +179,8 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
     {
         DomainGuard.IsNull(license, Errors.LicenseMetadataIsNull);
         DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
+        // La licencia que llega de una petición se hidrata sin validar: aquí es donde se valida (pendings/737).
+        license.EnsureValid();
 
         License = license;
 
