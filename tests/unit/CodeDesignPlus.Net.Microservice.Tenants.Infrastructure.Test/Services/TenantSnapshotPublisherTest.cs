@@ -1,4 +1,5 @@
 using CodeDesignPlus.Net.Cache.Abstractions;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
 using CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Services;
 using CodeDesignPlus.Net.Security.Abstractions;
 using Microsoft.Extensions.Logging;
@@ -107,6 +108,68 @@ public class TenantSnapshotPublisherTest
 
         // Act & Assert
         await publisher.RemoveAsync(Guid.NewGuid());
+    }
+
+    /// <summary>
+    /// Toda escritura de la copropiedad pasa por aquí: tiene que borrar la copia que guarda <c>GET /Tenant/{id}</c>, o la
+    /// sesión ve hasta cinco minutos los cupos de antes de comprar un paquete (pendings/739).
+    /// </summary>
+    [Fact]
+    public async Task PublishAsync_EvictsTheTenantCachedByTheQueries()
+    {
+        // Arrange
+        var tenant = BuildTenant(isActive: true);
+        var publisher = BuildPublisher();
+
+        // Act
+        await publisher.PublishAsync(tenant);
+
+        // Assert
+        cacheManagerMock.Verify(c => c.RemoveAsync(TenantQueryCacheKeys.ById(tenant.Id)), Times.Once);
+    }
+
+    [Fact]
+    public async Task RemoveAsync_EvictsTheTenantCachedByTheQueries()
+    {
+        // Arrange
+        var tenantId = Guid.NewGuid();
+        var publisher = BuildPublisher();
+
+        // Act
+        await publisher.RemoveAsync(tenantId);
+
+        // Assert
+        cacheManagerMock.Verify(c => c.RemoveAsync(TenantQueryCacheKeys.ById(tenantId)), Times.Once);
+    }
+
+    [Fact]
+    public async Task PublishAsync_EvictionFails_StillWritesTheSnapshot()
+    {
+        // Arrange
+        var tenant = BuildTenant(isActive: true);
+        cacheManagerMock.Setup(c => c.RemoveAsync(It.IsAny<string>())).ThrowsAsync(new InvalidOperationException("redis is down"));
+        var publisher = BuildPublisher();
+
+        // Act
+        await publisher.PublishAsync(tenant);
+
+        // Assert
+        cacheManagerMock.Verify(c => c.SetGlobalAsync(TenantCacheKeys.Snapshot(tenant.Id), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task PublishAsync_SnapshotFails_StillEvictsTheCachedTenant()
+    {
+        // Arrange
+        var tenant = BuildTenant(isActive: true);
+        cacheManagerMock.Setup(c => c.SetGlobalAsync(It.IsAny<string>(), It.IsAny<Models.Tenant>(), It.IsAny<TimeSpan?>())).ThrowsAsync(new InvalidOperationException("redis is down"));
+        var publisher = BuildPublisher();
+
+        // Act
+        await publisher.PublishAsync(tenant);
+
+        // Assert
+        cacheManagerMock.Verify(c => c.RemoveAsync(TenantQueryCacheKeys.ById(tenant.Id)), Times.Once);
     }
 
     private TenantSnapshotPublisher BuildPublisher() =>

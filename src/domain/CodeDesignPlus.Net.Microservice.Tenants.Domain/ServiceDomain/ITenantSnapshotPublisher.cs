@@ -13,7 +13,8 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
 public interface ITenantSnapshotPublisher
 {
     /// <summary>
-    /// Publishes the snapshot of a tenant and keeps the active tenants index in sync with its state.
+    /// Publishes the snapshot of a tenant, keeps the active tenants index in sync with its state and evicts the copy of the
+    /// tenant cached by the queries of ms-tenants. Every write of the tenant must call it (or <see cref="RemoveAsync"/>).
     /// </summary>
     /// <param name="tenant">The tenant to publish.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -21,7 +22,8 @@ public interface ITenantSnapshotPublisher
     Task PublishAsync(TenantAggregate tenant, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Removes the snapshot of a tenant and drops it from the active tenants index.
+    /// Removes the snapshot of a tenant, drops it from the active tenants index and evicts the copy of the tenant cached by
+    /// the queries of ms-tenants.
     /// </summary>
     /// <param name="tenantId">The tenant identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>

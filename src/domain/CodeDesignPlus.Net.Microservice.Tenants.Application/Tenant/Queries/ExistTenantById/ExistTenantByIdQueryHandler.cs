@@ -7,7 +7,7 @@ public class ExistTenantByIdQueryHandler(ITenantRepository repository, ICacheMan
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
 
-        var exists = await cacheManager.ExistsAsync(request.Id.ToString());
+        var exists = await cacheManager.ExistsAsync(TenantQueryCacheKeys.ById(request.Id));
 
         if(!exists)
             exists = await repository.ExistsAsync<TenantAggregate>(request.Id, cancellationToken);

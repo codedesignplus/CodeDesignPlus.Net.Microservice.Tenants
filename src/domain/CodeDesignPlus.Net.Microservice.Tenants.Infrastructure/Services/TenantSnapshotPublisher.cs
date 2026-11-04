@@ -6,7 +6,7 @@ using Models = CodeDesignPlus.Net.Security.Abstractions.Models;
 namespace CodeDesignPlus.Net.Microservice.Tenants.Infrastructure.Services;
 
 /// <summary>
-/// Publishes the tenant snapshot to the shared cache.
+/// Publishes the tenant snapshot to the shared cache and evicts the copy that the queries of ms-tenants keep of it.
 /// </summary>
 /// <param name="cacheManager">The cache manager.</param>
 /// <param name="logger">The logger service.</param>
@@ -16,6 +16,8 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
     public async Task PublishAsync(TenantAggregate tenant, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(tenant);
+
+        await EvictQueriesAsync(tenant.Id);
 
         try
         {
@@ -42,6 +44,8 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
     /// <inheritdoc/>
     public async Task RemoveAsync(Guid tenantId, CancellationToken cancellationToken = default)
     {
+        await EvictQueriesAsync(tenantId);
+
         try
         {
             await cacheManager.RemoveGlobalAsync(TenantCacheKeys.Snapshot(tenantId));
@@ -55,5 +59,24 @@ public class TenantSnapshotPublisher(ICacheManager cacheManager, ILogger<TenantS
         }
     }
 
-
+    /// <summary>
+    /// Evicts the <c>TenantDto</c> that <c>GET /Tenant/{id}</c> keeps in the cache, so the next read comes from the database.
+    /// </summary>
+    /// <remarks>
+    /// Every write of the tenant ends here (create, update, delete, restore, the license and package consumers and the
+    /// reconciliation job), so no path can leave the copy stale for the whole <c>RedisCache:Expiration</c> (pendings/739).
+    /// Goes in its own <c>try</c>: a failed snapshot must not keep the stale copy, nor the other way round.
+    /// </remarks>
+    /// <param name="tenantId">The tenant identifier.</param>
+    private async Task EvictQueriesAsync(Guid tenantId)
+    {
+        try
+        {
+            await cacheManager.RemoveAsync(TenantQueryCacheKeys.ById(tenantId));
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "The cached copy of tenant {TenantId} could not be evicted", tenantId);
+        }
+    }
 }

@@ -6,10 +6,10 @@ public class GetTenantByIdQueryHandler(ITenantRepository repository, IMapper map
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
 
-        var exists = await cacheManager.ExistsAsync(request.Id.ToString());
+        var exists = await cacheManager.ExistsAsync(TenantQueryCacheKeys.ById(request.Id));
 
         if (exists)
-            return await cacheManager.GetAsync<TenantDto>(request.Id.ToString());
+            return await cacheManager.GetAsync<TenantDto>(TenantQueryCacheKeys.ById(request.Id));
 
         var tenant = await repository.FindAsync<TenantAggregate>(request.Id, cancellationToken);
 
@@ -17,7 +17,7 @@ public class GetTenantByIdQueryHandler(ITenantRepository repository, IMapper map
 
         var dto = mapper.Map<TenantDto>(tenant);
 
-        await cacheManager.SetAsync(request.Id.ToString(), dto);
+        await cacheManager.SetAsync(TenantQueryCacheKeys.ById(request.Id), dto);
 
         return dto;
     }

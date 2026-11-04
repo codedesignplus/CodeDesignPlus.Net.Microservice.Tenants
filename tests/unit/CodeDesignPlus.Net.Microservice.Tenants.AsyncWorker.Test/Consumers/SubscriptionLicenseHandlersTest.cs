@@ -175,4 +175,43 @@ public class SubscriptionLicenseHandlersTest
         // Assert
         Assert.Equal(("Élite", "3"), (tenant.License.Name, tenant.EffectiveLicense().Metadata["assemblies_number_meetings"]));
     }
+
+    /// <summary>
+    /// La compra de un paquete republica la copropiedad después de guardarla: ahí se borra la copia de <c>GET /Tenant/{id}</c>
+    /// y la sesión ve el paquete en cuanto lo pide (pendings/739).
+    /// </summary>
+    [Fact]
+    public async Task PackagesPurchased_RepublishesTheTenantAfterSavingIt()
+    {
+        // Arrange
+        var order = new List<string>();
+        repository.Setup(x => x.UpdateAsync(tenant, It.IsAny<CancellationToken>())).Callback(() => order.Add("update")).Returns(Task.CompletedTask);
+        snapshots.Setup(x => x.PublishAsync(tenant, It.IsAny<CancellationToken>())).Callback(() => order.Add("publish")).Returns(Task.CompletedTask);
+        var handler = new ApplyTenantPackagesHandler(repository.Object, snapshots.Object, pubsub.Object, Mock.Of<ILogger<ApplyTenantPackagesHandler>>());
+
+        // Act
+        await handler.HandleAsync(new SubscriptionPackagesPurchasedDomainEvent(Guid.NewGuid(), Detail(), [Package()], Guid.NewGuid()), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(["update", "publish"], order);
+    }
+
+    /// <summary>
+    /// El cambio de licencia también republica la copropiedad después de guardarla (pendings/739).
+    /// </summary>
+    [Fact]
+    public async Task Changed_RepublishesTheTenantAfterSavingIt()
+    {
+        // Arrange
+        var order = new List<string>();
+        repository.Setup(x => x.UpdateAsync(tenant, It.IsAny<CancellationToken>())).Callback(() => order.Add("update")).Returns(Task.CompletedTask);
+        snapshots.Setup(x => x.PublishAsync(tenant, It.IsAny<CancellationToken>())).Callback(() => order.Add("publish")).Returns(Task.CompletedTask);
+        var handler = new ChangeTenantLicenseHandler(repository.Object, snapshots.Object, pubsub.Object, Mock.Of<ILogger<ChangeTenantLicenseHandler>>());
+
+        // Act
+        await handler.HandleAsync(new SubscriptionChangedDomainEvent(Guid.NewGuid(), Detail(), Sold(Start, Start.Plus(Duration.FromDays(31)), Guid.NewGuid(), "Élite"), tenant.License.Id, Guid.NewGuid()), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(["update", "publish"], order);
+    }
 }
