@@ -207,6 +207,6 @@ public class TenantSnapshotPublisherTest
             location,
             license,
             isActive,
-            Guid.NewGuid());
+            Guid.NewGuid(), VO.DocumentCheckDigitRules.None);
     }
 }

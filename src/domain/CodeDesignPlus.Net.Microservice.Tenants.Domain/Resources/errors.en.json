@@ -50,6 +50,11 @@
     "147": "The period to restore a deleted tenant is not valid.",
     "148": "The tenant is not deleted.",
     "149": "The period to restore the tenant has ended.",
-    "150": "The tenant can still be restored; its data is not purged yet."
+    "150": "The tenant can still be restored; its data is not purged yet.",
+    "151": "This document type is written with a hyphen and a check digit. If {0} is the number without the digit, write it like this: {0}-{1}.",
+    "152": "The check digit does not match: the one for {0} is {1}, not {2}. Write it like this: {0}-{1}.",
+    "153": "This document type is written with digits only, followed by a hyphen and the check digit, with no dots or spaces.",
+    "154": "The document check digit rules are missing.",
+    "155": "This document type is written with a hyphen and a check digit. If {0} already includes the digit, write it like this: {1}-{2}. If it does not, like this: {0}-{3}."
   }
 }

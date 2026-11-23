@@ -50,6 +50,11 @@
     "147": "Le délai pour restaurer une copropriété supprimée n'est pas valide.",
     "148": "La copropriété n'est pas supprimée.",
     "149": "Le délai pour restaurer la copropriété est écoulé.",
-    "150": "La copropriété peut encore être restaurée ; ses données ne sont pas encore purgées."
+    "150": "La copropriété peut encore être restaurée ; ses données ne sont pas encore purgées.",
+    "151": "Ce type de document s'écrit avec un tiret et un chiffre de vérification. Si {0} est le numéro sans le chiffre, écrivez-le ainsi : {0}-{1}.",
+    "152": "Le chiffre de vérification ne correspond pas : celui de {0} est {1}, et non {2}. Écrivez-le ainsi : {0}-{1}.",
+    "153": "Ce type de document s'écrit uniquement avec des chiffres, suivis d'un tiret et du chiffre de vérification, sans points ni espaces.",
+    "154": "Les règles du chiffre de vérification du document sont manquantes.",
+    "155": "Ce type de document s'écrit avec un tiret et un chiffre de vérification. Si {0} inclut déjà le chiffre, écrivez-le ainsi : {1}-{2}. Sinon, ainsi : {0}-{3}."
   }
 }

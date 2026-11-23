@@ -50,6 +50,11 @@
     "147": "O prazo para restaurar um condomínio excluído não é válido.",
     "148": "O condomínio não está excluído.",
     "149": "O prazo para restaurar o condomínio terminou.",
-    "150": "O condomínio ainda pode ser restaurado; seus dados ainda não foram apagados."
+    "150": "O condomínio ainda pode ser restaurado; seus dados ainda não foram apagados.",
+    "151": "Este tipo de documento é escrito com hífen e dígito verificador. Se {0} é o número sem o dígito, escreva assim: {0}-{1}.",
+    "152": "O dígito verificador não corresponde: o de {0} é {1}, não {2}. Escreva assim: {0}-{1}.",
+    "153": "Este tipo de documento é escrito apenas com dígitos, seguidos de um hífen e do dígito verificador, sem pontos nem espaços.",
+    "154": "Faltam as regras do dígito verificador do documento.",
+    "155": "Este tipo de documento é escrito com hífen e dígito verificador. Se {0} já inclui o dígito, escreva assim: {1}-{2}. Se não inclui, assim: {0}-{3}."
   }
 }

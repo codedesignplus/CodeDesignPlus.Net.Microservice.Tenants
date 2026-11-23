@@ -23,7 +23,7 @@ public class UpdateTenantCommandHandlerTest
         userContextMock = new Mock<IUserContext>();
         pubSubMock = new Mock<IPubSub>();
         snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
-        handler = new UpdateTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
+        handler = new UpdateTenantCommandHandler(repositoryMock.Object, userContextMock.Object, pubSubMock.Object, snapshotPublisherMock.Object, Microsoft.Extensions.Options.Options.Create(new Application.Options.TenantDocumentOptions()));
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class UpdateTenantCommandHandlerTest
     public async Task Handle_ValidRequest_UpdatesTenantAndPublishesEvents()
     {
         // Arrange
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Old Tenant", Utils.TypeDocument, "12345678", new Uri("http://test.com"), "31112364578","fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Old Tenant", Utils.TypeDocument, "12345678", new Uri("http://test.com"), "31112364578","fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
         var request = new UpdateTenantCommand(tenant.Id, "Test New Tenant", Utils.TypeDocument, "123456789", new Uri("http://test.com"), "31112364578","fake@fake.com", Utils.Location, Utils.License, true);
         var cancellationToken = CancellationToken.None;
 

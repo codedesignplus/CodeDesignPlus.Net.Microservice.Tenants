@@ -18,6 +18,12 @@ namespace CodeDesignPlus.Net.Microservice.Tenants.Application
             services.AddOptions<TenantPurgeOptions>()
                 .Bind(configuration.GetSection(TenantPurgeOptions.Section))
                 .ValidateOnStart();
+
+            services.AddSingleton<IValidateOptions<TenantDocumentOptions>, TenantDocumentOptionsValidator>();
+
+            services.AddOptions<TenantDocumentOptions>()
+                .Bind(configuration.GetSection(TenantDocumentOptions.Section))
+                .ValidateOnStart();
         }
     }
 }

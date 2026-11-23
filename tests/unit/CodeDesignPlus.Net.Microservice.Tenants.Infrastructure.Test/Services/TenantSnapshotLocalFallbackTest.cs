@@ -123,6 +123,6 @@ public class TenantSnapshotLocalFallbackTest
             location,
             license,
             true,
-            Guid.NewGuid());
+            Guid.NewGuid(), VO.DocumentCheckDigitRules.None);
     }
 }

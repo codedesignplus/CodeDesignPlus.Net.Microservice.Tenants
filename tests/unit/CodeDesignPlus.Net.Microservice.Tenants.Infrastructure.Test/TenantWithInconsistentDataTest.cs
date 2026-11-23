@@ -37,7 +37,7 @@ public class TenantWithInconsistentDataTest
 
         var license = License.Create(Guid.NewGuid(), "Élite", Now.Minus(Duration.FromDays(5)), Now.Plus(Duration.FromDays(30)), [], new Dictionary<string, string> { ["meetings.perYear"] = "12" });
 
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto Chía", TypeDocument.Create("NIT", "Número de Identificación Tributaria"), "901234567", null, "+573000000001", "admin@conjunto.com", location, license, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto Chía", TypeDocument.Create("NIT", "Número de Identificación Tributaria"), "901234567", null, "+573000000001", "admin@conjunto.com", location, license, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.GetAndClearEvents();
 

@@ -1,5 +1,6 @@
 using CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Default.Test.Validations;
 
@@ -33,7 +34,7 @@ public class AggregateTest
         var createdBy = Guid.NewGuid();
 
         // Act
-        var tenant = TenantAggregate.Create(id, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, createdBy);
+        var tenant = TenantAggregate.Create(id, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, createdBy, DocumentCheckDigitRules.None);
 
         // Assert
         Assert.Equal(id, tenant.Id);
@@ -53,7 +54,7 @@ public class AggregateTest
     public void TenantAggregate_Create_WithoutDomain_IsAllowed()
     {
         // Act
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), Utils.Name, Utils.TypeDocument, Utils.NumberDocument, null, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), Utils.Name, Utils.TypeDocument, Utils.NumberDocument, null, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         // Assert
         Assert.Null(tenant.Domain);
@@ -66,7 +67,7 @@ public class AggregateTest
         var id = Guid.NewGuid();
 
         // Act
-        var tenant = TenantAggregate.Create(id, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(id, Utils.Name, Utils.TypeDocument, Utils.NumberDocument, Utils.Domain, Utils.Phone, Utils.Email, Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         // Assert
         var @event = Assert.Single(tenant.GetAndClearEvents());

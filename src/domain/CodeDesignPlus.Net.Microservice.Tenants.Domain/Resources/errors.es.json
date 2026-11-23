@@ -50,6 +50,11 @@
     "147": "El plazo para restaurar una copropiedad eliminada no es válido.",
     "148": "La copropiedad no está eliminada.",
     "149": "Venció el plazo para restaurar la copropiedad.",
-    "150": "La copropiedad todavía se puede restaurar; aún no se purgan sus datos."
+    "150": "La copropiedad todavía se puede restaurar; aún no se purgan sus datos.",
+    "151": "Este tipo de documento se escribe con guion y dígito de verificación. Si {0} es el número sin el dígito, escríbelo así: {0}-{1}.",
+    "152": "El dígito de verificación no corresponde: el de {0} es {1}, no {2}. Escríbelo así: {0}-{1}.",
+    "153": "Este tipo de documento se escribe solo con dígitos, seguidos de un guion y el dígito de verificación, sin puntos ni espacios.",
+    "154": "Faltan las reglas del dígito de verificación del documento.",
+    "155": "Este tipo de documento se escribe con guion y dígito de verificación. Si {0} ya incluye el dígito, escríbelo así: {1}-{2}. Si no lo incluye, así: {0}-{3}."
   }
 }

@@ -38,7 +38,7 @@ public class TenantSnapshotReconciliationServiceTest
 
     private static TenantAggregate Tenant()
     {
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.GetAndClearEvents();
 

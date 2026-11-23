@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.Commands.RestoreTenant;
 using CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.Tenants.Domain.DomainEvents;
+using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
 using Xunit;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Application.Test.Tenant.Commands.RestoreTenant;
@@ -26,7 +27,7 @@ public class RestoreTenantCommandHandlerTest
 
     private static TenantAggregate DeletedTenant()
     {
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.Delete(Guid.NewGuid(), Duration.FromDays(30));
         tenant.GetAndClearEvents();

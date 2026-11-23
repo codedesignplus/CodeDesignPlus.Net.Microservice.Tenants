@@ -21,7 +21,7 @@ public class TenantWritesValidateTest
 
     private static TenantAggregate Tenant()
     {
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.GetAndClearEvents();
 
@@ -52,7 +52,7 @@ public class TenantWritesValidateTest
     public void Create_LicenseStartingAfterItsEnd_ThrowsStartDateGreaterThanEndDate()
     {
         // Act
-        var exception = Assert.Throws<CodeDesignPlusException>(() => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, LicenseStartingAfterItsEnd(), true, Guid.NewGuid()));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, LicenseStartingAfterItsEnd(), true, Guid.NewGuid(), DocumentCheckDigitRules.None));
 
         // Assert
         Assert.Equal(Errors.LicenseStartDateGreaterThanEndDate.GetCode(), exception.Code);
@@ -62,7 +62,7 @@ public class TenantWritesValidateTest
     public void Create_TypeDocumentCodeLongerThanAllowed_ThrowsCodeTypeDocumentIsInvalid()
     {
         // Act
-        var exception = Assert.Throws<CodeDesignPlusException>(() => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", new TypeDocument("NITX", "NIT"), "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid()));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", new TypeDocument("NITX", "NIT"), "900123456", null, "3107845123", "admin@example.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None));
 
         // Assert
         Assert.Equal(Errors.CodeTypeDocumentIsInvalid.GetCode(), exception.Code);
@@ -75,7 +75,7 @@ public class TenantWritesValidateTest
         var tenant = Tenant();
 
         // Act
-        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Update("Conjunto", new TypeDocument("NITX", "NIT"), "900123456", null, "3107845123", "admin@example.com", true, Guid.NewGuid()));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => tenant.Update("Conjunto", new TypeDocument("NITX", "NIT"), "900123456", null, "3107845123", "admin@example.com", true, Guid.NewGuid(), DocumentCheckDigitRules.None));
 
         // Assert
         Assert.Equal(Errors.CodeTypeDocumentIsInvalid.GetCode(), exception.Code);

@@ -33,7 +33,7 @@ public class TenantPackagesTest
             new TenantPackageAttribute("assemblies_virtual_enable", "true", "Or"),
         ]);
 
-    private static TenantAggregate Tenant(License license) => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, license, true, Guid.NewGuid());
+    private static TenantAggregate Tenant(License license) => TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, license, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
     /// <summary>
     /// Sum suma, Max toma el mayor y Or hace «o»; la clave que la licencia no trae la pone el paquete.

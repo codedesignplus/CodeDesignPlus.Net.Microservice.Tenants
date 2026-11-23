@@ -20,7 +20,7 @@ public class TenantDtoLicenseTest
             ["assemblies_virtual_enable"] = "false",
         });
 
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, license, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto", Utils.TypeDocument, "900123456", null, "3107845123", "admin@example.com", Utils.Location, license, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.ApplyPackages(
         [

@@ -36,7 +36,7 @@ public class TenantRepositoryTest
         this.repository = services.BuildServiceProvider().GetRequiredService<ITenantRepository>();
     }
 
-    private static TenantAggregate NewTenant() => TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, Guid.NewGuid().ToString("N")[..10], null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+    private static TenantAggregate NewTenant() => TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, Guid.NewGuid().ToString("N")[..10], null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
     private async Task<TenantAggregate> DeletedTenantAsync(Duration retention)
     {

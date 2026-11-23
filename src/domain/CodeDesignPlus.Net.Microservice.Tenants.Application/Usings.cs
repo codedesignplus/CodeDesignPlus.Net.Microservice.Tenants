@@ -18,4 +18,6 @@ global using CodeDesignPlus.Net.Microservice.Tenants.Domain;
 
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain.Repositories;
 global using CodeDesignPlus.Net.Microservice.Tenants.Domain.ServiceDomain;
-
+global using CodeDesignPlus.Net.Microservice.Tenants.Domain.ValueObjects;
+global using CodeDesignPlus.Net.Microservice.Tenants.Application.Options;
+global using Microsoft.Extensions.Options;

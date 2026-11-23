@@ -22,7 +22,7 @@ public class CreateTenantCommandHandlerTest
         repositoryMock = new Mock<ITenantRepository>();
         pubSubMock = new Mock<IPubSub>();
         snapshotPublisherMock = new Mock<ITenantSnapshotPublisher>();
-        handler = new CreateTenantCommandHandler(repositoryMock.Object, pubSubMock.Object, snapshotPublisherMock.Object);
+        handler = new CreateTenantCommandHandler(repositoryMock.Object, pubSubMock.Object, snapshotPublisherMock.Object, Microsoft.Extensions.Options.Options.Create(new Application.Options.TenantDocumentOptions()));
     }
 
     [Fact]

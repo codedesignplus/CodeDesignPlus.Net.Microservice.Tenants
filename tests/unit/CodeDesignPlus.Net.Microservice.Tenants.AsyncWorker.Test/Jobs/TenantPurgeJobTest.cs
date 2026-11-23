@@ -44,7 +44,7 @@ public class TenantPurgeJobTest
     /// </summary>
     private static TenantAggregate DueTenant()
     {
-        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid());
+        var tenant = TenantAggregate.Create(Guid.NewGuid(), "Test Tenant", Utils.TypeDocument, "123456789", null, "3107845123", "fake@fake.com", Utils.Location, Utils.License, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
 
         tenant.Delete(Guid.NewGuid(), Duration.FromTicks(1));
         tenant.GetAndClearEvents();

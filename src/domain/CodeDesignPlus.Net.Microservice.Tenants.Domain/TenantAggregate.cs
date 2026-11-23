@@ -117,7 +117,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         return true;
     }
 
-    public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy)
+    public static TenantAggregate Create(Guid id, string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, Location location, License license, bool isActive, Guid createdBy, DocumentCheckDigitRules documentRules)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
@@ -128,6 +128,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
         typeDocument.EnsureValid();
+        // El documento con el que la copropiedad factura: con guion y con su dígito si el tipo lo lleva (pendings/744).
+        DomainGuard.IsNull(documentRules, Errors.DocumentRulesRequired);
+        documentRules.Ensure(typeDocument.Code, numberDocument);
         DomainGuard.IsNull(license, Errors.LicenseMetadataIsNull);
         license.EnsureValid();
 
@@ -151,7 +154,7 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         return aggregate;
     }
 
-    public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, bool isActive, Guid updatedBy)
+    public void Update(string name, TypeDocument typeDocument, string numberDocument, Uri? domain, string phone, string email, bool isActive, Guid updatedBy, DocumentCheckDigitRules documentRules)
     {
         DomainGuard.IsNullOrEmpty(name, Errors.NameTenantIsInvalid);
         DomainGuard.GuidIsEmpty(updatedBy, Errors.UpdatedByIsInvalid);
@@ -161,6 +164,9 @@ public partial class TenantAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsFalse(PhoneRegex().IsMatch(phone), Errors.PhoneTenantIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailTenantIsInvalid);
         typeDocument.EnsureValid();
+        // El documento con el que la copropiedad factura: con guion y con su dígito si el tipo lo lleva (pendings/744).
+        DomainGuard.IsNull(documentRules, Errors.DocumentRulesRequired);
+        documentRules.Ensure(typeDocument.Code, numberDocument);
 
         Name = name;
         Domain = domain;

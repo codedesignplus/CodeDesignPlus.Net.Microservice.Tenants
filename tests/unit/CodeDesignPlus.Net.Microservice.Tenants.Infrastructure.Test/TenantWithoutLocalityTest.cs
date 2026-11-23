@@ -39,7 +39,7 @@ public class TenantWithoutLocalityTest
         var license = License.Create(Guid.NewGuid(), "Élite", now, now.Plus(Duration.FromDays(30)), [], []);
 
         return TenantAggregate.Create(Guid.NewGuid(), "Conjunto Chía", TypeDocument.Create("NIT", "Número de Identificación Tributaria"),
-            "901234567", null, "+573000000001", "admin@conjunto.com", location, license, true, Guid.NewGuid());
+            "901234567", null, "+573000000001", "admin@conjunto.com", location, license, true, Guid.NewGuid(), DocumentCheckDigitRules.None);
     }
 
     [Fact]

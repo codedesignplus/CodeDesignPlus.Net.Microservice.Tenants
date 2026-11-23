@@ -33,7 +33,7 @@ public class SubscriptionLicenseHandlersTest
     {
         tenant = TenantAggregate.Create(Guid.NewGuid(), "Conjunto Prueba", Utils.TypeDocument, "123456789", null, "3107845123", "fake@fake.com", Utils.Location,
             License.Create(Guid.NewGuid(), "Esencial", Start, Start.Plus(Duration.FromDays(31)), [new ModuleInfo(Guid.NewGuid(), "Organización")], new Dictionary<string, string> { ["meetings.perYear"] = "12" }),
-            true, Guid.NewGuid());
+            true, Guid.NewGuid(), DocumentCheckDigitRules.None);
         tenant.GetAndClearEvents();
 
         repository.Setup(x => x.FindAsync<TenantAggregate>(tenant.Id, It.IsAny<CancellationToken>())).ReturnsAsync(tenant);
