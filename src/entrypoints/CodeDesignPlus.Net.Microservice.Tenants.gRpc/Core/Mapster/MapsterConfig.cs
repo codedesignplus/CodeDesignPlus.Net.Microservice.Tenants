@@ -113,6 +113,12 @@ public static class MapsterConfig
                 src.IsActive
             ));
 
+        // The value object calls its id CurrencyId and the message calls it id: by convention the id went out empty, and
+        // whoever read the tenant over gRPC could not rebuild its currency (Kappali pendings/744).
+        TypeAdapterConfig.GlobalSettings
+            .NewConfig<CodeDesignPlus.Net.ValueObjects.Financial.Currency, Currency>()
+            .Map(dest => dest.Id, src => src.CurrencyId.ToString());
+
         TypeAdapterConfig.GlobalSettings
             .NewConfig<TenantDto, GetTenantResponse>()
             .Map(dest => dest.Domain, src => src.Domain != null ? src.Domain.ToString() : string.Empty)

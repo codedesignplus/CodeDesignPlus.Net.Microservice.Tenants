@@ -106,6 +106,66 @@ public class MapsterConfigTest
         Assert.Empty(response.License.Modules);
     }
 
+    /// <summary>
+    /// Every field of the answer carries what the tenant has. The currency went out with its id empty: the value object
+    /// calls it <c>CurrencyId</c> and the message <c>id</c>, so the mapping by convention skipped it, and ms-licenses could
+    /// not create a renewal, a license change nor a package purchase (Kappali pendings/744).
+    /// </summary>
+    [Fact]
+    public void TenantDto_To_GetTenantResponse_CarriesEveryFieldOfTheTenant()
+    {
+        // Arrange
+        CodeDesignPlus.Net.Microservice.Tenants.gRpc.Core.Mapster.MapsterConfig.Configure();
+        var mapper = new Mapper(TypeAdapterConfig.GlobalSettings);
+        var dto = BuildDto([new VO.ModuleInfo(Guid.NewGuid(), "Accounting")]);
+        var location = dto.Location;
+        var country = location.Country;
+        var currency = country.Currency;
+
+        // Act
+        var response = mapper.Map<GetTenantResponse>(dto);
+
+        // Assert
+        Assert.Equal(
+            (dto.Id.ToString(), dto.Name, dto.TypeDocument.Code, dto.TypeDocument.Name, dto.NumberDocument, dto.Domain?.ToString() ?? string.Empty, dto.Phone, dto.Email, dto.IsActive),
+            (response.Id, response.Name, response.TypeDocument.Code, response.TypeDocument.Name, response.NumberDocument, response.Domain, response.Phone, response.Email, response.IsActive));
+        Assert.Equal(
+            (currency.CurrencyId.ToString(), currency.Code, currency.Name, currency.Symbol, (int)currency.DecimalDigits, (int)currency.NumericCode),
+            (response.Location.Country.Currency.Id, response.Location.Country.Currency.Code, response.Location.Country.Currency.Name, response.Location.Country.Currency.Symbol, response.Location.Country.Currency.DecimalDigits, response.Location.Country.Currency.NumericCode));
+        Assert.Equal(
+            (country.Id.ToString(), country.Name, country.Alpha2, country.Alpha3, (uint)country.Code, country.PhoneCode, country.Timezone),
+            (response.Location.Country.Id, response.Location.Country.Name, response.Location.Country.Alpha2, response.Location.Country.Alpha3, response.Location.Country.Code, response.Location.Country.PhoneCode, response.Location.Country.Timezone));
+        Assert.Equal(
+            (location.State.Id.ToString(), location.State.Name, location.State.Code, location.City.Id.ToString(), location.City.Name, location.City.Timezone),
+            (response.Location.State.Id, response.Location.State.Name, response.Location.State.Code, response.Location.City.Id, response.Location.City.Name, response.Location.City.Timezone));
+        Assert.Equal(
+            (location.Locality!.Id.ToString(), location.Locality.Name, location.Neighborhood!.Id.ToString(), location.Neighborhood.Name, location.Address, location.PostalCode),
+            (response.Location.Locality.Id, response.Location.Locality.Name, response.Location.Neighborhood.Id, response.Location.Neighborhood.Name, response.Location.Address, response.Location.PostalCode));
+        Assert.Equal(
+            (dto.License.Id.ToString(), dto.License.Name, NodaTime.Text.InstantPattern.General.Format(dto.License.StartDate), NodaTime.Text.InstantPattern.General.Format(dto.License.EndDate)),
+            (response.License.Id, response.License.Name, NodaTime.Text.InstantPattern.General.Format(NodaTime.Text.InstantPattern.ExtendedIso.Parse(response.License.StartDate).Value), NodaTime.Text.InstantPattern.General.Format(NodaTime.Text.InstantPattern.ExtendedIso.Parse(response.License.EndDate).Value)));
+    }
+
+    /// <summary>
+    /// A tenant without locality nor neighborhood answers without them, not with a message of empty ids.
+    /// </summary>
+    [Fact]
+    public void TenantDto_To_GetTenantResponse_WithoutLocalityNorNeighborhood_LeavesThemOut()
+    {
+        // Arrange
+        CodeDesignPlus.Net.Microservice.Tenants.gRpc.Core.Mapster.MapsterConfig.Configure();
+        var mapper = new Mapper(TypeAdapterConfig.GlobalSettings);
+        var dto = BuildDto([]);
+        var location = dto.Location;
+        dto.Location = CodeDesignPlus.Net.ValueObjects.Location.Location.Create(location.Country, location.State, location.City, null, null, location.Address, location.PostalCode);
+
+        // Act
+        var response = mapper.Map<GetTenantResponse>(dto);
+
+        // Assert
+        Assert.Equal((null, null, location.City.Id.ToString()), (response.Location.Locality, response.Location.Neighborhood, response.Location.City.Id));
+    }
+
     private static TenantDto BuildDto(List<VO.ModuleInfo> modules)
     {
         var currency = CodeDesignPlus.Net.ValueObjects.Financial.Currency.Create(Guid.NewGuid(), "Peso", "COP", "$", 2, 170);
