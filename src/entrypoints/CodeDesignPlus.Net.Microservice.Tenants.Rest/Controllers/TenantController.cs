@@ -1,4 +1,6 @@
 using CodeDesignPlus.Net.Security.Abstractions;
+using CodeDesignPlus.Net.Core.Abstractions.Models.Pager;
+using CodeDesignPlus.Net.Microservice.Tenants.Application.Tenant.DataTransferObjects;
 
 namespace CodeDesignPlus.Net.Microservice.Tenants.Rest.Controllers;
 
@@ -19,6 +21,7 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Collection of Tenants.</returns>
     [HttpGet]
+    [ProducesResponseType<Pagination<TenantDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTenants([FromQuery] C.Criteria criteria, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAllTenantQuery(criteria), cancellationToken);
@@ -32,6 +35,7 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Las copropiedades eliminadas.</returns>
     [HttpGet("deleted")]
+    [ProducesResponseType<List<TenantDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetDeletedTenants(CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetDeletedTenantsQuery(), cancellationToken);
@@ -46,6 +50,7 @@ public class TenantController(IMediator mediator, IMapper mapper, IUserContext u
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The Tenant.</returns>
     [HttpGet("{id}")]
+    [ProducesResponseType<TenantDto>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTenantById(Guid id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetTenantByIdQuery(id), cancellationToken);
